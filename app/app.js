@@ -13,6 +13,10 @@ app.locals.siteTitle = 'Robin Good';
 app.use(express.static('app/public'));
 app.use(require('./routes/index'));
 app.use(require('./routes/speakers'));
+app.use(require('./routes/signup'));
+app.use(require('./routes/login'));
+app.use(require('./routes/contactus'));
+app.use(require('./routes/about'));
 
 var server = app.listen(app.get('port'), function() {
   console.log('Listening on port ' + app.get('port'));

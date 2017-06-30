@@ -4,7 +4,7 @@ var router = express.Router();
 router.get('/speakers', function(req, res) {
   var data = req.app.get('appData');
   var pagePhotos = [];
-  var pagespeakers = data.speakers;
+  var pagestories = data.speakers;
 
   data.speakers.forEach(function(item) {
     pagePhotos = pagePhotos.concat(item.artwork);
@@ -13,7 +13,7 @@ router.get('/speakers', function(req, res) {
   res.render('speakers', {
     pageTitle: 'speakers',
     artwork: pagePhotos,
-    speakers: pagespeakers,
+    speakers: pagestories,
     pageID: 'speakers'
   });
 });
