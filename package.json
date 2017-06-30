@@ -1,0 +1,24 @@
+{
+  "name": "robingood",
+  "version": "1.0.0",
+  "description": "startupProject",
+  "main": "app/app.js",
+  "scripts": {
+    "start": "nodemon -e css,ejs,js,json --watch app/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AleksandarHr/RobinGoodActual.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AleksandarHr/RobinGoodActual/issues"
+  },
+  "homepage": "https://github.com/AleksandarHr/RobinGoodActual#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "reload": "^1.1.7"
+  }
+}
