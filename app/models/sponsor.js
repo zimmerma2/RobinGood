@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var CompanySchema = Schema({
   name: {type: String, required: true, max:20},
-  logo: {type: String, required: true}, // filepath to an image?
+  logo: {data: Buffer, contentType: String, required: true}, // filepath to an image?
   website: {type: String, required:true, max:20},
   address: {type: String, required:true},
   phone_number: {type: String, required: true},

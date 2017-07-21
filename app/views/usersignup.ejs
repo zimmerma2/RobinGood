@@ -1,6 +1,14 @@
-<!DOCTYPE html>
+<!-- https://scotch.io/tutorials/easy-node-authentication-setup-and-local -->
+
+
+<!-- views/usersignup.ejs -->
+<!doctype html>
 <html>
-<body id="<%= pageID %>">
-  <p> This is the 'User signup page' </p>
+<head>
+	<% include partials/template/head.ejs %>
+</head>
+<body>
+	<% include partials/template/header.ejs %>
+	<% include partials/content/userSignupContent.ejs %>
 </body>
 </html>

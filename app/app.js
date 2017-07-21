@@ -1,3 +1,4 @@
+
 var express = require('express');
 var reload = require('reload');
 var app = express();
@@ -16,10 +17,15 @@ app.use(require('./routes/speakers'));
 app.use(require('./routes/usersignup'));
 app.use(require('./routes/sponsorsignup'));
 app.use(require('./routes/login'));
+app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
 app.use(require('./routes/about'));
 app.use(require('./routes/startacause'));
 
+
+
+app.listen(8000);
+console.log('Web server started.');
 var server = app.listen(app.get('port'), function() {
   console.log('Listening on port ' + app.get('port'));
 });

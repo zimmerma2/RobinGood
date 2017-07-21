@@ -19,6 +19,9 @@
   "homepage": "https://github.com/AleksandarHr/RobinGoodActual#readme",
   "dependencies": {
     "express": "^4.15.3",
-    "reload": "^1.1.7"
+    "reload": "^1.1.7",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "express-session": "^1.15.2"
   }
 }
