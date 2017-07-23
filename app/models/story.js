@@ -6,7 +6,7 @@ var StorySchema = Schema({
   title: {type: String, required: true, min:10, max:80},
   description: {type:String, required:true; max:1000},
   category: {type: String},
-  Image: {data: Buffer, contentType: String, required: true}, // filepath to an image?
+  image: {data: Buffer, contentType: String, required: true}, // filepath to an image?
   //verification_media
   [{type: Schema.ObjectId, ref: 'Genre'}]
   target_donation: {type: Number, required:true},
