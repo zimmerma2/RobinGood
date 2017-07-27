@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var CompanySchema = Schema({
+var SponsorSchema = Schema({
   name: {type: String, required: true, max:20},
   logo: {data: Buffer, contentType: String, required: true}, // filepath to an image?
   website: {type: String, required:true, max:20},
@@ -21,11 +21,11 @@ var CompanySchema = Schema({
 });
 
 // Virtual for stpry's URL
-StorySchema
+SponsorSchema
 .virtual('url')
 .get(function () {
   return '/catalog/sponsor/' + this._id;
 });
 
 //Export model
-module.exports = mongoose.model('Story', StorySchema);
+module.exports = mongoose.model('Story', SponsorSchema);
