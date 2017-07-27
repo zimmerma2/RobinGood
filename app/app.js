@@ -1,23 +1,33 @@
 var express = require('express');
-var reload = require('reload');
 var app = module.exports = express();
+var auth =  require('./config.json');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var configDB = require('./config/database.js');
 var dataFile = require('./data/data.json');
-var nodemailer = require('nodemailer');
-var bodyParser = require('body-parser')
-var path = require("path");
 var fs = require('fs')
+var flash    = require('connect-flash');
 var logger = require("morgan");
 var mg = require('nodemailer-mailgun-transport');
+var mongoose = require('mongoose');
+var morgan       = require('morgan');
+var nodeMailer = require('nodemailer');
 var nconf = require('nconf');
-var auth =  require('./config.json');
+var path = require('path');
+var passport = require('passport');
+var reload = require('reload');
+var session      = require('express-session');
+
 const port = process.env.PORT || 3000;
 
 var server = require('http').createServer(app);
+
 
 // app.set('port', process.env.PORT || 3000 );
 app.set('appData', dataFile);
 app.set('view engine', 'ejs');
 app.set('views', 'app/views');
+app.set('views', path.join(__dirname,'views'));
 
 app.locals.siteTitle = 'Robin Good';
 app.locals.allSpeakers = dataFile.speakers;
@@ -45,16 +55,27 @@ var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: '
 app.use(logger('dev'));
 app.use(logger('combined', { stream: accessLogStream }));
 
-var path = require('path');
-var bodyParser = require('body-parser');
-var nodeMailer = require('nodemailer');
 
-var app = express();
+// PASSPORT ================
+// configuration ===============================================================
+mongoose.connect(configDB.url); // connect to our database
+require('./config/passport')(passport); // pass passport for configuration
 
+// set up our express application
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
 
-app.set('views', path.join(__dirname,'views'));
-app.set('view engine','jade');
+app.set('view engine', 'ejs'); // set up ejs for templating
 
+// required for passport
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+// routes ======================================================================
+require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+// END OF PASSPORT ==============
 
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended:false}));

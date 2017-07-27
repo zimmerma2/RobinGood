@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var UserSchema = Schema({
     email: {type: String, unique: true, max: 35},
     password: {type: String, required: true, min:6, max: 32},
-    user_photo: {data: Buffer, contentType: String, required: true}, // filepath to an image?
+    // user_photo: {data: Buffer, contentType: String, required: true}, // filepath to an image?
     // activity_status: {type: String, required: true},
     nickname: {type: String, min:3, max:32},
     // total_donation: {type: Number, required: true},
@@ -19,14 +19,6 @@ var UserSchema = Schema({
     resetPasswordExpires: {type: Date}
 });
 
-// // Virtual for author's full name
-// AuthorSchema
-// .virtual('name')
-// .get(function () {
-//   return this.family_name + ', ' + this.first_name;
-// });
-//
-// Virtual for user's URL
 
 UserSchema.pre('save', function(next) {
   var user = this;
