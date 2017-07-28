@@ -28,14 +28,13 @@ router.post('/contactus/send', function(req, res) {
     user:'costofgiving@gmail.com',
     pass:'robingood2018'
   }
-
   });
 
   var mailOptions =
   {
     from: req.body.name + ' :' + req.body.email,
     to: 'costofgiving@gmail.com',
-    subject:'A simple test',
+    subject:'A simple test for contact form of Robin Good',
     text:'This a a simple test from Name:'+ req.body.name+' Email:'+req.body.email+' Message:'+req.body.message,
     html:'<p><ul><li>this a a simple test from Name:'+ req.body.name+'</li><li> Email:'+req.body.email+'</li><li>Message:'+req.body.message+'</li></ul>',
   }

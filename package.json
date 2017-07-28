@@ -33,6 +33,7 @@
     "method-override": "~1.0.0",
     "mongoose": "^4.10.5",
     "morgan": "^1.8.2",
+    "monk": "^4.0.0",
     "nconf": "^0.8.4",
     "nodemailer": "^4.0.1",
     "nodemailer-mailgun-transport": "latest",
