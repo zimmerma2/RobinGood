@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1= title
+  form#formAddProject(name='addProject', method='post', action='/addproject')
+    div.form-group
+      label(for='inputProjectName') Project Name
+      input#inputProjectName.form-control(type='text', placeholder='Project Name', name='projectName')
+    div.form-group
+      label(for='inputDescription') Project Description
+      input#inputDescription.form-control(type='text', placeholder='Enter description...', name='projectDescription')
+    div.form-group
+      label(for='inputFundGoal') Fung Goal
+      input#inputFundGoal.form-control(type='number', name='fundGoal', min=0, placeholder="$100")
+    div.form-group
+      label(for='inputEndDate') Closing Date
+      input#inputEndDate.form-control(type='date', name='endDate')
+    div.form-group
+      label(for='inputThumbnail') Upload a thumbnail
+      input#inputThumbnail.form-control-file(type='file', name='thumbnail', aria-describedby="thumbnailHelp", accept='image/*')
+      small#thumbnailHelp(class="form-text text-muted") Make sure its square!
+    div
+      input#inputSubmit(type='submit', class="btn btn-primary", value='Submit')

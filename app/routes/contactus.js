@@ -1,8 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var app = require('../app');
-var http = require('http');
-var path = require('path');
 var bodyParser = require('body-parser');
 var nodeMailer = require('nodemailer');
 

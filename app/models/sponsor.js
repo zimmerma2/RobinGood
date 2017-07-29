@@ -17,7 +17,7 @@ var SponsorSchema = Schema({
   average_per_view: {type: Number, required: true},
   // view_history ??
   account_creation_date: {type: Date, required: true},
-  story_title: [{type: Schema.ObjectId, ref: 'Story', required: true}]
+  story_title: [{type: Schema.ObjectId, ref: 'Sponsor', required: true}]
 });
 
 // Virtual for stpry's URL
@@ -28,4 +28,4 @@ SponsorSchema
 });
 
 //Export model
-module.exports = mongoose.model('Story', SponsorSchema);
+module.exports = mongoose.model('Sponsor', SponsorSchema);
