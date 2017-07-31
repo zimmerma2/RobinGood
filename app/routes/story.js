@@ -10,7 +10,6 @@ router.get('/story/:id', function(req, res) {
           "story" : docs[0]
       });
   });
-
 });
 
 module.exports = router;

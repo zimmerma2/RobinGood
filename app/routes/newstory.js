@@ -56,34 +56,13 @@ router.post('/addstory', function(req, res) {
   newStory.target_donation = fundGoal;
   newStory.closing_date = endDate;
 
-  var inserted = newStory.save(function(err) {
-    if(err)
-    throw err;
-    return done(null, newStory);
-  });
+  var inserted = newStory.save(function(err, result) {
+		if (err) throw err;
+    else
+      // res.redirect('/stories');
+});
 
   console.log("\nDocument inserted!\n\tID: ",inserted._id);
-
-  // Submit to the DB
-  // Story.insert({
-  //     "name" : projectName,
-  //     "description" : projectDescription,
-  //     "start_date" : date,
-  //     "end_date" : endDate,
-  //     "fund_goal" : fundGoal,
-  //     "raised" : 0,
-  //     "sponsors" : [],
-  //     "thumbnail" : '' //TODO add logic for file upload
-  // }, function (err, doc) {
-  //     if (err) {
-  //         // If it failed, return error
-  //         res.send("There was a problem adding the information to the database.");
-  //     }
-  //     else {
-  //         // And forward to success page
-  //         res.redirect("stories");
-  //     }
-  // });
 });
 
 module.exports = router;

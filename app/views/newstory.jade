@@ -2,7 +2,8 @@ extends layout
 
 block content
   h1= title
-  form#formAddStory(name='addStory', method='post', action='/addstory', enctype="multipart/form-data")
+  //- form#formAddStory(name='addStory', method='post', action='/addstory', enctype="multipart/form-data")
+  form#formAddStory(name='addStory', method='post', action='/addstory')
     div.form-group
       label(for='inputTitle') Story Title
       input#inputProjectName.form-control(type='text', placeholder='Story Title', name='storyTitle')
