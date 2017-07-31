@@ -1,4 +1,10 @@
+<<<<<<< HEAD:app/routes/newstory.js
 var express = require('express');
+=======
+D:var express = require('express');
+var router = express.Router();
+var Story = require('../models/story');
+>>>>>>> 31e2d51c69a8603288d5520b00fc888230247c50:app/routes/newproject.js
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var Story = require('../models/story');
