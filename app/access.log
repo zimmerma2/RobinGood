@@ -410,3 +410,6 @@
 ::1 - - [29/Jul/2017:20:58:28 +0000] "GET /projects HTTP/1.1" 200 872 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"
 ::1 - - [29/Jul/2017:20:58:28 +0000] "GET /stylesheets/style.css HTTP/1.1" 404 160 "http://localhost:3000/projects" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"
 ::1 - - [29/Jul/2017:20:58:28 +0000] "GET /images/undefined HTTP/1.1" 404 155 "http://localhost:3000/projects" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"
+::ffff:127.0.0.1 - - [29/Jul/2017:21:03:14 +0000] "GET /projects HTTP/1.1" 200 404 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"
+::ffff:127.0.0.1 - - [29/Jul/2017:21:03:14 +0000] "GET /stylesheets/style.css HTTP/1.1" 404 160 "http://localhost:3000/projects" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"
+::ffff:127.0.0.1 - - [29/Jul/2017:21:03:14 +0000] "GET /images/undefined HTTP/1.1" 404 155 "http://localhost:3000/projects" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"
