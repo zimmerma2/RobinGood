@@ -2,7 +2,7 @@ extends layout
 
 mixin story-card(story)
   li.media
-    img(class="d-flex align-self-center mr-3", src="/images/#{story.thumbnail}", width=100, height=100)
+    img(class="d-flex align-self-center mr-3", src="/thumbnails/#{story.thumbnail}", width=100, height=100)
     div.media-body
       h4(class="mt-0 mb-1")= story.title
       a(href="/story/#{story._id}") Link

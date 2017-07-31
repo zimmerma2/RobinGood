@@ -18,8 +18,8 @@ router.use(bodyParser.urlencoded({extended:false}));
 //     cb(null, true);
 // };
 
-var uploading = multer({
-  dest: __dirname + '../public/thumbnails/',
+var upload = multer({
+  dest: 'app/public/thumbnails/',
   limits: {fileSize: 1000000, files:1}
   // fileFilter: imageFilter
 });
@@ -30,20 +30,13 @@ router.get('/newstory', function(req, res) {
 });
 
 /* POST to Add Project Service */
-// router.post('/addstory', uploading, function(req, res) {
-router.post('/addstory', function(req, res) {
-
-  // Set our internal DB variable
-  // var db = req.db;
+router.post('/addstory', upload.single('thumbnail'), function(req, res) {
 
   // Get our form values. These rely on the "name" attributes
   var storyTitle = req.body.storyTitle;
   var storyDescription = req.body.storyDescription;
   var fundGoal = req.body.fundGoal;
   var endDate = req.body.endDate;
-
-  // Set our collection
-  // var collection = db.get('stories');
 
   // Get current date
   var today = new Date();
@@ -57,12 +50,17 @@ router.post('/addstory', function(req, res) {
   newStory.closing_date = endDate;
 
   var inserted = newStory.save(function(err, result) {
-		if (err) throw err;
-    else
-      // res.redirect('/stories');
+		if (err){
+      console.log('Error making new story.');
+      // req.flash('Error','Error making new story.');
+      throw err;
+    }
 });
 
+  console.log("FILENAME: ", req.file.filename);
+
   console.log("\nDocument inserted!\n\tID: ",inserted._id);
+  res.redirect('/stories');
 });
 
 module.exports = router;
