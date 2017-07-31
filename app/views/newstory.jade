@@ -2,13 +2,13 @@ extends layout
 
 block content
   h1= title
-  form#formAddProject(name='addProject', method='post', action='/addproject')
+  form#formAddStory(name='addStory', method='post', action='/addstory', enctype="multipart/form-data")
     div.form-group
-      label(for='inputProjectName') Project Name
-      input#inputProjectName.form-control(type='text', placeholder='Project Name', name='projectName')
+      label(for='inputTitle') Story Title
+      input#inputProjectName.form-control(type='text', placeholder='Story Title', name='storyTitle')
     div.form-group
-      label(for='inputDescription') Project Description
-      input#inputDescription.form-control(type='text', placeholder='Enter description...', name='projectDescription')
+      label(for='inputDescription') Story Description
+      input#inputDescription.form-control(type='text', placeholder='Enter description...', name='storyDescription')
     div.form-group
       label(for='inputFundGoal') Fung Goal
       input#inputFundGoal.form-control(type='number', name='fundGoal', min=0, placeholder="$100")

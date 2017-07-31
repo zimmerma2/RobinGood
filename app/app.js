@@ -52,8 +52,8 @@ app.set('appData', dataFile);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname,'views'));
 app.use(require('./routes/index'));
-app.use(require('./routes/projects'));
-app.use(require('./routes/newproject'));
+app.use(require('./routes/stories'));
+app.use(require('./routes/newstory'));
 app.use(require('./routes/speakers'));
 app.use(require('./routes/usersignup'));
 app.use(require('./routes/sponsorsignup'));
@@ -61,6 +61,7 @@ app.use(require('./routes/login'));
 app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
 app.use(require('./routes/about'));
+app.use(require('./routes/story'));
 app.use(require('./routes/startacause'));
 
 app.locals.db = db;
