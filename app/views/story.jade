@@ -1,16 +1,11 @@
 extends layout
 
-mixin story-card(story)
-  li.media
-    img(class="d-flex align-self-center mr-3", src="/images/#{story.thumbnail}", width=100, height=100)
-    div.media-body
-      h4(class="mt-0 mb-1")= story.title
-      p.card-text= story.description
-
 block content
   h1= story.title
-  img(src="/public/thumbnails/#{story.thumbnail}")
+  img(src="/thumbnails/#{story.thumbnail}", align="middle")
   h3= story.description
   p Target Donation: #{story.target_donation}
+  p Start Date: 
+    time= story.opening_date
   p Closing Date: 
     time= story.closing_date

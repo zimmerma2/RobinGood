@@ -5,9 +5,10 @@ var StorySchema = Schema({
   title: {type: String, required: true, min:10, max:80},
   description: {type:String, required:true, max:1000},
   target_donation: {type: Number, required:true},
-  closing_date: {type: Date, required: true}
+  opening_date: {type: Date, required: true},
+  closing_date: {type: Date, required: true},
+  thumbnail: {type: String, required: true} // filepath to an image?
   // category: {type: String}
-  // image: {data: Buffer, contentType: String, required: true} // filepath to an image?
   //verification_media
   // [{type: Schema.ObjectId, ref: 'Genre'}]
   // user: {type: Schema.ObjectId, ref: 'User', required: true},

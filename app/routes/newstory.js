@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var multer = require('multer');
+var fs = require('fs');
 var Story = require('../models/story');
 
 var router = express.Router();
@@ -19,7 +20,7 @@ router.use(bodyParser.urlencoded({extended:false}));
 // };
 
 var upload = multer({
-  dest: 'app/public/thumbnails/',
+  dest: 'temp/',
   limits: {fileSize: 1000000, files:1}
   // fileFilter: imageFilter
 });
@@ -31,6 +32,7 @@ router.get('/newstory', function(req, res) {
 
 /* POST to Add Project Service */
 router.post('/addstory', upload.single('thumbnail'), function(req, res) {
+  var uploadDir = 'app/public/thumbnails/'
 
   // Get our form values. These rely on the "name" attributes
   var storyTitle = req.body.storyTitle;
@@ -38,28 +40,35 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res) {
   var fundGoal = req.body.fundGoal;
   var endDate = req.body.endDate;
 
-  // Get current date
-  var today = new Date();
-  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-
-
   var newStory = new Story();
   newStory.title = storyTitle;
   newStory.description = storyDescription;
   newStory.target_donation = fundGoal;
   newStory.closing_date = endDate;
+  newStory.opening_date = new Date();
+  newStory.thumbnail = newStory._id + '.jpg';
 
-  var inserted = newStory.save(function(err, result) {
+  console.log(newStory.thumbnail);
+
+  newStory.save(function(err) {
 		if (err){
-      console.log('Error making new story.');
+      console.log('\nError making new story.');
       // req.flash('Error','Error making new story.');
       throw err;
+      fs.unlink(req.file.path, function(err) {
+        if (err) throw err;
+        console.log("\nDeleted thumbnail.");
+      })
+    } else {
+      var uploadPath = uploadDir + newStory.thumbnail;
+      fs.rename(req.file.path, uploadPath, function(err) {
+        if (err) throw err;
+        console.log("\nMoved thumbnail to:", uploadPath);
+      })
     }
 });
 
-  console.log("FILENAME: ", req.file.filename);
-
-  console.log("\nDocument inserted!\n\tID: ",inserted._id);
+  console.log("\nDocument inserted!\n\tID: ",newStory._id);
   res.redirect('/stories');
 });
 
