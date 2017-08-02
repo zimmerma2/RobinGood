@@ -5,19 +5,26 @@ block content
   form#formAddStory(name='addStory', method='post', action='/addstory', enctype="multipart/form-data")
     div.form-group
       label(for='inputTitle') Story Title
-      input#inputProjectName.form-control(type='text', placeholder='Story Title', name='storyTitle')
+      input#inputTitle.form-control(type='text', placeholder='Story Title', name='title', required='true', value=(undefined===story ? '' : story.title))
     div.form-group
       label(for='inputDescription') Story Description
-      input#inputDescription.form-control(type='text', placeholder='Enter description...', name='storyDescription')
+      input#inputDescription.form-control(type='text', placeholder='Enter description...', name='description', required='true', value=(undefined===story ? '' : story.description))
     div.form-group
-      label(for='inputFundGoal') Fung Goal
-      input#inputFundGoal.form-control(type='number', name='fundGoal', min=0, placeholder="$100")
+      label(for='inputTargetDonation') Fung Goal
+      input#inputTargetDonation.form-control(type='number', name='targetDonation', min=0, placeholder="$100", required='true', value=(undefined===story ? '' : story.target_donation))
     div.form-group
       label(for='inputEndDate') Closing Date
-      input#inputEndDate.form-control(type='date', name='endDate')
+      input#inputEndDate.form-control(type='date', name='endDate', required='true', value=(undefined===story ? '' : story.closing_date))
     div.form-group
       label(for='inputThumbnail') Upload a thumbnail
-      input#inputThumbnail.form-control-file(type='file', name='thumbnail', aria-describedby="thumbnailHelp", accept='image/*')
+      input#inputThumbnail.form-control-file(type='file', name='thumbnail', aria-describedby="thumbnailHelp", accept='image/*', required='true')
       small#thumbnailHelp(class="form-text text-muted") Make sure its square!
     div
       input#inputSubmit(type='submit', class="btn btn-primary", value='Submit')
+  
+  if errors
+    br      
+    h2 Form Errors:
+    ul
+      for error in errors
+        li=error.msg
