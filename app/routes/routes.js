@@ -19,29 +19,46 @@ module.exports = function(app, passport) {
   });
 
   // process the login form
-     app.post('/login', passport.authenticate('local-login', {
-         successRedirect : '/profile', // redirect to the secure profile section
+     app.post('/login', passport.authenticate('user-local-login', {
+         successRedirect : '/', // redirect to the secure profile section
          failureRedirect : '/login', // redirect back to the signup page if there is an error
          failureFlash : true // allow flash messages
      }));
 
 
   // =====================================
-  // SIGNUP ==============================
+  // USER SIGNUP =========================
   // =====================================
   // show the signup form
-  app.get('/usersignup', function(req, res) {
+  // app.get('/usersignup', function(req, res) {
+  //
+  //   // render the page and pass in any flash data if it exists
+  //   res.render('usersignup.ejs', { message: req.flash('signupMessage') });
+  // });
+  //
+  // // process the signup form
+  // app.post('/usersignup', passport.authenticate('user-local-signup', {
+  //   successRedirect : '/login', // redirect to the secure profile section
+  //   failureRedirect : '/usersignup', // redirect back to the signup page if there is an error
+  //   failureFlash : true // allow flash messages
+  // }));
 
-    // render the page and pass in any flash data if it exists
-    res.render('usersignup.ejs', { message: req.flash('signupMessage') });
-  });
-
-  // process the signup form
-  app.post('/usersignup', passport.authenticate('local-signup', {
-    successRedirect : '/login', // redirect to the secure profile section
-    failureRedirect : '/usersignup', // redirect back to the signup page if there is an error
-    failureFlash : true // allow flash messages
-  }));
+  // =====================================
+  // SPONSOR SIGNUP ======================
+  // =====================================
+  // show the signup form
+  // app.get('/sponsorsignup', function(req, res) {
+  //
+  //   // render the page and pass in any flash data if it exists
+  //   res.render('sponsorsignup.ejs', { message: req.flash('signupMessage') });
+  // });
+  //
+  // // process the signup form
+  // app.post('/sponsorsignup', passport.authenticate('sponsor-local-signup', {
+  //   successRedirect : '/login', // redirect to the secure profile section
+  //   failureRedirect : '/sponsorsignup', // redirect back to the signup page if there is an error
+  //   failureFlash : true // allow flash messages
+  // }));
   // =====================================
   // PROFILE SECTION =====================
   // =====================================
