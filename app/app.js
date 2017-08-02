@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var configDB = require('./config/database.js');
 var dataFile = require('./data/data.json');
+var expressValidator = require('express-validator');
 var fs = require('fs')
 var flash    = require('connect-flash');
 var logger = require("morgan");
@@ -33,6 +34,7 @@ app.use(bodyParser.json())
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
+app.use(expressValidator());
 
 // log requests to stdout and also
 // log HTTP requests to a file in combined format
