@@ -1,26 +1,18 @@
-var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser')
+module.exports = function(app, passport) {
+  // =====================================
+  // USER SIGNUP =========================
+  // =====================================
+  // show the signup form
+  app.get('/sponsorsignup', function(req, res) {
 
-router.use(bodyParser.urlencoded({ extended: false }))
-router.use(bodyParser.json())
-
-router.get('/sponsorsignup', function(req, res) {
-
-  res.render('sponsorsignup', {
-    pageTitle: 'Sponsor signup',
-    pageID: 'sponsorsignup'
+    // render the page and pass in any flash data if it exists
+    res.render('sponsorsignup.ejs', { message: req.flash('signupMessage') });
   });
 
-});
-
-router.post('/sponsorsignup', function(req, res) {
-  res.redirect('/');
-  console.log('POST request processed for username');
-  console.log('COMPANY: ' + req.body.company_name);
-  console.log('REPRESENTATIVE_NAME: ' + req.body.rep_name);
-  console.log('REPRESENTATIVE_EMAIL: ' + req.body.rep_email);
-  console.log('REPRESENTATIVE_NUMBER: ' + req.body.rep_number);
- });
-
-module.exports = router;
+  // process the signup form
+  app.post('/sponsorsignup', passport.authenticate('sponsor-local-signup', {
+    successRedirect : '/login', // redirect to the secure profile section
+    failureRedirect : '/sponsorsignup', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+  }));
+};

@@ -55,8 +55,8 @@ app.use(require('./routes/index'));
 app.use(require('./routes/stories'));
 app.use(require('./routes/newstory'));
 app.use(require('./routes/speakers'));
-app.use(require('./routes/usersignup'));
-app.use(require('./routes/sponsorsignup'));
+// app.use(require('./routes/usersignup'));
+// app.use(require('./routes/sponsorsignup'));
 app.use(require('./routes/login'));
 app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
@@ -68,10 +68,7 @@ app.locals.db = db;
 
 // PASSPORT ================
 // configuration ===============================================================
-
-
 require('./config/passport')(passport); // pass passport for configuration
-
 
 // required for passport
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
@@ -81,6 +78,8 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./routes/usersignup.js')(app, passport);
+require('./routes/sponsorsignup.js')(app, passport);
 // END OF PASSPORT ==============
 
 
