@@ -7,6 +7,7 @@ var LocalStrategy   = require('passport-local').Strategy;
 var User            = require('../models/user');
 var Sponsor         = require('../models/sponsor');
 
+var bcrypt          = require('bcrypt-nodejs');
 // expose this function to our app using module.exports
 module.exports = function(passport) {
 
@@ -70,19 +71,44 @@ module.exports = function(passport) {
 
           var newUser = new User();
           newUser.email = email;
-          newUser.password = newUser.generateHash(password);
-
-          newUser.save(function(err) {
-            if(err)
-            throw err;
-            return done(null, newUser);
+          // bcrypt.hash(password, null, null, function(err,hash){
+          //   if (err)
+          //   throw err;
+          //   else {
+          //     newUser.password = hash;
+          //   }
+          // });
+          //
+          // newUser.save(function(err) {
+          //   if(err)
+          //   throw err;
+          //   return done(null, newUser);
+          // });
+          // console.log('New user was created: ' + email);
+          bcrypt.hash(password, null, null, function(err, hash) {
+            if (err) return done(err);
+            newUser.password = hash;
+            newUser.save(function(err) {
+              if (err) return done(err);
+              console.log("New user was created: " + email);
+              return done(null, newUser);
+            });
           });
-          console.log('New user was created: ' + email);
+
         }
       });
     });
   }));
-
+  // newUser.password = newUser.generateHash(password);
+  //           bcrypt.genSalt(10, function(err, salt){
+  //             bcrypt.hashSync(password, salt, function(err, hash){
+  //               if(err)
+  //                 throw err;
+  //               else {
+  //                 newUser.password = hash;
+  //               }
+  // });
+  // });
 
   // =========================================================================
   // LOCAL SPONSOR SIGNUP ====================================================
@@ -157,12 +183,21 @@ module.exports = function(passport) {
         return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
       }
       // if the user is found but the password is wrong
-      if (!user.validPassword(password)) {
-        console.log('Oops! Wrong password.');
-        return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-      }
-      // all is well, return successful user
-      return done(null, user);
+      // if (!user.validPassword(password)) {
+      //   console.log('Oops! Wrong password.');
+      //   return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+      // }
+      // // all is well, return successful user
+      // return done(null, user);
+      bcrypt.compare(password, user.password, function(err, res) {
+        if (err)
+        throw err;
+        if(!res) {
+          console.log('Ooops!. Wrong Pass!');
+          return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+        }
+        return done(null, user);
+      });
     });
   }));
 };
