@@ -5,17 +5,17 @@ var bodyParser = require('body-parser')
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
-// router.get('/login', function(req, res) {
+// router.get('/userlogin', function(req, res) {
 //
-//   res.render('login', {
+//   res.render('userlogin', {
 //     pageTitle: 'Login',
-//     pageID: 'login'
+//     pageID: 'userlogin'
 //   });
 //
 // });
 //
 //
-// router.post('/login', function(req, res) {
+// router.post('/userlogin', function(req, res) {
 //   res.redirect('/');
 //   console.log('POST request processed for username');
 //   console.log('EMAIL: ' + req.body.email);

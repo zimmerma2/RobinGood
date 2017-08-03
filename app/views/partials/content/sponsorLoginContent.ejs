@@ -1,0 +1,30 @@
+<!-- https://github.com/johnpapa/node-auth/blob/master/views/login.ejs -->
+
+<div class="container">
+
+<div class="col-sm-6 col-sm-offset-3">
+
+	<h1><span class="fa fa-sign-in"></span> Login</h1>
+
+	<!-- LOGIN FORM -->
+	<form action="/login" method="post">
+		<div class="form-group">
+			<label>Representative Email</label>
+			<input type="text" class="form-control" name="email">
+		</div>
+		<div class="form-group">
+			<label>Password</label>
+			<input type="password" class="form-control" name="password">
+		</div>
+
+		<button type="submit" class="btn btn-warning btn-lg">Login</button>
+	</form>
+
+	<hr>
+
+	<p>Need a <a href="/usersignup">User account</a> or a <a href="/sponsorsignup">Sponsor account</a>?</p>
+	<p>Or go <a href="/">Home</a>.</p>
+
+</div>
+
+</div>

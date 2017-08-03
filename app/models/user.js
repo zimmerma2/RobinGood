@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var UserSchema = Schema({
     email: {type: String, unique: true, max: 35},
-    password: {type: String, required: true, min:6, max: 32},
+    password: {type: String, required: true, min:6, max: 100},
     // user_photo: {data: Buffer, contentType: String, required: true}, // filepath to an image?
     // activity_status: {type: String, required: true},
     nickname: {type: String, min:3, max:32},
@@ -54,8 +54,20 @@ UserSchema.methods.generateHash = function(password) {
 // // checking if password is valid
 UserSchema.methods.validPassword = function(password) {
   var user = this;
-  return bcrypt.compareSync(password, user.password);
+
+      // console.log('GIVEN PASSWORD: ' + hash);
+      console.log('STORED PASSWORD: ' + user.password + ' AND IS OF TYPE: ' + typeof(user.password));
+      return bcrypt.compareSync(bcrypt.hashSync(password, bcrypt.genSaltSync(8), null), user.password);
+
+
 };
+
+// // checking if password is valid
+// UserSchema.methods.validPassword = function(password) {
+//   var user = this;
+//   return bcrypt.compareSync(password, user.password);
+// };
+
 
 
 //Export model

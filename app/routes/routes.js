@@ -9,21 +9,39 @@ module.exports = function(app, passport) {
   // });
 
   // =====================================
-  // LOGIN ===============================
+  // USER LOGIN ==========================
   // =====================================
   // show the login form
-  app.get('/login', function(req, res) {
+  app.get('/userlogin', function(req, res) {
 
     // render the page and pass in any flash data if it exists
-    res.render('login.ejs', { message: req.flash('loginMessage') });
+    res.render('userlogin.ejs', { message: req.flash('loginMessage') });
   });
 
   // process the login form
-     app.post('/login', passport.authenticate('user-local-login', {
-         successRedirect : '/', // redirect to the secure profile section
-         failureRedirect : '/login', // redirect back to the signup page if there is an error
-         failureFlash : true // allow flash messages
-     }));
+  app.post('/userlogin', passport.authenticate('user-local-login', {
+    successRedirect : '/', // redirect to the secure profile section
+    failureRedirect : '/userlogin', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+  }));
+
+
+  // =====================================
+  // SPONSOR LOGIN =======================
+  // =====================================
+  // show the login form
+  app.get('/sponsorlogin', function(req, res) {
+
+    // render the page and pass in any flash data if it exists
+    res.render('sponsorlogin.ejs', { message: req.flash('loginMessage') });
+  });
+
+  // process the login form
+  app.post('/sponsorlogin', passport.authenticate('user-local-login', {
+    successRedirect : '/', // redirect to the secure profile section
+    failureRedirect : '/sponsorlogin', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+  }));
 
 
   // =====================================
