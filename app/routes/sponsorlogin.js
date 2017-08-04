@@ -1,25 +1,18 @@
-var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser')
+module.exports = function(app, passport) {
+  // =====================================
+  // USER LOGIN  =========================
+  // =====================================
+  // show the signup form
+  app.get('/sponsorlogin', function(req, res) {
 
-router.use(bodyParser.urlencoded({ extended: false }))
-router.use(bodyParser.json())
+    // render the page and pass in any flash data if it exists
+    res.render('sponsorlogin.ejs', { message: req.flash('loginMessage') });
+  });
 
-// router.get('/sponsorlogin', function(req, res) {
-//
-//   res.render('sponsorlogin', {
-//     pageTitle: 'Login',
-//     pageID: 'login'
-//   });
-//
-// });
-//
-//
-// router.post('/sponsorlogin', function(req, res) {
-//   res.redirect('/');
-//   console.log('POST request processed for username');
-//   console.log('EMAIL: ' + req.body.email);
-//   console.log('PASS: ' + req.body.password);
-//  });
-
-module.exports = router;
+  // process the login form
+  app.post('/sponsorlogin', passport.authenticate('sponsor-local-login', {
+    successRedirect : '/', // redirect to the secure profile section
+    failureRedirect : '/sponsorlogin', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+  }));
+};

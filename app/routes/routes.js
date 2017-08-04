@@ -30,18 +30,18 @@ module.exports = function(app, passport) {
   // SPONSOR LOGIN =======================
   // =====================================
   // show the login form
-  app.get('/sponsorlogin', function(req, res) {
-
-    // render the page and pass in any flash data if it exists
-    res.render('sponsorlogin.ejs', { message: req.flash('loginMessage') });
-  });
-
-  // process the login form
-  app.post('/sponsorlogin', passport.authenticate('user-local-login', {
-    successRedirect : '/', // redirect to the secure profile section
-    failureRedirect : '/sponsorlogin', // redirect back to the signup page if there is an error
-    failureFlash : true // allow flash messages
-  }));
+  // app.get('/sponsorlogin', function(req, res) {
+  //
+  //   // render the page and pass in any flash data if it exists
+  //   res.render('sponsorlogin.ejs', { message: req.flash('loginMessage') });
+  // });
+  //
+  // // process the login form
+  // app.post('/sponsorlogin', passport.authenticate('sponsor-local-login', {
+  //   successRedirect : '/', // redirect to the secure profile section
+  //   failureRedirect : '/sponsorlogin', // redirect back to the signup page if there is an error
+  //   failureFlash : true // allow flash messages
+  // }));
 
 
   // =====================================

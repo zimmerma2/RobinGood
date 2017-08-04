@@ -8,27 +8,10 @@
     <form action="/sponsorsignup" method="post">
         <h4><span class="fa fa-sign-in"></span> Login Information</h4>
 
-        <div class="form-group">
-            <label>Company Name</label>
-            <input type="text" class="form-control" name="company_name">
-        </div>
-        <div class="form-group">
-            <label>Company ID</label>
-            <input type="password" class="form-control" name="company_id">
-        </div>
 
-        <h4><span class="fa fa-sign-in"></span> Representative Information</h4>
-        <div class="form-group">
-            <label>Representative First Name</label>
-            <input type="text" class="form-control" name="rep_first_name">
-        </div>
-        <div class="form-group">
-            <label>Representative Last Name</label>
-            <input type="text" class="form-control" name="rep_last_name">
-        </div>
         <div class="form-group">
             <label>Representative Email</label>
-            <input type="text" class="form-control" name="rep_email">
+            <input type="text" class="form-control" name="representative_email">
         </div>
         <div class="form-group">
             <label>Password</label>
@@ -37,6 +20,24 @@
         <div class="form-group">
             <label>Repeat Password</label>
             <input type="password" class="form-control" name="repeat_password">
+        </div>
+
+        <h4><span class="fa fa-sign-in"></span> Company and Representative Information</h4>
+        <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" class="form-control" name="company_name">
+        </div>
+        <div class="form-group">
+            <label>Representative First Name</label>
+            <input type="text" class="form-control" name="representative_first_name">
+        </div>
+        <div class="form-group">
+            <label>Representative Last Name</label>
+            <input type="text" class="form-control" name="representative_last_name">
+        </div>
+        <div class="form-group">
+            <label>Company ID</label>
+            <input type="password" class="form-control" name="company_id">
         </div>
 
         <button type="submit" class="btn btn-warning btn-lg">Sponsor Signup</button>

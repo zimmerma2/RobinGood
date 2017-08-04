@@ -91,14 +91,14 @@ module.exports = function(passport) {
   // by default, if there was no name, it would just be called 'local'
 
   passport.use('sponsor-local-signup', new LocalStrategy({
-    usernameField : 'company_name',
+    usernameField : 'representative_email',
     passwordField: 'password',
     passReqToCallback: true // allows us to pass back the entire request to the callback
   },
-  function (req, company_name, password, done) {
+  function (req, representative_email, password, done) {
     //asynch
     process.nextTick(function() {
-      Sponsor.findOne({'company_name' : company_name}, function (err, sponsor) {
+      Sponsor.findOne({'representative_email' : representative_email}, function (err, sponsor) {
         if(err){
           console.log('Error: ' + err);
           return done(err);
@@ -122,11 +122,11 @@ module.exports = function(passport) {
           // req.checkBody('password','Password is required.').notEmpty();
 
           var newSponsor = new Sponsor();
-          newSponsor.company_name = company_name;
+          newSponsor.representative_email = representative_email;
+          newSponsor.company_name = req.body.company_name;
           newSponsor.company_id = req.body.company_id;
-          newSponsor.representative_first_name = req.body.rep_first_name;
-          newSponsor.representative_last_name = req.body.rep_last_name;
-          newSponsor.representative_email = req.body.rep_email;
+          newSponsor.representative_first_name = req.body.representative_first_name;
+          newSponsor.representative_last_name = req.body.representative_first_name;
 
           newSponsor.password = newSponsor.generateHash(password);
 
@@ -135,7 +135,7 @@ module.exports = function(passport) {
             throw err;
             return done(null, newSponsor);
           });
-          console.log('New sponsor was created: ' + company_name);
+          console.log('New sponsor was created: ' + representative_email);
         }
       });
     });
@@ -176,6 +176,44 @@ module.exports = function(passport) {
       // all is well, return successful user
       console.log('Login successful.');
       return done(null, user);
+    });
+  }));
+
+
+  // =========================================================================
+  // LOCAL SPONSOR LOGIN =====================================================
+  // =========================================================================
+  // we are using named strategies since we have one for login and one for signup
+  // by default, if there was no name, it would just be called 'local'
+
+  passport.use('sponsor-local-login', new LocalStrategy({
+    // by default, local strategy uses username and password, we will override with email
+    usernameField : 'representative_email',
+    passwordField : 'password',
+    passReqToCallback : true // allows us to pass back the entire request to the callback
+  },
+  function(req, representative_email, password, done) { // callback with email and password from our form
+    // find a user whose email is the same as the forms email
+    // we are checking to see if the user trying to login already exists
+    Sponsor.findOne({ 'representative_email' :  representative_email }, function(err, sponsor) {
+      // if there are any errors, return the error before anything else
+      if (err) {
+        console.log('There has been an error ' + err);
+        return done(err);
+      }
+      // if no sponsor is found, return the message
+      if (!sponsor) {
+        console.log('No sponsor found.');
+        return done(null, false, req.flash('loginMessage', 'No sponsor found.')); // req.flash is the way to set flashdata using connect-flash
+      }
+      // if the sponsor is found but the password is wrong
+      if (!sponsor.validPassword(password)) {
+        console.log('Oops! Wrong password.');
+        return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+      }
+      // all is well, return successful sponsor
+      console.log('Login successful.');
+      return done(null, sponsor);
     });
   }));
 };
