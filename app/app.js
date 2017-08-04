@@ -59,7 +59,7 @@ app.use(require('./routes/newstory'));
 app.use(require('./routes/speakers'));
 // app.use(require('./routes/usersignup'));
 // app.use(require('./routes/sponsorsignup'));
-app.use(require('./routes/userlogin'));
+// app.use(require('./routes/userlogin'));
 app.use(require('./routes/sponsorlogin'));
 app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
@@ -81,6 +81,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./routes/userlogin.js')(app, passport);
 require('./routes/usersignup.js')(app, passport);
 require('./routes/sponsorsignup.js')(app, passport);
 // END OF PASSPORT ==============

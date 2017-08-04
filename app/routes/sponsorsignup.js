@@ -11,7 +11,7 @@ module.exports = function(app, passport) {
 
   // process the signup form
   app.post('/sponsorsignup', passport.authenticate('sponsor-local-signup', {
-    successRedirect : '/login', // redirect to the secure profile section
+    successRedirect : '/sponsorlogin', // redirect to the secure profile section
     failureRedirect : '/sponsorsignup', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
   }));

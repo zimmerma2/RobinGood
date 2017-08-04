@@ -20,22 +20,22 @@ var UserSchema = Schema({
 });
 
 
-UserSchema.pre('save', function(next) {
-  var user = this;
-  var SALT_FACTOR = 5;
-
-  if (!user.isModified('password')) return next();
-
-  bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
-    if (err) return next(err);
-
-    bcrypt.hash(user.password, salt, null, function(err, hash) {
-      if (err) return next(err);
-      user.password = hash;
-      next();
-    });
-  });
-});
+// UserSchema.pre('save', function(next) {
+//   var user = this;
+//   var SALT_FACTOR = 8;
+//
+//   if (!user.isModified('password')) return next();
+//
+//   bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
+//     if (err) return next(err);
+//
+//     bcrypt.hash(user.password, salt, null, function(err, hash) {
+//       if (err) return next(err);
+//       user.password = hash;
+//       next();
+//     });
+//   });
+// });
 
 
 UserSchema
@@ -48,27 +48,13 @@ UserSchema
 //======================
 // generating a hash
 UserSchema.methods.generateHash = function(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-// // checking if password is valid
+// checking if password is valid
 UserSchema.methods.validPassword = function(password) {
-  var user = this;
-
-      // console.log('GIVEN PASSWORD: ' + hash);
-      console.log('STORED PASSWORD: ' + user.password + ' AND IS OF TYPE: ' + typeof(user.password));
-      return bcrypt.compareSync(bcrypt.hashSync(password, bcrypt.genSaltSync(8), null), user.password);
-
-
+    return bcrypt.compareSync(password, this.password);
 };
-
-// // checking if password is valid
-// UserSchema.methods.validPassword = function(password) {
-//   var user = this;
-//   return bcrypt.compareSync(password, user.password);
-// };
-
-
 
 //Export model
 module.exports = mongoose.model('User', UserSchema);

@@ -78,17 +78,6 @@ module.exports = function(passport) {
             throw err;
             return done(null, newUser);
           });
-
-          // bcrypt.hash(password, null, null, function(err, hash) {
-          //   if (err) return done(err);
-          //   newUser.password = hash;
-          //   newUser.save(function(err) {
-          //     if (err) return done(err);
-          //     console.log("New user was created: " + email);
-          //     return done(null, newUser);
-          //   });
-          // });
-
         }
       });
     });
@@ -182,22 +171,11 @@ module.exports = function(passport) {
       // if the user is found but the password is wrong
       if (!user.validPassword(password)) {
         console.log('Oops! Wrong password.');
-
         return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
       }
       // all is well, return successful user
+      console.log('Login successful.');
       return done(null, user);
-
-  //
-      // bcrypt.compare(password, user.password, function(err, res) {
-      //   if (err) return done(err);
-      //   var hash =
-      //   if(!res) {
-      //     console.log('Ooops!. Wrong Pass!');
-      //     return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-      //   }
-      //   return done(null, user);
-      // });
     });
   }));
 };
