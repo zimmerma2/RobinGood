@@ -25,6 +25,13 @@ var upload = multer({
   // fileFilter: imageFilter
 });
 
+function deleteUploaded(filePath) {
+  fs.unlink(filePath, function(err) {
+    if (err) throw err;
+    console.log("\nDeleted uploaded file at: ", filePath);
+  });
+}
+
 /* GET New Project page. */
 router.get('/newstory', function(req, res) {
   res.render('newstory.jade', { title: 'Create a New Story' });
@@ -63,6 +70,7 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res) {
 
   if (errors) {
     //If there are errors render the form again, passing the previously entered values and errors
+    deleteUploaded(req.file.path);
     res.render('newstory.jade', { title: 'Create a New Story', story: newStory, errors: errors});
     return;
   } else {
@@ -76,16 +84,13 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res) {
       if (err){
         console.log('\nError making new story.');
         // Delete uploaded file
-        fs.unlink(req.file.path, function(err) {
-          if (err) throw err;
-          console.log("\nDeleted thumbnail.");
-        });
-        throw err;
+        deleteUploaded(req.file.path);
+        return next(err);
       } else {
         // Created story, move thumbnail
         var uploadPath = uploadDir + newStory.thumbnail;
         fs.rename(req.file.path, uploadPath, function(err) {
-          if (err) throw err;
+          if (err) {return next(err)};
           console.log("\nStory created!\n\tID: ",newStory._id);
           console.log("\nMoved thumbnail to:", uploadPath);
         })

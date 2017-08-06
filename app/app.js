@@ -44,7 +44,7 @@ app.use(logger('combined', { stream: accessLogStream }));
 
 // app.set('port', process.env.PORT || 3000 );
 
-app.use(express.static(path.join(__dirname + '.../public')));
+app.use(express.static(path.join(__dirname + '/public')));
 
 app.locals.siteTitle = 'Robin Good';
 app.locals.allSpeakers = dataFile.speakers;
@@ -64,7 +64,6 @@ app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
 app.use(require('./routes/about'));
 app.use(require('./routes/story'));
-app.use(require('./routes/startacause'));
 
 app.locals.db = db;
 
