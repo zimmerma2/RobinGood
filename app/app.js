@@ -21,6 +21,11 @@ var passport = require('passport');
 var reload = require('reload');
 var session      = require('express-session');
 
+var simplemde = null;
+if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
+  simplemde = require('simplemde');
+}
+
 const port = process.env.PORT || 3000;
 
 var server = require('http').createServer(app);
@@ -43,6 +48,9 @@ app.use(logger('dev'));
 app.use(logger('combined', { stream: accessLogStream }));
 
 // app.set('port', process.env.PORT || 3000 );
+
+// Allows use of local js stored in modules
+app.use(express.static('node_modules'));
 
 app.use(express.static(path.join(__dirname + '/public')));
 

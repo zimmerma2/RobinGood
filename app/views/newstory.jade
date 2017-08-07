@@ -1,6 +1,9 @@
 extends layout
 
-block scripts
+block scriptsAfterContent
+  script(src="/simplemde/node_modules/codemirror/lib/codemirror.js")
+  link(rel="stylesheet" href="/simplemde/dist/simplemde.min.css")
+  script(src="/simplemde/dist/simplemde.min.js")
   script(src='/js/simplemde.js')
 
 block content
@@ -13,7 +16,7 @@ block content
       label(for='inputDescription') Story Description
       input#inputDescription.form-control(type='text', placeholder='Enter description...', name='description', required='true', value=(undefined===story ? '' : story.description))
     div.form-group
-      label(for='inputTargetDonation') Fung Goal
+      label(for='inputTargetDonation') Fund Goal
       input#inputTargetDonation.form-control(type='number', name='targetDonation', min=0, placeholder="$100", required='true', value=(undefined===story ? '' : story.target_donation))
     div.form-group
       label(for='inputEndDate') Closing Date
@@ -24,7 +27,7 @@ block content
       small#thumbnailHelp(class="form-text text-muted") Make sure its square!
     div.form-group
       label(for='storyBody') Story body
-      input#inputStoryBody.form-control(type='text', name='storyBody', placeholder='Tell your story.')
+      textarea#inputStoryBody.form-control(name='storyBody', placeholder='Tell your story.', data-provide="markdown", rows=10)
     div
       input#inputSubmit(type='submit', class="btn btn-primary", value='Submit')
       
@@ -34,5 +37,3 @@ block content
     ul
       for error in errors
         li=error.msg
-
-    

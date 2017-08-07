@@ -68,6 +68,10 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res) {
   newStory.target_donation = req.body.targetDonation;
   newStory.closing_date = req.body.endDate;
 
+
+  console.log("\n\nStory Body:", req.body.storyBody, "\n\n");
+
+
   if (errors) {
     //If there are errors render the form again, passing the previously entered values and errors
     deleteUploaded(req.file.path);

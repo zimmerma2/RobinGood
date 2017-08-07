@@ -7,7 +7,8 @@ var StorySchema = Schema({
   target_donation: {type: Number, required:true},
   opening_date: {type: Date, required: true},
   closing_date: {type: Date, required: true},
-  thumbnail: {type: String, required: true} // filepath to an image?
+  thumbnail: {type: String, required: true}
+  // body: {type: String, required: true}
   // category: {type: String}
   //verification_media
   // [{type: Schema.ObjectId, ref: 'Genre'}]
@@ -18,7 +19,7 @@ var StorySchema = Schema({
   // company: [{type: Schema.ObjectId, ref: 'Company', required: true}]
 });
 
-// Virtual for stpry's URL
+// Virtual for story's URL
 StorySchema
 .virtual('url')
 .get(function () {
