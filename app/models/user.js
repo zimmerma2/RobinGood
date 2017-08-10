@@ -11,6 +11,7 @@ var UserSchema = Schema({
     // total_donation: {type: Number, required: true},
     //view_history
     // account_creation_date: {type: Date, required: true},
+    isVerified: { type: Boolean, default: false },
     date_of_birth: {type: Date},
     nationality: {type: String},
     address: {type: String},
