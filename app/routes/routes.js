@@ -88,7 +88,7 @@ module.exports = function(app, passport) {
   // we will want this protected so you have to be logged in to visit
   // we will use route middleware to verify this (the isLoggedIn function)
   app.get('/forgot', function(req, res){
-    res.render('forgot.jade', {
+    res.render('forgot.pug', {
       user: req.user
     });
   });
@@ -162,7 +162,7 @@ module.exports = function(app, passport) {
         console.log('Password reset token is invalid or has expired.');
         return res.redirect('/forgot');
       }
-      res.render('reset.jade', {
+      res.render('reset.pug', {
         user: req.user
       });
     });

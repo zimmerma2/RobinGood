@@ -9,6 +9,7 @@ var expressValidator = require('express-validator');
 var fs = require('fs')
 var flash    = require('connect-flash');
 var logger = require("morgan");
+var marked = require('marked');
 var mg = require('nodemailer-mailgun-transport');
 var mongoose = require('mongoose');
 mongoose.connect(configDB.url); // connect to our database

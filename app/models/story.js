@@ -4,11 +4,11 @@ var Schema = mongoose.Schema;
 var StorySchema = Schema({
   title: {type: String, required: true, min:10, max:80},
   description: {type:String, required:true, max:1000},
-  target_donation: {type: Number, required:true},
-  opening_date: {type: Date, required: true},
-  closing_date: {type: Date, required: true},
-  thumbnail: {type: String, required: true}
-  // body: {type: String, required: true}
+  targetDonation: {type: Number, required:true},
+  openingDate: {type: Date, required: true},
+  closingDate: {type: Date, required: true},
+  thumbnail: {type: String, required: true},
+  body: {type: String, required: true}
   // category: {type: String}
   //verification_media
   // [{type: Schema.ObjectId, ref: 'Genre'}]

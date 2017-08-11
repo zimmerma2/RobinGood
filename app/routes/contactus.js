@@ -8,7 +8,7 @@ router.use(bodyParser.urlencoded({extended:false}));
 
 router.get('/contactus', function(req, res) {
 
-  res.render('contactus.jade', {
+  res.render('contactus.pug', {
     pageTitle: 'Contact Us',
     pageID: 'contactus'
   });
