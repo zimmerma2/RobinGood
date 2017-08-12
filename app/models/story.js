@@ -8,7 +8,8 @@ var StorySchema = Schema({
   openingDate: {type: Date, required: true},
   closingDate: {type: Date, required: true},
   thumbnail: {type: String, required: true},
-  body: {type: String, required: true}
+  body_md: {type: String, required: true},
+  body_html: {type: String, required: true}
   // category: {type: String}
   //verification_media
   // [{type: Schema.ObjectId, ref: 'Genre'}]

@@ -10,7 +10,7 @@ mixin story-card(story)
       p.card-text= story.description
 
 block content
-  h1 Projects
+  h1 Stories
   ul.list-unstyled
     for story in storylist
       +story-card(story)
