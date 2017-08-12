@@ -6,6 +6,11 @@ var LocalStrategy   = require('passport-local').Strategy;
 // load up the user model
 var User            = require('../models/user');
 var Sponsor         = require('../models/sponsor');
+var Token           = require('../models/token');
+
+var crypto = require('crypto');
+var nodemailer = require('nodemailer');
+var mg = require('nodemailer-mailgun-transport');
 
 var bcrypt          = require('bcrypt-nodejs');
 // expose this function to our app using module.exports
@@ -82,146 +87,180 @@ module.exports = function(passport) {
             console.log('There are errors.');
           }
           else {
+            var token = new Token({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
+            newUser.verification_token = token._id;
+
             newUser.save(function(err) {
+              if (err) { return res.status(500).send({ msg: err.message }); }
+
+              // Create a verification token for this user
+              // Save the verification token
+              token.save(function (err) {
+                if (err) { return res.status(500).send({ msg: err.message }); }
+
+                // Send the email
+                var auth = {
+                  auth: {
+                    api_key : 'key-cdff84af4df2afedfcbfae910a42c471',
+                    domain: 'sandbox9027eeecb61d473c9a14f12a8e4a846e.mailgun.org'
+                  }
+                }
+                var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+                var mailOptions = {
+                  from: 'no-reply@yourwebapplication.com',
+                  to: newUser.email,
+                  subject: 'Account Verification Token',
+                  text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+                  nodemailerMailgun.sendMail(mailOptions, function (err) {
+                    if (err) {
+                      console.log('Error: ' + err);
+                    }
+                    // res.status(200).send('A verification email has been sent to ' + newUser.email + '.');
+                  });
+                });
+              });
+            }
+          }
+        });
+      });
+    }));
+
+    // =========================================================================
+    // LOCAL SPONSOR SIGNUP ====================================================
+    // =========================================================================
+    // we are using named strategies since we have one for login and one for signup
+    // by default, if there was no name, it would just be called 'local'
+
+    passport.use('sponsor-local-signup', new LocalStrategy({
+      usernameField : 'representative_email',
+      passwordField: 'password',
+      passReqToCallback: true // allows us to pass back the entire request to the callback
+    },
+    function (req, representative_email, password, done) {
+      //asynch
+      process.nextTick(function() {
+        Sponsor.findOne({'representative_email' : representative_email}, function (err, sponsor) {
+          if(err){
+            console.log('Error: ' + err);
+            return done(err);
+          }
+          if(sponsor) {
+            console.log('A company with that name already exists.');
+            return done(null, false, req.flash('signupMessage', 'A company with that name already exists.'));
+          } else {
+            // checks for password and repeat_password match
+            if (password != req.body.repeat_password) {
+              console.log('Passwords do not match.');
+              return done(null, false, req.flash('signupMessage', 'Passwords do not match.'));
+            }
+
+            // UNCOMMENT later when views are good/usable
+            // req.checkBody('copmany_name','Company Name is required').notEmpty();
+            // req.checkBody('copmany_id','Company ID is required.').notEmpty();
+            // req.checkBody('representative_first_name','Representative first must be specified.').notEmpty();
+            // req.checkBody('representative_last_name','Representative last is required.').notEmpty();
+            // req.checkBody('representative_email','Representative email is required.').notEmpty();
+            // req.checkBody('password','Password is required.').notEmpty();
+
+            var newSponsor = new Sponsor();
+            newSponsor.representative_email = representative_email;
+            newSponsor.company_name = req.body.company_name;
+            newSponsor.company_id = req.body.company_id;
+            newSponsor.representative_first_name = req.body.representative_first_name;
+            newSponsor.representative_last_name = req.body.representative_first_name;
+
+            newSponsor.password = newSponsor.generateHash(password);
+
+            newSponsor.save(function(err) {
               if(err)
               throw err;
-              return done(null, newUser);
+              return done(null, newSponsor);
             });
+            console.log('New sponsor was created: ' + representative_email);
           }
-        }
+        });
       });
-    });
-  }));
+    }));
 
-  // =========================================================================
-  // LOCAL SPONSOR SIGNUP ====================================================
-  // =========================================================================
-  // we are using named strategies since we have one for login and one for signup
-  // by default, if there was no name, it would just be called 'local'
+    // =========================================================================
+    // LOCAL USER LOGIN ========================================================
+    // =========================================================================
+    // we are using named strategies since we have one for login and one for signup
+    // by default, if there was no name, it would just be called 'local'
 
-  passport.use('sponsor-local-signup', new LocalStrategy({
-    usernameField : 'representative_email',
-    passwordField: 'password',
-    passReqToCallback: true // allows us to pass back the entire request to the callback
-  },
-  function (req, representative_email, password, done) {
-    //asynch
-    process.nextTick(function() {
-      Sponsor.findOne({'representative_email' : representative_email}, function (err, sponsor) {
-        if(err){
-          console.log('Error: ' + err);
+    passport.use('user-local-login', new LocalStrategy({
+      // by default, local strategy uses username and password, we will override with email
+      usernameField : 'email',
+      passwordField : 'password',
+      passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
+    function(req, email, password, done) { // callback with email and password from our form
+      // find a user whose email is the same as the forms email
+      // we are checking to see if the user trying to login already exists
+      User.findOne({ 'email' :  email }, function(err, user) {
+        // if there are any errors, return the error before anything else
+        if (err)
+        return done(err);
+
+
+        // if no user is found, return the message
+        if (!user) {
+          console.log('No user found.');
+          return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+        }
+        // if the user is found but the password is wrong
+        if (!user.validPassword(password)) {
+          console.log('Oops! Wrong password.');
+          return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+        }
+
+        if (!user.isVerified) {
+          console.log ('User is not verified. Please verify your email.');
+          return done(null, false, req.flash('loginMEssage', 'User is not verified.'));
+        }
+        // all is well, return successful user
+        console.log('Login successful.');
+
+        return done(null, user);
+      });
+    }));
+
+
+    // =========================================================================
+    // LOCAL SPONSOR LOGIN =====================================================
+    // =========================================================================
+    // we are using named strategies since we have one for login and one for signup
+    // by default, if there was no name, it would just be called 'local'
+
+    passport.use('sponsor-local-login', new LocalStrategy({
+      // by default, local strategy uses username and password, we will override with email
+      usernameField : 'representative_email',
+      passwordField : 'password',
+      passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
+    function(req, representative_email, password, done) { // callback with email and password from our form
+      // find a user whose email is the same as the forms email
+      // we are checking to see if the user trying to login already exists
+      console.log('It gets here.');
+      Sponsor.findOne({ 'representative_email' :  representative_email }, function(err, sponsor) {
+        // if there are any errors, return the error before anything else
+        if (err) {
+          console.log('There has been an error ' + err);
           return done(err);
         }
-        if(sponsor) {
-          console.log('A company with that name already exists.');
-          return done(null, false, req.flash('signupMessage', 'A company with that name already exists.'));
-        } else {
-          // checks for password and repeat_password match
-          if (password != req.body.repeat_password) {
-            console.log('Passwords do not match.');
-            return done(null, false, req.flash('signupMessage', 'Passwords do not match.'));
-          }
-
-          // UNCOMMENT later when views are good/usable
-          // req.checkBody('copmany_name','Company Name is required').notEmpty();
-          // req.checkBody('copmany_id','Company ID is required.').notEmpty();
-          // req.checkBody('representative_first_name','Representative first must be specified.').notEmpty();
-          // req.checkBody('representative_last_name','Representative last is required.').notEmpty();
-          // req.checkBody('representative_email','Representative email is required.').notEmpty();
-          // req.checkBody('password','Password is required.').notEmpty();
-
-          var newSponsor = new Sponsor();
-          newSponsor.representative_email = representative_email;
-          newSponsor.company_name = req.body.company_name;
-          newSponsor.company_id = req.body.company_id;
-          newSponsor.representative_first_name = req.body.representative_first_name;
-          newSponsor.representative_last_name = req.body.representative_first_name;
-
-          newSponsor.password = newSponsor.generateHash(password);
-
-          newSponsor.save(function(err) {
-            if(err)
-            throw err;
-            return done(null, newSponsor);
-          });
-          console.log('New sponsor was created: ' + representative_email);
+        // if no sponsor is found, return the message
+        if (!sponsor) {
+          console.log('No sponsor found.');
+          return done(null, false, req.flash('loginMessage', 'No sponsor found.')); // req.flash is the way to set flashdata using connect-flash
         }
+        // if the sponsor is found but the password is wrong
+        if (!sponsor.validPassword(password)) {
+          console.log('Oops! Wrong password.');
+          return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+        }
+        // all is well, return successful sponsor
+        console.log('Login successful.');
+        return done(null, sponsor);
       });
-    });
-  }));
-
-  // =========================================================================
-  // LOCAL USER LOGIN ========================================================
-  // =========================================================================
-  // we are using named strategies since we have one for login and one for signup
-  // by default, if there was no name, it would just be called 'local'
-
-  passport.use('user-local-login', new LocalStrategy({
-    // by default, local strategy uses username and password, we will override with email
-    usernameField : 'email',
-    passwordField : 'password',
-    passReqToCallback : true // allows us to pass back the entire request to the callback
-  },
-  function(req, email, password, done) { // callback with email and password from our form
-    // find a user whose email is the same as the forms email
-    // we are checking to see if the user trying to login already exists
-    User.findOne({ 'email' :  email }, function(err, user) {
-      // if there are any errors, return the error before anything else
-      if (err)
-      return done(err);
-
-      // if no user is found, return the message
-      if (!user) {
-        console.log('No user found.');
-        return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
-      }
-      // if the user is found but the password is wrong
-      if (!user.validPassword(password)) {
-        console.log('Oops! Wrong password.');
-        return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-      }
-      // all is well, return successful user
-      console.log('Login successful.');
-      return done(null, user);
-    });
-  }));
-
-
-  // =========================================================================
-  // LOCAL SPONSOR LOGIN =====================================================
-  // =========================================================================
-  // we are using named strategies since we have one for login and one for signup
-  // by default, if there was no name, it would just be called 'local'
-
-  passport.use('sponsor-local-login', new LocalStrategy({
-    // by default, local strategy uses username and password, we will override with email
-    usernameField : 'representative_email',
-    passwordField : 'password',
-    passReqToCallback : true // allows us to pass back the entire request to the callback
-  },
-  function(req, representative_email, password, done) { // callback with email and password from our form
-    // find a user whose email is the same as the forms email
-    // we are checking to see if the user trying to login already exists
-    console.log('It gets here.');
-    Sponsor.findOne({ 'representative_email' :  representative_email }, function(err, sponsor) {
-      // if there are any errors, return the error before anything else
-      if (err) {
-        console.log('There has been an error ' + err);
-        return done(err);
-      }
-      // if no sponsor is found, return the message
-      if (!sponsor) {
-        console.log('No sponsor found.');
-        return done(null, false, req.flash('loginMessage', 'No sponsor found.')); // req.flash is the way to set flashdata using connect-flash
-      }
-      // if the sponsor is found but the password is wrong
-      if (!sponsor.validPassword(password)) {
-        console.log('Oops! Wrong password.');
-        return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-      }
-      // all is well, return successful sponsor
-      console.log('Login successful.');
-      return done(null, sponsor);
-    });
-  }));
-};
+    }));
+  };

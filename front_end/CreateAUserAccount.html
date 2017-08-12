@@ -38,24 +38,37 @@
     </head>
     <div class= 'container-fluid'>
 	<body>
+            <div class='row'>
+                <div class='col-md-offset-4 col-md-2 text-center'>
+                    <a href='CreateAUserAccount.html'>
+                        <button class='btn btn-info btn-md'>User</button>
+                    </a>
+                </div>
+                <div class='col-md-2'>
+                    <a href='CreateASponsorAccount.html'>
+                        <button class='btn btn-info btn-md'>Sponsor</button>
+                    </a>
+                </div>
+            </div>
+            <br>
             <!-- The Create an account stuff -->
             <div class='col-md-offset-4 col-md-4 text-center' id='User-Account-Info'>
                 <form action='putfilenamehere'>
                     <div class='well' id='Login-info'>
                         <h3>Log In Info</h3><br>
-                        Username: 
+                        <label for='username'>Username:</label> 
                         <input type='text' name="username"><br><br>
-                        Password: 
+                        <label for="password">Password:</label>
                         <input type='text' name='password'><br><br>
-                        Repeat Password: 
+                        <label for="repeat password">Repeat Password:</label>
                         <input type='text' name='repeat_password'>
                     </div>
                     <div class='well' id='Add-info'>
-                        Field 1: 
+                        <label for='field1'>Field 1:</label>
                         <input type='text' name="field1"><br><br>
-                        Field 2: 
+                        <label for='field2'>Field 2:</label>
                         <input type='text' name="field2"><br><br>
-                        Field 3: 
+                        <label for='field3'>Field 3:</label>
                         <input type='text' name="field3"><br><br>
                         <button class='btn-lg btn-success' type='submit' value='login'>Create Your Account!</button>
                     </div>

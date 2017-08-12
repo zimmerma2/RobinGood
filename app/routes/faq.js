@@ -10,4 +10,5 @@ router.get('/faq', function(req, res) {
 
 });
 
+
 module.exports = router;
