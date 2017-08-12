@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include partials/template/head.ejs %>
+</head>
+<body id="<%= pageID %>">
+  <% include partials/template/header.ejs %>
+</div>
+  <br/>
+  <form action="/confirmation/:token" method="post" class="form-horizontal" role="form" style="width: 50%;">
+    <p> Your email has been verified </p>
+  </form>
+</div>
+</body>
+</html>

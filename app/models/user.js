@@ -12,6 +12,7 @@ var UserSchema = Schema({
     //view_history
     // account_creation_date: {type: Date, required: true},
     isVerified: { type: Boolean, default: false },
+    verification_token: { type: String},
     date_of_birth: {type: Date},
     nationality: {type: String},
     address: {type: String},

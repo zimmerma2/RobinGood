@@ -4,89 +4,13 @@ module.exports = function(app, passport) {
   var crypto = require('crypto');
   var bcrypt = require('bcrypt-nodejs');
   var User = require('../models/user');
+  var Token = require('../models/token');
   var nodemailer = require('nodemailer');
   var mg = require('nodemailer-mailgun-transport');
-  // =====================================
-  // HOME PAGE (with login links) ========
-  // =====================================
-  // app.get('/', function(req, res) {
-  //     res.render('index.ejs'); // load the index.ejs file
-  // });
 
-  // =====================================
-  // USER LOGIN ==========================
-  // =====================================
-  // show the login form
-  // app.get('/userlogin', function(req, res) {
-  //
-  //   // render the page and pass in any flash data if it exists
-  //   res.render('userlogin.ejs', { message: req.flash('loginMessage') });
-  // });
-  //
-  // // process the login form
-  // app.post('/userlogin', passport.authenticate('user-local-login', {
-  //   successRedirect : '/', // redirect to the secure profile section
-  //   failureRedirect : '/userlogin', // redirect back to the signup page if there is an error
-  //   failureFlash : true // allow flash messages
-  // }));
-
-
-  // =====================================
-  // SPONSOR LOGIN =======================
-  // =====================================
-  // show the login form
-  // app.get('/sponsorlogin', function(req, res) {
-  //
-  //   // render the page and pass in any flash data if it exists
-  //   res.render('sponsorlogin.ejs', { message: req.flash('loginMessage') });
-  // });
-  //
-  // // process the login form
-  // app.post('/sponsorlogin', passport.authenticate('sponsor-local-login', {
-  //   successRedirect : '/', // redirect to the secure profile section
-  //   failureRedirect : '/sponsorlogin', // redirect back to the signup page if there is an error
-  //   failureFlash : true // allow flash messages
-  // }));
-
-
-  // =====================================
-  // USER SIGNUP =========================
-  // =====================================
-  // show the signup form
-  // app.get('/usersignup', function(req, res) {
-  //
-  //   // render the page and pass in any flash data if it exists
-  //   res.render('usersignup.ejs', { message: req.flash('signupMessage') });
-  // });
-  //
-  // // process the signup form
-  // app.post('/usersignup', passport.authenticate('user-local-signup', {
-  //   successRedirect : '/login', // redirect to the secure profile section
-  //   failureRedirect : '/usersignup', // redirect back to the signup page if there is an error
-  //   failureFlash : true // allow flash messages
-  // }));
-
-  // =====================================
-  // SPONSOR SIGNUP ======================
-  // =====================================
-  // show the signup form
-  // app.get('/sponsorsignup', function(req, res) {
-  //
-  //   // render the page and pass in any flash data if it exists
-  //   res.render('sponsorsignup.ejs', { message: req.flash('signupMessage') });
-  // });
-  //
-  // // process the signup form
-  // app.post('/sponsorsignup', passport.authenticate('sponsor-local-signup', {
-  //   successRedirect : '/login', // redirect to the secure profile section
-  //   failureRedirect : '/sponsorsignup', // redirect back to the signup page if there is an error
-  //   failureFlash : true // allow flash messages
-  // }));
-  // =====================================
-  // PROFILE SECTION =====================
-  // =====================================
-  // we will want this protected so you have to be logged in to visit
-  // we will use route middleware to verify this (the isLoggedIn function)
+// ================================
+// FORGOTTEN PASSWORD =============
+// ================================
   app.get('/forgot', function(req, res){
     res.render('forgot.jade', {
       user: req.user
@@ -155,6 +79,10 @@ module.exports = function(app, passport) {
     });
   });
 
+
+  // ================================
+  // FORGOTTEN RESET ================
+  // ================================
   app.get('/reset/:token', function(req, res) {
     User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now()} }, function(err, user) {
       if (!user) {
@@ -227,6 +155,52 @@ module.exports = function(app, passport) {
   });
 
 
+  // =====================================
+  // EMAIL VERIFICATION ==================
+  // =====================================
+  // app.get('/confirmation/:token', function(req, res) {
+  //
+  //   res.render('confirmation', {
+  //     pageTitle: 'confirmation',
+  //     pageID: 'confirmation'
+  //   });
+  // });
+  //
+  // app.post('confirmation/:token', function (req, res) {
+  //   console.log('ARGHHHHHHHHH');
+  //   // Check for validation errors
+  //   var errors = req.validationErrors();
+  //   if (errors) return res.status(400).send(errors);
+  //
+  //   // Find a matching token
+  //   Token.findOne({ token: req.body.token }, function (err, token) {
+  //     if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
+  //
+  //     // If we found a token, find a matching user
+  //     User.findOne({ _id: token._userId }, function (err, user) {
+  //       if (!user) {
+  //         console.log('Unable to find a user for this token.');
+  //         return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
+  //       }
+  //       if (user.isVerified) {
+  //         console.log('This user has already been verified.');
+  //         return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
+  //       }
+  //       // Verify and save the user
+  //       user.isVerified = true;
+  //       console.log('User with email ' + user.email + 'has been successfully verified: ' + user.isVerified);
+  //       user.save(function (err) {
+  //         if (err) { return res.status(500).send({ msg: err.message }); }
+  //         res.status(200).send("The account has been verified. Please log in.");
+  //       });
+  //     });
+  //   });
+  // });
+
+
+  // =====================================
+  // PROFILE SECTION =====================
+  // =====================================
   app.get('/profile', isLoggedIn, function(req, res) {
     res.render('profile.ejs', {
       user : req.user // get the user out of session and pass to template

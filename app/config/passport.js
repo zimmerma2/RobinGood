@@ -87,12 +87,13 @@ module.exports = function(passport) {
             console.log('There are errors.');
           }
           else {
+            var token = new Token({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
+            newUser.verification_token = token.token;
+
             newUser.save(function(err) {
               if (err) { return res.status(500).send({ msg: err.message }); }
 
               // Create a verification token for this user
-              var token = new Token({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
-
               // Save the verification token
               token.save(function (err) {
                 if (err) { return res.status(500).send({ msg: err.message }); }
@@ -201,6 +202,7 @@ module.exports = function(passport) {
         if (err)
         return done(err);
 
+
         // if no user is found, return the message
         if (!user) {
           console.log('No user found.');
@@ -211,8 +213,14 @@ module.exports = function(passport) {
           console.log('Oops! Wrong password.');
           return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
         }
+
+        if (!user.isVerified) {
+          console.log ('User is not verified. Please verify your email.');
+          return done(null, false, req.flash('loginMEssage', 'User is not verified.'));
+        }
         // all is well, return successful user
         console.log('Login successful.');
+
         return done(null, user);
       });
     }));

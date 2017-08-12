@@ -63,11 +63,12 @@ app.use(require('./routes/contactus'));
 app.use(require('./routes/about'));
 app.use(require('./routes/story'));
 app.use(require('./routes/startacause'));
+app.use(require('./routes/confirmation'));
 
 app.locals.db = db;
 
 // PASSPORT ================
-// configuration ===============================================================
+// configuration ====================``===========================================
 require('./config/passport')(passport); // pass passport for configuration
 
 // required for passport
