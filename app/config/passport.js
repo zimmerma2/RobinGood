@@ -88,7 +88,7 @@ module.exports = function(passport) {
           }
           else {
             var token = new Token({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
-            newUser.verification_token = token.token;
+            newUser.verification_token = token._id;
 
             newUser.save(function(err) {
               if (err) { return res.status(500).send({ msg: err.message }); }

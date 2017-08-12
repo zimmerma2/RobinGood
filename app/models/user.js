@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var Schema = mongoose.Schema;
+var Token = require('../models/token');
+
 
 var UserSchema = Schema({
     email: {type: String, unique: true, max: 35},
@@ -12,7 +14,7 @@ var UserSchema = Schema({
     //view_history
     // account_creation_date: {type: Date, required: true},
     isVerified: { type: Boolean, default: false },
-    verification_token: { type: String},
+    verification_token: { type: Schema.ObjectId, ref: 'Token'},
     date_of_birth: {type: Date},
     nationality: {type: String},
     address: {type: String},
