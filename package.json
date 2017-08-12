@@ -31,6 +31,7 @@
     "express-session": "latest",
     "express-validator": "^3.2.1",
     "form-validate": "0.0.7",
+    "jquery": "^3.2.1",
     "marked": "^0.3.6",
     "method-override": "~1.0.0",
     "mongoose": "^4.10.5",

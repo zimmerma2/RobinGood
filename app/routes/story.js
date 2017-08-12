@@ -11,17 +11,9 @@ router.get('/story/:id', function(req, res, next) {
     if (err) { return next(err);}
     var story = docs[0];
 
-    // Convert story body html to string for rendering on the client
-    const bodyPath = 'app/public/stories/markdown/' + story.body_md;
-    fs.readFile(bodyPath, 'utf8', function (err, data) {
-      if (err) { return next(err);}
-      console.log("Read story body from: ", bodyPath);
-
-      res.render('story.pug', {
-        title : story.title,
-        story : story,
-        storyBody_md : data
-      });
+    res.render('story.pug', {
+      title : story.title,
+      story : story,
     });
   });
 });

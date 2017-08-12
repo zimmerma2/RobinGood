@@ -1,7 +1,7 @@
 extends layout
 
 block scriptsHeader
-  script(src="/marked/lib/marked.js")
+  script(src="/jquery/dist/jquery.min.js")
 
 block content
   h1= story.title
@@ -22,4 +22,4 @@ block content
     article#storyBody
 
 block scriptsAfterContent
-  script document.getElementById('storyBody').innerHTML = marked( !{JSON.stringify(storyBody_md)} );
+  script $("#storyBody").load("/stories/html/" + !{JSON.stringify(story.body_html)});
