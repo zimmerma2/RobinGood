@@ -25,20 +25,28 @@ var upload = multer({
   // fileFilter: imageFilter
 });
 
+function deleteUploaded(filePath) {
+  fs.unlink(filePath, function(err) {
+    if (err) throw err;
+    console.log("\nDeleted uploaded file at: ", filePath);
+  });
+}
+
 /* GET New Project page. */
 router.get('/newstory', function(req, res) {
-  res.render('newstory.jade', { title: 'Create a New Story' });
+  res.render('newstory.pug', { title: 'Create a New Story' });
 });
 
 /* POST to Add Project Service */
-router.post('/addstory', upload.single('thumbnail'), function(req, res) {
-  var uploadDir = 'app/public/thumbnails/'
+router.post('/addstory', upload.single('thumbnail'), function(req, res, next) {
+  var uploadDir = 'app/public/'
 
   // Validate form entries
   req.checkBody('title','Story title is required.').notEmpty();
   req.checkBody('description','Story description is required.').notEmpty();
   req.checkBody('targetDonation','Target donation must be specified.').notEmpty();
   req.checkBody('endDate','Valid closing date is required.').isDate();
+  req.checkBody('storyBody','Story body is required.').notEmpty();
   // TODO validate thumbnail
 
   // Sanitize form entries
@@ -50,6 +58,8 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res) {
   req.sanitize('targetDonation').toFloat();
   req.sanitize('endDate').escape();
   req.sanitize('endDate').toDate();
+  req.sanitize('storyBody').escape();
+  req.sanitize('storyBody').trim();
 
   // Run the validators
   var errors = req.validationErrors();
@@ -58,37 +68,54 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res) {
   var newStory = new Story();
   newStory.title = req.body.title;
   newStory.description = req.body.description;
-  newStory.target_donation = req.body.targetDonation;
-  newStory.closing_date = req.body.endDate;
+  newStory.targetDonation = req.body.targetDonation;
+  newStory.closingDate = req.body.endDate;
+
+
+  console.log("\n\nStory Body:", req.body.storyBody, "\n\n");
+
 
   if (errors) {
     //If there are errors render the form again, passing the previously entered values and errors
-    res.render('newstory.jade', { title: 'Create a New Story', story: newStory, errors: errors});
+    deleteUploaded(req.file.path);
+    res.render('newstory.pug', { title: 'Create a New Story', story: newStory, errors: errors});
     return;
   } else {
     // Form data is valid, continue with processing
-    newStory.opening_date = new Date();
+    newStory.openingDate = new Date();
 
     var fileExtension = req.file.originalname.split('.').pop();
     newStory.thumbnail = newStory._id + '.' + fileExtension;
+    newStory.body = newStory._id + '.md';
 
     newStory.save(function(err) {
       if (err){
         console.log('\nError making new story.');
         // Delete uploaded file
-        fs.unlink(req.file.path, function(err) {
-          if (err) throw err;
-          console.log("\nDeleted thumbnail.");
-        });
-        throw err;
+        deleteUploaded(req.file.path);
+        return next(err);
       } else {
-        // Created story, move thumbnail
-        var uploadPath = uploadDir + newStory.thumbnail;
-        fs.rename(req.file.path, uploadPath, function(err) {
-          if (err) throw err;
-          console.log("\nStory created!\n\tID: ",newStory._id);
-          console.log("\nMoved thumbnail to:", uploadPath);
-        })
+        // Created story, save related files
+        var thumbPath = uploadDir + 'thumbnails/' + newStory.thumbnail;
+        var bodyPath = uploadDir + 'stories/' + newStory.body;
+
+        // Move thumbnail
+        fs.rename(req.file.path, thumbPath, function(err) {
+          if (err) {return next(err)};
+          console.log("\nStory created!\nID: ",newStory._id);
+          console.log("Moved thumbnail to: ", thumbPath);
+        });
+
+        // Save story body
+        fs.writeFile(bodyPath, req.body.storyBody, function (err) {
+          if (err) {
+            console.log('\nError writing file: ', bodyPath);
+            // Delete uploaded file
+            return next(err);
+        }
+        console.log('Wrote story body to: ', bodyPath)
+      });
+
         res.redirect('/story/' + newStory._id);
       }
     });

@@ -4,10 +4,11 @@ var Schema = mongoose.Schema;
 var StorySchema = Schema({
   title: {type: String, required: true, min:10, max:80},
   description: {type:String, required:true, max:1000},
-  target_donation: {type: Number, required:true},
-  opening_date: {type: Date, required: true},
-  closing_date: {type: Date, required: true},
-  thumbnail: {type: String, required: true} // filepath to an image?
+  targetDonation: {type: Number, required:true},
+  openingDate: {type: Date, required: true},
+  closingDate: {type: Date, required: true},
+  thumbnail: {type: String, required: true},
+  body: {type: String, required: true}
   // category: {type: String}
   //verification_media
   // [{type: Schema.ObjectId, ref: 'Genre'}]
@@ -18,7 +19,7 @@ var StorySchema = Schema({
   // company: [{type: Schema.ObjectId, ref: 'Company', required: true}]
 });
 
-// Virtual for stpry's URL
+// Virtual for story's URL
 StorySchema
 .virtual('url')
 .get(function () {

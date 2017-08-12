@@ -1,0 +1,25 @@
+extends layout
+
+block scriptsHeader
+  script(src="/marked/lib/marked.js")
+
+block content
+  h1= story.title
+  img(src="/thumbnails/" + story.thumbnail, align="middle")
+  h3= story.description
+  p 
+    b Target Donation:
+    = story.targetDonation
+  p 
+    b Start Date: 
+    time= story.openingDate
+  p 
+    b Closing Date: 
+    time= story.closingDate
+  div
+    h2 Story Body
+    hr
+    article#storyBody
+
+block scriptsAfterContent
+  script document.getElementById('storyBody').innerHTML = marked( !{JSON.stringify(storyBody_md)} );

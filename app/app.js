@@ -9,6 +9,7 @@ var expressValidator = require('express-validator');
 var fs = require('fs')
 var flash    = require('connect-flash');
 var logger = require("morgan");
+var marked = require('marked');
 var mg = require('nodemailer-mailgun-transport');
 var mongoose = require('mongoose');
 mongoose.connect(configDB.url); // connect to our database
@@ -20,6 +21,11 @@ var path = require('path');
 var passport = require('passport');
 var reload = require('reload');
 var session      = require('express-session');
+
+var simplemde = null;
+if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
+  simplemde = require('simplemde');
+}
 
 const port = process.env.PORT || 3000;
 
@@ -44,7 +50,10 @@ app.use(logger('combined', { stream: accessLogStream }));
 
 // app.set('port', process.env.PORT || 3000 );
 
-app.use(express.static(path.join(__dirname + '.../public')));
+// Allows use of local js stored in modules
+app.use(express.static('node_modules'));
+
+app.use(express.static(path.join(__dirname + '/public')));
 
 app.locals.siteTitle = 'Robin Good';
 app.locals.allSpeakers = dataFile.speakers;

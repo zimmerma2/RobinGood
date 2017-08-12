@@ -12,7 +12,7 @@ module.exports = function(app, passport) {
 // FORGOTTEN PASSWORD =============
 // ================================
   app.get('/forgot', function(req, res){
-    res.render('forgot.jade', {
+    res.render('forgot.pug', {
       user: req.user
     });
   });
@@ -90,7 +90,7 @@ module.exports = function(app, passport) {
         console.log('Password reset token is invalid or has expired.');
         return res.redirect('/forgot');
       }
-      res.render('reset.jade', {
+      res.render('reset.pug', {
         user: req.user
       });
     });
@@ -213,6 +213,19 @@ module.exports = function(app, passport) {
   app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
+  });
+
+  // =====================================
+  // 404 Not Found =======================
+  // =====================================
+  app.use(function(req, res, next){
+    res.status(404);
+
+    res.render('404.ejs', {
+      pageTitle: '404: Not Found',
+      pageID: '404'
+    });
+    return;
   });
 };
 

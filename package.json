@@ -22,15 +22,16 @@
     "bcrypt": "^1.0.2",
     "bcrypt-nodejs": "latest",
     "body-parser": "^1.17.2",
+    "codemirror": "^5.28.0",
     "connect-flash": "~0.1.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
-    "ejs": "~0.8.5",
+    "ejs": "^0.8.8",
     "express": "~4.15.2",
     "express-session": "latest",
     "express-validator": "^3.2.1",
     "form-validate": "0.0.7",
-    "jade": "^1.11.0",
+    "marked": "^0.3.6",
     "method-override": "~1.0.0",
     "mongoose": "^4.10.5",
     "monk": "^4.0.0",
@@ -43,8 +44,9 @@
     "passport-facebook": "~1.0.2",
     "passport-google-oauth": "~0.1.5",
     "passport-local": "~0.1.6",
-    "pug": "latest",
+    "pug": "^2.0.0-rc.3",
     "reload": "^1.1.7",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "simplemde": "^1.11.2"
   }
 }

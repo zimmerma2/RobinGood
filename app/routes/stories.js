@@ -5,7 +5,7 @@ var router = express.Router();
 /* GET StoryList page. */
 router.get('/stories', function(req, res) {
     Story.find({},{},function(e,docs){
-        res.render('storylist.jade', {
+        res.render('storylist.pug', {
             "storylist" : docs
         });
     });
