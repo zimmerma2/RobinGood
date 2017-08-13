@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended:false}));
 
-router.get('/confirmation/:token', function(req, res) {
+router.get('/user_verification/:token', function(req, res) {
   var token = req.params.token;
   Token.findOne({ token: token}, function(err, tokenObject){
     if(!tokenObject) console.log('no such token exists');
@@ -25,19 +25,24 @@ router.get('/confirmation/:token', function(req, res) {
         }
         else {
           console.log('User is found');
+          tokenObject.remove();
+          // user.verification_token = 0; // set the token to 0 after email has been verified and token has been deleted
           user.isVerified = true;
           console.log('User with email ' + user.email + 'has been successfully verified: ' + user.isVerified);
           user.save(function (err) {
-            if (err) { return res.status(500).send({ msg: err.message }); }
+            if (err) {
+              console.log('error: ' + err);
+              // return res.status(500).send({ msg: err.message });
+            }
             // res.status(200).send("The account has been verified. Please log in.");
           });
         }
       });
     }
   });
-  res.render('confirmation', {
-    pageTitle: 'confirmation',
-    pageID: 'confirmation'
+  res.render('user_verification', {
+    pageTitle: 'UserVerification',
+    pageID: 'user_verification'
   });
 });
 

@@ -110,7 +110,7 @@ module.exports = function(passport) {
                   from: 'no-reply@yourwebapplication.com',
                   to: newUser.email,
                   subject: 'Account Verification Token',
-                  text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+                  text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/user_verification\/' + token.token + '.\n' };
                   nodemailerMailgun.sendMail(mailOptions, function (err) {
                     if (err) {
                       console.log('Error: ' + err);
@@ -171,12 +171,51 @@ module.exports = function(passport) {
 
             newSponsor.password = newSponsor.generateHash(password);
 
-            newSponsor.save(function(err) {
-              if(err)
-              throw err;
-              return done(null, newSponsor);
-            });
-            console.log('New sponsor was created: ' + representative_email);
+            var errors = req.validationErrors();
+            if(errors) {
+              // TODO: add page reload + error message pop-up
+              console.log('There are errors.');
+            }
+            else {
+              var token = new Token({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
+              newSponsor.verification_token = token._id;
+
+              newSponsor.save(function(err) {
+                if (err) { return res.status(500).send({ msg: err.message }); }
+
+                // Create a verification token for this user
+                // Save the verification token
+                token.save(function (err) {
+                  if (err) { return res.status(500).send({ msg: err.message }); }
+
+                  // Send the email
+                  var auth = {
+                    auth: {
+                      api_key : 'key-cdff84af4df2afedfcbfae910a42c471',
+                      domain: 'sandbox9027eeecb61d473c9a14f12a8e4a846e.mailgun.org'
+                    }
+                  }
+                  var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+                  var mailOptions = {
+                    from: 'no-reply@yourwebapplication.com',
+                    to: newSponsor.email,
+                    subject: 'Account Verification Token',
+                    text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/user_verification\/' + token.token + '.\n' };
+                    nodemailerMailgun.sendMail(mailOptions, function (err) {
+                      if (err) {
+                        console.log('Error: ' + err);
+                      }
+                      // res.status(200).send('A verification email has been sent to ' + newSponsor.email + '.');
+                    });
+                  });
+                });
+              }
+            // newSponsor.save(function(err) {
+            //   if(err)
+            //   throw err;
+            //   return done(null, newSponsor);
+            // });
+            // console.log('New sponsor was created: ' + representative_email);
           }
         });
       });
@@ -257,6 +296,10 @@ module.exports = function(passport) {
         if (!sponsor.validPassword(password)) {
           console.log('Oops! Wrong password.');
           return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+        }
+        if (!sponsor.isVerified) {
+          console.log ('User is not verified. Please verify your email.');
+          return done(null, false, req.flash('loginMEssage', 'User is not verified.'));
         }
         // all is well, return successful sponsor
         console.log('Login successful.');
