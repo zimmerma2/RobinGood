@@ -1,6 +1,7 @@
 var express = require('express');
-var fs = require('fs');
 var bodyParser = require('body-parser');
+var fs = require('fs');
+var marked = require('marked');
 var multer = require('multer');
 var Story = require('../models/story');
 
@@ -86,7 +87,8 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res, next) {
 
     var fileExtension = req.file.originalname.split('.').pop();
     newStory.thumbnail = newStory._id + '.' + fileExtension;
-    newStory.body = newStory._id + '.md';
+    newStory.body_md = newStory._id + '.md';
+    newStory.body_html = newStory._id + '.html';
 
     newStory.save(function(err) {
       if (err){
@@ -97,7 +99,8 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res, next) {
       } else {
         // Created story, save related files
         var thumbPath = uploadDir + 'thumbnails/' + newStory.thumbnail;
-        var bodyPath = uploadDir + 'stories/' + newStory.body;
+        var bodyPath_md = uploadDir + 'stories/markdown/' + newStory.body_md;
+        var bodyPath_html = uploadDir + 'stories/html/' + newStory.body_html;
 
         // Move thumbnail
         fs.rename(req.file.path, thumbPath, function(err) {
@@ -106,16 +109,31 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res, next) {
           console.log("Moved thumbnail to: ", thumbPath);
         });
 
-        // Save story body
-        fs.writeFile(bodyPath, req.body.storyBody, function (err) {
+        // Save story body - markdown
+        fs.writeFile(bodyPath_md, req.body.storyBody, function (err) {
           if (err) {
-            console.log('\nError writing file: ', bodyPath);
+            console.log('\nError writing file: ', bodyPath_md);
             // Delete uploaded file
+            deleteUploaded(thumbPath);
             return next(err);
-        }
-        console.log('Wrote story body to: ', bodyPath)
-      });
+          }
+          console.log('Wrote story body markdown to: ', bodyPath_md)
+        });
 
+        // Save story body - html
+        var body_html = marked(req.body.storyBody);
+        fs.writeFile(bodyPath_html, body_html, function (err) {
+          if (err) {
+            console.log('\nError writing file: ', bodyPath_html);
+            // Delete uploaded files
+            deleteUploaded(thumbPath);
+            deleteUploaded(bodyPath_md);
+            return next(err);
+          }
+          console.log('Wrote story body html to: ', bodyPath_html)
+        });
+
+        // Story succesfully created, redirect user to new page
         res.redirect('/story/' + newStory._id);
       }
     });
