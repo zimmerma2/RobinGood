@@ -177,7 +177,7 @@ module.exports = function(passport) {
               console.log('There are errors.');
             }
             else {
-              var token = new Token({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
+              var token = new Token({ _userId: newSponsor._id, token: crypto.randomBytes(16).toString('hex') });
               newSponsor.verification_token = token._id;
 
               newSponsor.save(function(err) {
@@ -198,9 +198,9 @@ module.exports = function(passport) {
                   var nodemailerMailgun = nodemailer.createTransport(mg(auth));
                   var mailOptions = {
                     from: 'no-reply@yourwebapplication.com',
-                    to: newSponsor.email,
+                    to: newSponsor.representative_email,
                     subject: 'Account Verification Token',
-                    text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/user_verification\/' + token.token + '.\n' };
+                    text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/sponsor_verification\/' + token.token + '.\n' };
                     nodemailerMailgun.sendMail(mailOptions, function (err) {
                       if (err) {
                         console.log('Error: ' + err);
