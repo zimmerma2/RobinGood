@@ -1,10 +1,10 @@
 extends layout
 
 block scriptsAfterContent
-  script(src="/simplemde/node_modules/codemirror/lib/codemirror.js")
+  script(type='text/javascript', src="/simplemde/node_modules/codemirror/lib/codemirror.js")
   link(rel="stylesheet" href="/simplemde/dist/simplemde.min.css")
-  script(src="/simplemde/dist/simplemde.min.js")
-  script(src='/js/simplemde.js')
+  script(type='text/javascript', src="/simplemde/dist/simplemde.min.js")
+  script(type='text/javascript', src='/js/newstory_md.js')
 
 block content
   h1= title
@@ -16,7 +16,7 @@ block content
       for error in errors
         li=error.msg
   
-  form#formAddStory(name='addStory', method='post', action='/addstory', enctype="multipart/form-data")
+  form#formAddStory(name='addStory', method='post', action='/story/add', enctype="multipart/form-data")
     div.form-group
       label(for='inputTitle') Story Title
       input#inputTitle.form-control(type='text', placeholder='Story Title', name='title', required='true', value=(undefined===story ? '' : story.title))

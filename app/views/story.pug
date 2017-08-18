@@ -20,6 +20,9 @@ block content
     h2 Story Body
     hr
     article#storyBody
+  div(align='right')
+    hr
+    a.btn.btn-primary(href="/story/edit/" + story._id) Edit story
 
 block scriptsAfterContent
   script $("#storyBody").load("/stories/html/" + !{JSON.stringify(story.body_html)});
