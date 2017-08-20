@@ -73,18 +73,23 @@ app.use(require('./routes/about'));
 app.use(require('./routes/story'));
 app.use(require('./routes/user_verification'));
 app.use(require('./routes/sponsor_verification'));
+app.use(require('./routes/userprofile'));
 
 app.locals.db = db;
 
 // PASSPORT ================
-// configuration ====================``===========================================
-require('./config/passport')(passport); // pass passport for configuration
-
 // required for passport
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(session({
+  secret: 'my_session_secret',
+  saveUninitialized: true,
+  resave: true,
+}));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
+// configuration ====================``===========================================
+require('./config/passport')(passport); // pass passport for configuration
+
 
 // routes ======================================================================
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
