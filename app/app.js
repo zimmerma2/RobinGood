@@ -60,13 +60,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname,'views'));
 
 app.use(require('./routes/index'));
-app.use(require('./routes/stories'));
-app.use(require('./routes/newstory'));
-app.use(require('./routes/editstory'));
 app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
 app.use(require('./routes/about'));
-app.use(require('./routes/story'));
+app.use('/story', require('./routes/story'));
 app.use(require('./routes/user_verification'));
 app.use(require('./routes/sponsor_verification'));
 app.use(require('./routes/userprofile'));

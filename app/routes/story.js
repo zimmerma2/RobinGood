@@ -1,31 +1,45 @@
 var express = require('express');
-var mongoose = require('mongoose');
-var Story = require('../models/story');
 var router = express.Router();
+var multer = require('multer');
 
-var ObjectId = mongoose.Types.ObjectId;
+// Require controllers
+var story_controller = require('../controllers/storyController');
+
+//TODO place this in a better location
+//Only accept images
+// const imageFilter = function (req, file, cb) {
+//     // accept image only
+//     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+//         return cb(new Error('Only image files are allowed!'), false);
+//     }
+//     cb(null, true);
+// };
+
+var upload = multer({
+  dest: 'temp/',
+  limits: {fileSize: 1000000, files:1}
+  // fileFilter: imageFilter
+});
 
 /* GET Story page. */
-router.get('/story/:id([a-z0-9]+)', function(req, res, next) {
-  // Sanitize id
-  req.sanitize('id').escape();
-  req.sanitize('id').trim();
+router.get('/:id([a-z0-9]+)', story_controller.story_detail);
 
-  // Redirect to 404 if id is invalid
-  if (!ObjectId.isValid(req.params.id)) {
-    return next();
-  }
+/* GET Stories page. */
+router.get('/list', story_controller.story_list);
 
-  Story.findById(req.params.id, function(err,story) {
-    if (err) { return next(err);}
-    // If no story found, continue request
-    if (story === null) {return next();}
+/* GET New Story page. */
+router.get('/new', story_controller.story_new_get);
 
-    res.render('story.pug', {
-      title : story.title,
-      story : story,
-    });
-  });
-});
+/* POST to Add Story Service */
+router.post('/add', upload.single('thumbnail'), story_controller.story_new_post);
+
+/* GET Edit Story page. */
+router.get('/:id([a-z0-9]+)/update', story_controller.story_update_get);
+
+/* POST to Edit Story page. */
+router.post('/:id([a-z0-9]+)/update', story_controller.story_update_post);
+
+/* POST to Delete Story */
+router.post('/:id([a-z0-9]+)/delete', story_controller.story_delete);
 
 module.exports = router;

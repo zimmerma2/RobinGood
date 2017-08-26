@@ -22,7 +22,7 @@ block content
     article#storyBody
   div(align='right')
     hr
-    a.btn.btn-primary(href="/story/" + story._id + "/edit") Edit story
+    a.btn.btn-primary(href="/story/" + story._id + "/update") Edit story
 
 block scriptsAfterContent
   script $("#storyBody").load("/stories/html/" + !{JSON.stringify(story.body_html)});
