@@ -65,32 +65,17 @@ module.exports = function(passport) {
         if(err)
         return done(err);
         if(user) {
-          console.log('That email is already taken');
-          return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
-        } else {
-          // checks for password and repeat_password match
-          if (password != req.body.repeat_password) {
-            console.log('Passwords do not match.');
-            return done(null, false, req.flash('signupMessage', 'Passwords do not match.'));
-          }
-
-          // TODO: add more sanitization and validation
-          req.checkBody('email','Email is required.').notEmpty().isEmail();
-
-          var newUser = new User();
-          newUser.email = email;
-          newUser.password = newUser.generateHash(password);
-
-          var errors = req.validationErrors();
-          if(errors) {
-            // TODO: add page reload + error message pop-up
-            console.log('There are errors.');
+          // ADD RESENDING TOKENS - user is found (has already been created) but token had expired before
+          //   verified their email. Send another token
+          if(user.isVerified) {
+            console.log('That email is already taken');
+            return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
           }
           else {
-            var token = new Token({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
-            newUser.verification_token = token._id;
+            var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+            user.verification_token = token._id;
 
-            newUser.save(function(err) {
+            user.save(function(err) {
               if (err) { return res.status(500).send({ msg: err.message }); }
 
               // Create a verification token for this user
@@ -108,68 +93,32 @@ module.exports = function(passport) {
                 var nodemailerMailgun = nodemailer.createTransport(mg(auth));
                 var mailOptions = {
                   from: 'no-reply@yourwebapplication.com',
-                  to: newUser.email,
+                  to: user.email,
                   subject: 'Account Verification Token',
                   text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/user_verification\/' + token.token + '.\n' };
                   nodemailerMailgun.sendMail(mailOptions, function (err) {
                     if (err) {
                       console.log('Error: ' + err);
                     }
-                    // res.status(200).send('A verification email has been sent to ' + newUser.email + '.');
+                    // res.status(200).send('A verification email has been sent to ' + user.email + '.');
                   });
                 });
               });
             }
           }
-        });
-      });
-    }));
-
-    // =========================================================================
-    // LOCAL SPONSOR SIGNUP ====================================================
-    // =========================================================================
-    // we are using named strategies since we have one for login and one for signup
-    // by default, if there was no name, it would just be called 'local'
-
-    passport.use('sponsor-local-signup', new LocalStrategy({
-      usernameField : 'representative_email',
-      passwordField: 'password',
-      passReqToCallback: true // allows us to pass back the entire request to the callback
-    },
-    function (req, representative_email, password, done) {
-      //asynch
-      process.nextTick(function() {
-        Sponsor.findOne({'representative_email' : representative_email}, function (err, sponsor) {
-          if(err){
-            console.log('Error: ' + err);
-            return done(err);
-          }
-          if(sponsor) {
-            console.log('A company with that name already exists.');
-            return done(null, false, req.flash('signupMessage', 'A company with that name already exists.'));
-          } else {
+          else {
             // checks for password and repeat_password match
             if (password != req.body.repeat_password) {
               console.log('Passwords do not match.');
               return done(null, false, req.flash('signupMessage', 'Passwords do not match.'));
             }
 
-            // UNCOMMENT later when views are good/usable
-            // req.checkBody('copmany_name','Company Name is required').notEmpty();
-            // req.checkBody('copmany_id','Company ID is required.').notEmpty();
-            // req.checkBody('representative_first_name','Representative first must be specified.').notEmpty();
-            // req.checkBody('representative_last_name','Representative last is required.').notEmpty();
-            // req.checkBody('representative_email','Representative email is required.').notEmpty();
-            // req.checkBody('password','Password is required.').notEmpty();
+            // TODO: add more sanitization and validation
+            req.checkBody('email','Email is required.').notEmpty().isEmail();
 
-            var newSponsor = new Sponsor();
-            newSponsor.representative_email = representative_email;
-            newSponsor.company_name = req.body.company_name;
-            newSponsor.company_id = req.body.company_id;
-            newSponsor.representative_first_name = req.body.representative_first_name;
-            newSponsor.representative_last_name = req.body.representative_first_name;
-
-            newSponsor.password = newSponsor.generateHash(password);
+            var newUser = new User();
+            newUser.email = email;
+            newUser.password = newUser.generateHash(password);
 
             var errors = req.validationErrors();
             if(errors) {
@@ -177,10 +126,10 @@ module.exports = function(passport) {
               console.log('There are errors.');
             }
             else {
-              var token = new Token({ _userId: newSponsor._id, token: crypto.randomBytes(16).toString('hex') });
-              newSponsor.verification_token = token._id;
+              var token = new Token({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
+              newUser.verification_token = token._id;
 
-              newSponsor.save(function(err) {
+              newUser.save(function(err) {
                 if (err) { return res.status(500).send({ msg: err.message }); }
 
                 // Create a verification token for this user
@@ -198,112 +147,202 @@ module.exports = function(passport) {
                   var nodemailerMailgun = nodemailer.createTransport(mg(auth));
                   var mailOptions = {
                     from: 'no-reply@yourwebapplication.com',
-                    to: newSponsor.representative_email,
+                    to: newUser.email,
                     subject: 'Account Verification Token',
-                    text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/sponsor_verification\/' + token.token + '.\n' };
+                    text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/user_verification\/' + token.token + '.\n' };
                     nodemailerMailgun.sendMail(mailOptions, function (err) {
                       if (err) {
                         console.log('Error: ' + err);
                       }
-                      // res.status(200).send('A verification email has been sent to ' + newSponsor.email + '.');
+                      // res.status(200).send('A verification email has been sent to ' + newUser.email + '.');
                     });
                   });
                 });
               }
-            // newSponsor.save(function(err) {
-            //   if(err)
-            //   throw err;
-            //   return done(null, newSponsor);
-            // });
-            // console.log('New sponsor was created: ' + representative_email);
-          }
+            }
+          });
         });
-      });
-    }));
+      }));
 
-    // =========================================================================
-    // LOCAL USER LOGIN ========================================================
-    // =========================================================================
-    // we are using named strategies since we have one for login and one for signup
-    // by default, if there was no name, it would just be called 'local'
+      // =========================================================================
+      // LOCAL SPONSOR SIGNUP ====================================================
+      // =========================================================================
+      // we are using named strategies since we have one for login and one for signup
+      // by default, if there was no name, it would just be called 'local'
 
-    passport.use('user-local-login', new LocalStrategy({
-      // by default, local strategy uses username and password, we will override with email
-      usernameField : 'email',
-      passwordField : 'password',
-      passReqToCallback : true // allows us to pass back the entire request to the callback
-    },
-    function(req, email, password, done) { // callback with email and password from our form
-      // find a user whose email is the same as the forms email
-      // we are checking to see if the user trying to login already exists
-      User.findOne({ 'email' :  email }, function(err, user) {
-        // if there are any errors, return the error before anything else
-        if (err)
-        return done(err);
+      passport.use('sponsor-local-signup', new LocalStrategy({
+        usernameField : 'representative_email',
+        passwordField: 'password',
+        passReqToCallback: true // allows us to pass back the entire request to the callback
+      },
+      function (req, representative_email, password, done) {
+        //asynch
+        process.nextTick(function() {
+          Sponsor.findOne({'representative_email' : representative_email}, function (err, sponsor) {
+            if(err){
+              console.log('Error: ' + err);
+              return done(err);
+            }
+            if(sponsor) {
+              console.log('A company with that name already exists.');
+              return done(null, false, req.flash('signupMessage', 'A company with that name already exists.'));
+            } else {
+              // checks for password and repeat_password match
+              if (password != req.body.repeat_password) {
+                console.log('Passwords do not match.');
+                return done(null, false, req.flash('signupMessage', 'Passwords do not match.'));
+              }
+
+              // UNCOMMENT later when views are good/usable
+              // req.checkBody('copmany_name','Company Name is required').notEmpty();
+              // req.checkBody('copmany_id','Company ID is required.').notEmpty();
+              // req.checkBody('representative_first_name','Representative first must be specified.').notEmpty();
+              // req.checkBody('representative_last_name','Representative last is required.').notEmpty();
+              // req.checkBody('representative_email','Representative email is required.').notEmpty();
+              // req.checkBody('password','Password is required.').notEmpty();
+
+              var newSponsor = new Sponsor();
+              newSponsor.representative_email = representative_email;
+              newSponsor.company_name = req.body.company_name;
+              newSponsor.company_id = req.body.company_id;
+              newSponsor.representative_first_name = req.body.representative_first_name;
+              newSponsor.representative_last_name = req.body.representative_first_name;
+
+              newSponsor.password = newSponsor.generateHash(password);
+
+              var errors = req.validationErrors();
+              if(errors) {
+                // TODO: add page reload + error message pop-up
+                console.log('There are errors.');
+              }
+              else {
+                var token = new Token({ _userId: newSponsor._id, token: crypto.randomBytes(16).toString('hex') });
+                newSponsor.verification_token = token._id;
+
+                newSponsor.save(function(err) {
+                  if (err) { return res.status(500).send({ msg: err.message }); }
+
+                  // Create a verification token for this user
+                  // Save the verification token
+                  token.save(function (err) {
+                    if (err) { return res.status(500).send({ msg: err.message }); }
+
+                    // Send the email
+                    var auth = {
+                      auth: {
+                        api_key : 'key-cdff84af4df2afedfcbfae910a42c471',
+                        domain: 'sandbox9027eeecb61d473c9a14f12a8e4a846e.mailgun.org'
+                      }
+                    }
+                    var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+                    var mailOptions = {
+                      from: 'no-reply@yourwebapplication.com',
+                      to: newSponsor.representative_email,
+                      subject: 'Account Verification Token',
+                      text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/sponsor_verification\/' + token.token + '.\n' };
+                      nodemailerMailgun.sendMail(mailOptions, function (err) {
+                        if (err) {
+                          console.log('Error: ' + err);
+                        }
+                        // res.status(200).send('A verification email has been sent to ' + newSponsor.email + '.');
+                      });
+                    });
+                  });
+                }
+                // newSponsor.save(function(err) {
+                //   if(err)
+                //   throw err;
+                //   return done(null, newSponsor);
+                // });
+                // console.log('New sponsor was created: ' + representative_email);
+              }
+            });
+          });
+        }));
+
+        // =========================================================================
+        // LOCAL USER LOGIN ========================================================
+        // =========================================================================
+        // we are using named strategies since we have one for login and one for signup
+        // by default, if there was no name, it would just be called 'local'
+
+        passport.use('user-local-login', new LocalStrategy({
+          // by default, local strategy uses username and password, we will override with email
+          usernameField : 'email',
+          passwordField : 'password',
+          passReqToCallback : true // allows us to pass back the entire request to the callback
+        },
+        function(req, email, password, done) { // callback with email and password from our form
+          // find a user whose email is the same as the forms email
+          // we are checking to see if the user trying to login already exists
+          User.findOne({ 'email' :  email }, function(err, user) {
+            // if there are any errors, return the error before anything else
+            if (err)
+            return done(err);
 
 
-        // if no user is found, return the message
-        if (!user) {
-          console.log('No user found.');
-          return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
-        }
-        // if the user is found but the password is wrong
-        if (!user.validPassword(password)) {
-          console.log('Oops! Wrong password.');
-          return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-        }
+            // if no user is found, return the message
+            if (!user) {
+              console.log('No user found.');
+              return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+            }
+            // if the user is found but the password is wrong
+            if (!user.validPassword(password)) {
+              console.log('Oops! Wrong password.');
+              return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+            }
 
-        if (!user.isVerified) {
-          console.log ('User is not verified. Please verify your email.');
-          return done(null, false, req.flash('loginMEssage', 'User is not verified.'));
-        }
-        // all is well, return successful user
-        console.log('Login successful.');
+            if (!user.isVerified) {
+              console.log ('User is not verified. Please verify your email.');
+              return done(null, false, req.flash('loginMEssage', 'User is not verified.'));
+            }
+            // all is well, return successful user
+            console.log('Login successful.');
 
-        return done(null, user);
-      });
-    }));
+            return done(null, user);
+          });
+        }));
 
 
-    // =========================================================================
-    // LOCAL SPONSOR LOGIN =====================================================
-    // =========================================================================
-    // we are using named strategies since we have one for login and one for signup
-    // by default, if there was no name, it would just be called 'local'
+        // =========================================================================
+        // LOCAL SPONSOR LOGIN =====================================================
+        // =========================================================================
+        // we are using named strategies since we have one for login and one for signup
+        // by default, if there was no name, it would just be called 'local'
 
-    passport.use('sponsor-local-login', new LocalStrategy({
-      // by default, local strategy uses username and password, we will override with email
-      usernameField : 'representative_email',
-      passwordField : 'password',
-      passReqToCallback : true // allows us to pass back the entire request to the callback
-    },
-    function(req, representative_email, password, done) { // callback with email and password from our form
-      // find a user whose email is the same as the forms email
-      // we are checking to see if the user trying to login already exists
-      console.log('It gets here.');
-      Sponsor.findOne({ 'representative_email' :  representative_email }, function(err, sponsor) {
-        // if there are any errors, return the error before anything else
-        if (err) {
-          console.log('There has been an error ' + err);
-          return done(err);
-        }
-        // if no sponsor is found, return the message
-        if (!sponsor) {
-          console.log('No sponsor found.');
-          return done(null, false, req.flash('loginMessage', 'No sponsor found.')); // req.flash is the way to set flashdata using connect-flash
-        }
-        // if the sponsor is found but the password is wrong
-        if (!sponsor.validPassword(password)) {
-          console.log('Oops! Wrong password.');
-          return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-        }
-        if (!sponsor.isVerified) {
-          console.log ('User is not verified. Please verify your email.');
-          return done(null, false, req.flash('loginMEssage', 'User is not verified.'));
-        }
-        // all is well, return successful sponsor
-        console.log('Login successful.');
-        return done(null, sponsor);
-      });
-    }));
-  };
+        passport.use('sponsor-local-login', new LocalStrategy({
+          // by default, local strategy uses username and password, we will override with email
+          usernameField : 'representative_email',
+          passwordField : 'password',
+          passReqToCallback : true // allows us to pass back the entire request to the callback
+        },
+        function(req, representative_email, password, done) { // callback with email and password from our form
+          // find a user whose email is the same as the forms email
+          // we are checking to see if the user trying to login already exists
+          console.log('It gets here.');
+          Sponsor.findOne({ 'representative_email' :  representative_email }, function(err, sponsor) {
+            // if there are any errors, return the error before anything else
+            if (err) {
+              console.log('There has been an error ' + err);
+              return done(err);
+            }
+            // if no sponsor is found, return the message
+            if (!sponsor) {
+              console.log('No sponsor found.');
+              return done(null, false, req.flash('loginMessage', 'No sponsor found.')); // req.flash is the way to set flashdata using connect-flash
+            }
+            // if the sponsor is found but the password is wrong
+            if (!sponsor.validPassword(password)) {
+              console.log('Oops! Wrong password.');
+              return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+            }
+            if (!sponsor.isVerified) {
+              console.log ('User is not verified. Please verify your email.');
+              return done(null, false, req.flash('loginMEssage', 'User is not verified.'));
+            }
+            // all is well, return successful sponsor
+            console.log('Login successful.');
+            return done(null, sponsor);
+          });
+        }));
+      };
