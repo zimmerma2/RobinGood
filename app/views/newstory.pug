@@ -5,6 +5,7 @@ block scriptsAfterContent
   link(rel="stylesheet" href="/simplemde/dist/simplemde.min.css")
   script(type='text/javascript', src="/simplemde/dist/simplemde.min.js")
   script(type='text/javascript', src='/js/newstory_md.js')
+  script(type='text/javascript') simplemde.value(!{JSON.stringify(storyBody_md)})
 
 block content
   h1= title
@@ -28,7 +29,7 @@ block content
       input#inputTargetDonation.form-control(type='number', name='targetDonation', min=0, placeholder="$100", required='true', value=(undefined===story ? '' : story.targetDonation))
     div.form-group
       label(for='inputEndDate') Closing Date
-      input#inputEndDate.form-control(type='date', name='endDate', required='true', value=(undefined===story ? '' : story.closingDate))
+      input#inputEndDate.form-control(type='date', name='endDate', required='true', value=(undefined===story ? '' : story.closingDate.toISOString().slice(0,10)))
     div.form-group
       label(for='inputThumbnail') Upload a thumbnail
       input#inputThumbnail.form-control-file(type='file', name='thumbnail', aria-describedby="thumbnailHelp", accept='image/*', required='true')

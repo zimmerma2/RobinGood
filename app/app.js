@@ -35,7 +35,16 @@ app.use(bodyParser.json())
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
-app.use(expressValidator());
+
+// Define custom form validators
+app.use(expressValidator({
+ customValidators: {
+    isImage: function(filename) {
+        const result =  filename.match(/\.(jpg|jpeg|png|gif)$/);
+        return (result != null) ? true : false;
+    }
+ }
+}));
 
 // log requests to stdout and also
 // log HTTP requests to a file in combined format

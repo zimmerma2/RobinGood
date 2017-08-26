@@ -12,6 +12,7 @@ const uploadDir = 'app/public/'
 function imageFilter(req, file, cb) {
   // accept image only
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    console.error("Not an image file: ", file.originalname);
     cb(null, false);
   }
   cb(null, true);

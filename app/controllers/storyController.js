@@ -52,13 +52,24 @@ exports.story_new_get =  function story_new_get (req, res) {
  }
 
 exports.story_new_post =  function story_new_post (req, res, next) {
+  // TODO there must be a better way!
+  req.body.thumbnail = req.file.originalname;
+
+  console.log("\n\nBody:\n");
+  console.log(req.body);
+
+  console.log("\n\nFile:\n");
+  console.log(req.file.originalname);
+
+
   // Validate form entries
   req.checkBody('title','Story title is required.').notEmpty();
   req.checkBody('description','Story description is required.').notEmpty();
   req.checkBody('targetDonation','Target donation must be specified.').notEmpty();
   req.checkBody('endDate','Valid closing date is required.').isDate();
   req.checkBody('storyBody','Story body is required.').notEmpty();
-  // TODO validate thumbnail
+  req.checkBody('thumbnail','Thumbnail is required.').notEmpty();
+  req.checkBody('thumbnail','Thumbnail must be an image file.').isImage();
 
   // Sanitize form entries
   req.sanitize('title').escape();
@@ -75,6 +86,9 @@ exports.story_new_post =  function story_new_post (req, res, next) {
   // Run the validators
   var errors = req.validationErrors();
 
+  console.log("\n\nErrors:\n");
+  console.log(errors);
+
   //Create a story object with escaped and trimmed data.
   var newStory = new Story();
   newStory.title = req.body.title;
@@ -86,7 +100,12 @@ exports.story_new_post =  function story_new_post (req, res, next) {
     // TODO Look into validating form BEFORE uploading file
     //If there are errors render the form again, passing the previously entered values and errors
     storyHelpers.deleteUploaded(req.file.path);
-    res.render('newstory.pug', { title: 'Create a New Story', story: newStory, errors: errors});
+    res.render('newstory.pug', {
+      title :  'Create a New Story',
+      errors : errors,
+      story : newStory,
+      storyBody_md : req.body.storyBody
+    });
     return;
   } else {
     // Form data is valid, continue with processing
