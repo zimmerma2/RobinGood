@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title RobinGood About Us
+    title Profile Page
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/HeadFoot.css')
     .container.navbar.navbar-static-top
@@ -39,7 +39,7 @@ html
         li
           a(href='StartACause.html') Start A Cause
         li
-          a(href='/userlogin') Log In
+          a(href='Login.html') Log In
         li
           a(href='CreateAUserAccount.html') Create An Account
         li
@@ -48,37 +48,34 @@ html
             input(type='text', name='search')
   .container-fluid
     body
-      // The login stuff
       .row
-        .col-md-offset-4.col-md-4.text-center
-          h1 About Us
-          p
-            | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-          p
-            | Still have questions? Understandable, its all just filler text anyway.
-            | Go to our
-            a(href='FAQ.html') FAQ
-            |  page to go over frequently asked
-            |                         questions!
+        .col-md-offset-2.col-md-2
+          img(src='http://d33v4339jhl8k0.cloudfront.net/docs/assets/528e78fee4b0865bc066be5a/images/52af1e8ce4b074ab9e98f0e0/file-mxuiNezRS5.jpg')
+          h2 username123
+        .col-md-3.text-center
+          a(href='UserFavoritedStories.htm')
+            button.btn.btn-md.btn-info Favorite Stories
+        .col-md-3.text-center
+          a(href='UserDonationHistory.htm')
+            button.btn.btn-md.btn-info Donation History
+      br
       .row
-        .col-md-offset-4.col-md-4.text-center
-          h1 Contact Us!
-          h3 Question Form
-          .well
-            form(action='/')
-              .well
-                label(for='name') Name:
-                input(type='text', name='name')
-                br
-                br
-                label(for='email') Email:
-                input(type='text', name='email')
-                br
-                br
-                label(for='question') Put your question here:
-                #questionbox
-                  textarea(name='question', style='height: 200px;width: 331px;margin: 0px;resize: none;')
-                button.btn.btn-md.btn-success(type='submit', value='question') Submit your question!
+        .col-md-offset-4.col-md-6
+          p
+            strong Email:
+            | email@hotmail.com
+          br
+          p
+            strong Phone Number:
+            | (123) 456-7890
+          br
+          p
+            strong Etc:
+            | Etcetera
+          br
+          p
+            strong Etc:
+            | Etcetera
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')

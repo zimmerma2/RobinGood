@@ -6,7 +6,7 @@ var router = express.Router();
 router.get('/sponsor_profile/:id', function(req, res) {
   var candidateId = req.params.id;
   Sponsor.find({'_id': {'$eq': candidateId}},{},function(e,docs){
-      res.render('sponsorprofile', {
+      res.render('sponsor/sponsorprofile', {
         pageTitle: 'SPONSOR_PROFILE',
         pageID: 'sponsorprofile'
       });

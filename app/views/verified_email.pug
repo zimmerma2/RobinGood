@@ -1,9 +1,9 @@
 doctype html
 html
   head
-    title Profile Page
-    link(rel='stylesheet', href='bootstrap.css')
-    link(rel='stylesheet', href='HeadFoot.css')
+    title RobinGood Home
+    link(rel='stylesheet', href='/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/HeadFoot.css')
     .container.navbar.navbar-static-top
       a.navbar-brand(href='Home.html') RobinGood
       ul.nav.navbar-nav.navbar-right
@@ -48,37 +48,23 @@ html
             input(type='text', name='search')
   .container-fluid
     body
-      .row
-        .col-md-offset-2.col-md-2
-          img(src='http://d33v4339jhl8k0.cloudfront.net/docs/assets/528e78fee4b0865bc066be5a/images/52af1e8ce4b074ab9e98f0e0/file-mxuiNezRS5.jpg')
-          h2= user.email
-        .col-md-3.text-center
-          a(href='UserFavoritedStories.htm')
-            button.btn.btn-md.btn-info Favorite Stories
-        .col-md-3.text-center
-          a(href='UserDonationHistory.htm')
-            button.btn.btn-md.btn-info Donation History
+      // The login stuff
+      br
       br
       .row
-        .col-md-offset-4.col-md-6
-          p
-            strong Email:
-            = user.email
+        .col-md-offset-4.col-md-4.text-center
+          p Your email has been verified!
           br
           p
-            strong Phone Number:
-            | (123) 456-7890
+            | You can now explore
+            a(href='Home.html') RobinGood
+            |  and
+            |                         support your favorite causes!
           br
-          p
-            strong Etc:
-            | Etcetera
-          br
-          p
-            strong Etc:
-            | Etcetera
+          a(href='ProfilePage.html') Go to your profile
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
-      script(src='bootstrap.js')
+      script(src='/js/bootstrap.js')
   // Foot of the page
   .footer
     .row

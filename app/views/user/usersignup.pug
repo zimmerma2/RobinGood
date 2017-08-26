@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title RobinGood About Us
+    title RobinGood
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/HeadFoot.css')
     .container.navbar.navbar-static-top
@@ -39,46 +39,54 @@ html
         li
           a(href='StartACause.html') Start A Cause
         li
-          a(href='/userlogin') Log In
+          a(href='Login.html') Log In
         li
-          a(href='CreateAUserAccount.html') Create An Account
+          a(href='CreateAUserAccount') Create An Account
         li
           form(action='searchfile')
             button.btn.btn-info(type='submit') Search:
             input(type='text', name='search')
   .container-fluid
     body
-      // The login stuff
       .row
-        .col-md-offset-4.col-md-4.text-center
-          h1 About Us
-          p
-            | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-          p
-            | Still have questions? Understandable, its all just filler text anyway.
-            | Go to our
-            a(href='FAQ.html') FAQ
-            |  page to go over frequently asked
-            |                         questions!
-      .row
-        .col-md-offset-4.col-md-4.text-center
-          h1 Contact Us!
-          h3 Question Form
-          .well
-            form(action='/')
-              .well
-                label(for='name') Name:
-                input(type='text', name='name')
-                br
-                br
-                label(for='email') Email:
-                input(type='text', name='email')
-                br
-                br
-                label(for='question') Put your question here:
-                #questionbox
-                  textarea(name='question', style='height: 200px;width: 331px;margin: 0px;resize: none;')
-                button.btn.btn-md.btn-success(type='submit', value='question') Submit your question!
+        .col-md-offset-4.col-md-2.text-center
+          a(href='CreateAUserAccount.html')
+            button.btn.btn-info.btn-md User
+        .col-md-2
+          a(href='CreateASponsorAccount.html')
+            button.btn.btn-info.btn-md Sponsor
+      br
+      // The Create an account stuff
+      #User-Account-Info.col-md-offset-4.col-md-4.text-center
+        form(action='/usersignup', method='post')
+          #Login-info.well
+            h3 Log In Info
+            br
+            label(for='username') Username:
+            input(type='text', name='username')
+            br
+            br
+            label(for='password') Password:
+            input(type='password', name='password')
+            br
+            br
+            label(for='repeat password') Repeat Password:
+            input(type='password', name='repeat_password')
+          #Add-info.well
+            label(for='field1') Field 1:
+            input(type='text', name='field1')
+            br
+            br
+            label(for='field2') Field 2:
+            input(type='text', name='field2')
+            br
+            br
+            label(for='field3') Field 3:
+            input(type='text', name='field3')
+            br
+            br
+            button.btn-lg.btn-success.submit(type='submit', value='login') Create Your Account!
+          input(type='button', onclick="location.href='/userlogin';", value='Already have an account?')
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')

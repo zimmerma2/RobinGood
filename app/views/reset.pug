@@ -1,13 +1,101 @@
-extends layout
-
-block content
-  form(method='POST')
-    legend Reset Password
-    .form-group
-      label(for='password') New Password
-      input.form-control(type='password', name='password', value='', placeholder='New password', autofocus=true)
-    .form-group
-      label(for='confirm') Confirm Password
-      input.form-control(type='password', name='confirm', value='', placeholder='Confirm password')
-    .form-group
-      button.btn.btn-primary(type='submit') Update Password
+doctype html
+html
+  head
+    title RobinGood Home
+    link(rel='stylesheet', href='/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/HeadFoot.css')
+    .container.navbar.navbar-static-top
+      a.navbar-brand(href='Home.html') RobinGood
+      ul.nav.navbar-nav.navbar-right
+        li.dropdown
+          a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+            | Causes
+            span.caret
+          ul.dropdown-menu
+            li
+              a(href='MedicalCauses.html') Medical
+            li
+              a(href='AnimalCauses.html') Animals
+            li
+              a(href='VolunteerCauses.html') Volunteer
+            li
+              a(href='EducationCauses.html') Education
+            li
+              a(href='EmergenciesCauses.html') Emergencies
+            li
+              a(href='SportsCauses.html') Sports
+            li
+              a(href='MemorialCauses.html') Memorial
+            li
+              a(href='HealthCauses.html') Health
+            li
+              a(href='CommunityBuildingCauses.html') Community Building
+            li
+              a(href='OtherCauses.html') Other
+        li
+          a(href='AboutUs.html') About Us
+        li
+          a(href='Advertise.html') Advertise
+        li
+          a(href='StartACause.html') Start A Cause
+        li
+          a(href='Login.html') Log In
+        li
+          a(href='CreateAUserAccount.html') Create An Account
+        li
+          form(action='searchfile')
+            button.btn.btn-info(type='submit') Search:
+            input(type='text', name='search')
+  .container-fluid
+    body
+      // The login stuff
+      .col-md-offset-4.col-md-4.text-center
+        .well
+          h2 Set Your New Password
+          br
+          // Put filename here
+          form(action='putfilehere')
+            label(for='password') Password:
+            input(type='text', name='password')
+            br
+            br
+            label(for='password2') Repeat Password:
+            input(type='text', name='password2')
+            br
+            br
+            br
+            button.btn-lg.btn-success(type='submit', value='login') Set your new password!
+      // Connects to Bootstrap
+      script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+      script(src='/js/bootstrap.js')
+  // Foot of the page
+  .footer
+    .row
+      .col-md-4.text-center
+        h2 Links
+        ul.list-unstyled
+          li
+            a(href='Home.html') Home
+          li
+            a(href='Causes.html') Causes
+          li
+            a(href='StartACause.html') Start A Cause
+          li
+            a(href='Advertise.html') Advertise
+      .col-md-4.text-center
+        h2 About
+        ul.list-unstyled
+          li
+            a(href='AboutUs.html') About Us
+          li
+            a(href='FAQ.html') FAQ
+          li
+            a(href='facebook.com') Facebook
+          li
+            a(href='twitter.com') Twitter
+      .col-md-4.text-center
+        h2 Contact Us
+        ul.list-unstyled
+          li Grinnell, IA
+          li 1-555-robingo
+          li RobinGood@hotmail.com

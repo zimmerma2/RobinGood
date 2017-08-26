@@ -40,7 +40,7 @@ router.get('/sponsor_verification/:token', function(req, res) {
       });
     }
   });
-  res.render('sponsor_verification', {
+  res.render('sponsor/sponsor_verification', {
     pageTitle: 'SponsorVerification',
     pageID: 'sponsor_verification'
   });

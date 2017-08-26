@@ -63,7 +63,6 @@ app.use(require('./routes/index'));
 app.use(require('./routes/stories'));
 app.use(require('./routes/newstory'));
 app.use(require('./routes/editstory'));
-app.use(require('./routes/speakers'));
 app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
 app.use(require('./routes/about'));

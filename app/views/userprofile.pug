@@ -1,9 +1,0 @@
-<h1>Editing #{user.email}'s profile!</h1>
-form(method="POST", action="/user_profile/")
- input(type="hidden", name="_method", value="PUT")
- p Nickname:
-  input(type="text", name="nickname", value=user.nickname)
- p Nationality:
-  input(type="text", name="nationality", value=user.nationality)
- p
-  input(type="submit")
