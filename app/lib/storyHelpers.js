@@ -1,8 +1,37 @@
 var fs = require('fs');
 var marked = require('marked');
+var multer = require('multer');
 var Story = require('../models/story');
 
 const uploadDir = 'app/public/'
+
+/********************************
+* Functions for handling files *
+********************************/
+// Only accept images
+function imageFilter(req, file, cb) {
+  // accept image only
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    cb(null, false);
+  }
+  cb(null, true);
+};
+
+var imageUploader = multer({
+  dest: 'temp/',
+  limits: {fileSize: 1000000, files:1},
+  fileFilter: imageFilter
+});
+
+function moveThumbnail(newStory, req, res, next) {
+  const thumbPath = uploadDir + 'thumbnails/' + newStory.thumbnail;
+
+  fs.rename(req.file.path, thumbPath, function(err) {
+    if (err) {return next(err)};
+    console.log("\nStory created!\nID: " + newStory._id);
+    console.log("Moved thumbnail to: " + thumbPath);
+  });
+}
 
 function deleteUploaded(filePath) {
   if (fs.existsSync(filePath)) {
@@ -14,37 +43,6 @@ function deleteUploaded(filePath) {
     console.log("File, '" + filePath + "' does not exist.");
   }
 };
-
-function deleteStory(id) {
-  Story.findById(id, function deleteStoryFiles(err, story) {
-    if (err) throw err;
-    // If no story found, continue request
-    if (story === null) {
-      console.error("No story with the the _id '" + id + "' exists.");
-      return false;
-    }
-
-    deleteUploaded(uploadDir + 'thumbnails/' + story.thumbnail);
-    deleteUploaded(uploadDir + 'stories/markdown/' + story.body_md);
-    deleteUploaded(uploadDir + 'stories/html/' + story.body_html);
-  });
-
-  Story.findByIdAndRemove(id, function (err) {
-    if (err) throw err;
-    //Success - got to author list
-    console.log("Story with id '" + id + "' deleted succesfully.");
-  });
-};
-
-function moveThumbnail(newStory, req, res, next) {
-  const thumbPath = uploadDir + 'thumbnails/' + newStory.thumbnail;
-
-  fs.rename(req.file.path, thumbPath, function(err) {
-    if (err) {return next(err)};
-    console.log("\nStory created!\nID: " + newStory._id);
-    console.log("Moved thumbnail to: " + thumbPath);
-  });
-}
 
 function writeBodyFiles(newStory, req, res, next) {
   const bodyPath_md = uploadDir + 'stories/markdown/' + newStory.body_md;
@@ -75,7 +73,32 @@ function writeBodyFiles(newStory, req, res, next) {
   });
 };
 
+/***************************************
+* Functions for managing the database *
+***************************************/
+function deleteStory(id) {
+  Story.findById(id, function deleteStoryFiles(err, story) {
+    if (err) throw err;
+    // If no story found, continue request
+    if (story === null) {
+      console.error("No story with the the _id '" + id + "' exists.");
+      return false;
+    }
+
+    deleteUploaded(uploadDir + 'thumbnails/' + story.thumbnail);
+    deleteUploaded(uploadDir + 'stories/markdown/' + story.body_md);
+    deleteUploaded(uploadDir + 'stories/html/' + story.body_html);
+  });
+
+  Story.findByIdAndRemove(id, function (err) {
+    if (err) throw err;
+    //Success - got to author list
+    console.log("Story with id '" + id + "' deleted succesfully.");
+  });
+};
+
 // Export functions
+exports.imageUploader = imageUploader;
 exports.uploadDir = uploadDir;
 exports.deleteStory = deleteStory;
 exports.deleteUploaded = deleteUploaded;
