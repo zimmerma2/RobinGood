@@ -7,7 +7,7 @@ router.get('/user_profile/', function(req, res) {
   var candidateId = mongoose.Types.ObjectId(req.params.id);
   User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
     console.log('Initial value of nickname: ' + user.nickname);
-    res.render('userprofile.pug', {
+    res.render('user/userprofile.pug', {
       title : user.email,
       user : user,
     });

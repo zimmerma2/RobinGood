@@ -58,7 +58,7 @@ html
       br
       // The Create an account stuff
       #User-Account-Info.col-md-offset-4.col-md-4.text-center
-        form(action='putfilenamehere')
+        form(action='/userlogin', method='post')
           #Login-info.well
             h3 Log In Info
             br
@@ -67,11 +67,11 @@ html
             br
             br
             label(for='password') Password:
-            input(type='text', name='password')
+            input(type='password', name='password')
             br
             br
             label(for='repeat password') Repeat Password:
-            input(type='text', name='repeat_password')
+            input(type='password', name='repeat_password')
           #Add-info.well
             label(for='field1') Field 1:
             input(type='text', name='field1')
@@ -86,7 +86,7 @@ html
             br
             br
             button.btn-lg.btn-success(type='submit', value='login') Create Your Account!
-          input(type='button', onclick="location.href='Login.html';", value='Already have an account?')
+          input(type='button', onclick="location.href='/userlogin';", value='Already have an account?')
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')
