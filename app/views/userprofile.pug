@@ -1,9 +1,112 @@
-<h1>Editing #{user.email}'s profile!</h1>
-form(method="POST", action="/user_profile/")
- input(type="hidden", name="_method", value="PUT")
- p Nickname:
-  input(type="text", name="nickname", value=user.nickname)
- p Nationality:
-  input(type="text", name="nationality", value=user.nationality)
- p
-  input(type="submit")
+doctype html
+html
+  head
+    title Profile Page
+    link(rel='stylesheet', href='/css/bootstrap.css')
+    link(rel='stylesheet', href='/css/HeadFoot.css')
+    .container.navbar.navbar-static-top
+      a.navbar-brand(href='Home.html') RobinGood
+      ul.nav.navbar-nav.navbar-right
+        li.dropdown
+          a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+            | Causes
+            span.caret
+          ul.dropdown-menu
+            li
+              a(href='MedicalCauses.html') Medical
+            li
+              a(href='AnimalCauses.html') Animals
+            li
+              a(href='VolunteerCauses.html') Volunteer
+            li
+              a(href='EducationCauses.html') Education
+            li
+              a(href='EmergenciesCauses.html') Emergencies
+            li
+              a(href='SportsCauses.html') Sports
+            li
+              a(href='MemorialCauses.html') Memorial
+            li
+              a(href='HealthCauses.html') Health
+            li
+              a(href='CommunityBuildingCauses.html') Community Building
+            li
+              a(href='OtherCauses.html') Other
+        li
+          a(href='AboutUs.html') About Us
+        li
+          a(href='Advertise.html') Advertise
+        li
+          a(href='StartACause.html') Start A Cause
+        li
+          a(href='Login.html') Log In
+        li
+          a(href='CreateAUserAccount.html') Create An Account
+        li
+          form(action='searchfile')
+            button.btn.btn-info(type='submit') Search:
+            input(type='text', name='search')
+  .container-fluid
+    body
+      .row
+        .col-md-offset-2.col-md-2
+          img(src='http://d33v4339jhl8k0.cloudfront.net/docs/assets/528e78fee4b0865bc066be5a/images/52af1e8ce4b074ab9e98f0e0/file-mxuiNezRS5.jpg')
+          h2 username123
+        .col-md-3.text-center
+          a(href='UserFavoritedStories.htm')
+            button.btn.btn-md.btn-info Favorite Stories
+        .col-md-3.text-center
+          a(href='UserDonationHistory.htm')
+            button.btn.btn-md.btn-info Donation History
+      br
+      .row
+        .col-md-offset-4.col-md-6
+          p
+            strong Email:
+            | email@hotmail.com
+          br
+          p
+            strong Phone Number:
+            | (123) 456-7890
+          br
+          p
+            strong Etc:
+            | Etcetera
+          br
+          p
+            strong Etc:
+            | Etcetera
+      // Connects to Bootstrap
+      script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+      script(src='/js/bootstrap.js')
+  // Foot of the page
+  .footer
+    .row
+      .col-md-4.text-center
+        h2 Links
+        ul.list-unstyled
+          li
+            a(href='Home.html') Home
+          li
+            a(href='Causes.html') Causes
+          li
+            a(href='StartACause.html') Start A Cause
+          li
+            a(href='Advertise.html') Advertise
+      .col-md-4.text-center
+        h2 About
+        ul.list-unstyled
+          li
+            a(href='AboutUs.html') About Us
+          li
+            a(href='FAQ.html') FAQ
+          li
+            a(href='facebook.com') Facebook
+          li
+            a(href='twitter.com') Twitter
+      .col-md-4.text-center
+        h2 Contact Us
+        ul.list-unstyled
+          li Grinnell, IA
+          li 1-555-robingo
+          li RobinGood@hotmail.com
