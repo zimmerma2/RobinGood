@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Token = require('../models/token');
 var User = require('../models/user');
+var dateMath = require('date-arithmetic')
 
 var bodyParser = require('body-parser');
 router.use(bodyParser.json());
@@ -10,6 +11,7 @@ router.use(bodyParser.urlencoded({extended:false}));
 router.get('/user_verification/:token', function(req, res) {
   var token = req.params.token;
   Token.findOne({ token: token}, function(err, tokenObject){
+
     if(!tokenObject) console.log('no such token exists');
     else{
       var user_id = tokenObject._userId;
@@ -22,6 +24,10 @@ router.get('/user_verification/:token', function(req, res) {
         else if (user.isVerified) {
           console.log('This user has already been verified.');
           // return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
+        }
+        else if (dateMath.gt(Date.now(), tokenObject.expiresAt)) {
+          console.log('The token has expired.');
+          tokenObject.remove();
         }
         else {
           console.log('User is found');

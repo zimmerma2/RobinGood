@@ -111,7 +111,6 @@ module.exports = function(app, passport) {
             console.log('Passwords do not match.');
             return res.redirect('back');
         }
-
           user.password = user.generateHash(req.body.password);
           user.resetPasswordToken = undefined;
           user.resetPasswordExpires = undefined;
