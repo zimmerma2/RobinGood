@@ -54,7 +54,7 @@ html
           a(href='CreateAUserAccount.html')
             button.btn.btn-info User
         .col-md-2
-          a(href='CreateASponsorAccount.html')
+          a(href='/usersignup')
             button.btn.btn-info.text-center Sponsor
       br
       #User-Account-Info.col-md-offset-4.col-md-4.text-center
@@ -62,12 +62,16 @@ html
           #Login-info.well
             h3 Log In Info
             br
-            label(for='companyname') Company Name:
-            input(type='text', name='companyname')
+            label(for='representative_email') Representative Email:
+            input(type='text', name='representative_email')
             br
             br
-            label(for='companyid') Company ID:
-            input(type='text', name='companyid')
+            label(for='password') Password:
+            input(type='password', name='password')
+            br
+            br
+            label(for='repeat_password') Repeat Password:
+            input(type='password', name='repeat_password')
             br
             br
           #Add-info.well
@@ -75,20 +79,20 @@ html
             input(type='text', name='name')
             br
             br
-            label(for='email') Email:
-            input(type='text', name='email')
+            label(for='email') Company Name:
+            input(type='text', name='company_name')
             br
             br
-            label(for='password') Password:
-            input(type='text', name='password')
+            label(for='password') Representative First Name:
+            input(type='text', name='representative_first_name')
             br
             br
-            label(for='repeatpassword') Repeat Password:
-            input(type='text', name='repeatpassword')
+            label(for='repeatpassword') Representative Last Name:
+            input(type='text', name='representative_last_name')
             br
             br
-            label(for='number') Phone Number:
-            input(type='text', name='number')
+            label(for='number') Company ID:
+            input(type='text', name='company_id')
             br
             br
             button.btn-lg.btn-success(type='submit', value='login') Create Your Account!

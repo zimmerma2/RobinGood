@@ -41,52 +41,32 @@ html
         li
           a(href='Login.html') Log In
         li
-          a(href='CreateAUserAccount') Create An Account
+          a(href='CreateAUserAccount.html') Create An Account
         li
           form(action='searchfile')
             button.btn.btn-info(type='submit') Search:
             input(type='text', name='search')
   .container-fluid
     body
-      .row
-        .col-md-offset-4.col-md-2.text-center
-          a(href='usersignup')
-            button.btn.btn-info.btn-md User
-        .col-md-2
-          a(href='sponsorsignup')
-            button.btn.btn-info.btn-md Sponsor
-      br
-      // The Create an account stuff
-      #User-Account-Info.col-md-offset-4.col-md-4.text-center
-        form(action='/usersignup', method='post')
-          #Login-info.well
-            h3 Log In Info
+      // The login stuff
+      .col-md-offset-4.col-md-4.text-center
+        #login.well
+          h2 Log in
+          br
+          // Put filename here
+          form(action='/userlogin', method='post')
+            | User email
             br
-            label(for='email') Email:
             input(type='text', name='email')
             br
             br
-            label(for='password') Password:
-            input(type='password', name='password')
+            |                         Password
+            br
+            input(type='text', name='password')
             br
             br
-            label(for='repeat password') Repeat Password:
-            input(type='password', name='repeat_password')
-          #Add-info.well
-            label(for='field_1') Field 1:
-            input(type='text', name='field_1')
             br
-            br
-            label(for='field_2') Field 2:
-            input(type='text', name='field_2')
-            br
-            br
-            label(for='field_3') Field 3:
-            input(type='text', name='field_3')
-            br
-            br
-            button.btn.btn-lg.btn-success.submit(type='submit', value='Submit') Create Your Account!
-          input(type='button', onclick="location.href='/userlogin';", value='Already have an account?')
+            button.btn-lg.btn-success(type='submit', value='login') Log in!
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')
