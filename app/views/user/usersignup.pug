@@ -50,10 +50,10 @@ html
     body
       .row
         .col-md-offset-4.col-md-2.text-center
-          a(href='CreateAUserAccount.html')
+          a(href='usersignup')
             button.btn.btn-info.btn-md User
         .col-md-2
-          a(href='CreateASponsorAccount.html')
+          a(href='sponsorsignup')
             button.btn.btn-info.btn-md Sponsor
       br
       // The Create an account stuff
@@ -62,8 +62,8 @@ html
           #Login-info.well
             h3 Log In Info
             br
-            label(for='username') Username:
-            input(type='text', name='username')
+            label(for='email') Email:
+            input(type='text', name='email')
             br
             br
             label(for='password') Password:
@@ -73,19 +73,19 @@ html
             label(for='repeat password') Repeat Password:
             input(type='password', name='repeat_password')
           #Add-info.well
-            label(for='field1') Field 1:
-            input(type='text', name='field1')
+            label(for='field_1') Field 1:
+            input(type='text', name='field_1')
             br
             br
-            label(for='field2') Field 2:
-            input(type='text', name='field2')
+            label(for='field_2') Field 2:
+            input(type='text', name='field_2')
             br
             br
-            label(for='field3') Field 3:
-            input(type='text', name='field3')
+            label(for='field_3') Field 3:
+            input(type='text', name='field_3')
             br
             br
-            button.btn-lg.btn-success.submit(type='submit', value='login') Create Your Account!
+            button.btn.btn-lg.btn-success.submit(type='submit', value='Submit') Create Your Account!
           input(type='button', onclick="location.href='/userlogin';", value='Already have an account?')
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
