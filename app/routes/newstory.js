@@ -33,14 +33,14 @@ function deleteUploaded(filePath) {
   });
 }
 
-/* GET New Project page. */
-router.get('/newstory', function(req, res) {
+/* GET New Story page. */
+router.get('/story/new', function(req, res) {
   res.render('newstory.pug', { title: 'Create a New Story' });
 });
 
-/* POST to Add Project Service */
-router.post('/addstory', upload.single('thumbnail'), function(req, res, next) {
-  var uploadDir = 'app/public/'
+/* POST to Add Story Service */
+router.post('/story/add', upload.single('thumbnail'), function(req, res, next) {
+  const uploadDir = 'app/public/'
 
   // Validate form entries
   req.checkBody('title','Story title is required.').notEmpty();
@@ -71,10 +71,6 @@ router.post('/addstory', upload.single('thumbnail'), function(req, res, next) {
   newStory.description = req.body.description;
   newStory.targetDonation = req.body.targetDonation;
   newStory.closingDate = req.body.endDate;
-
-
-  console.log("\n\nStory Body:", req.body.storyBody, "\n\n");
-
 
   if (errors) {
     //If there are errors render the form again, passing the previously entered values and errors

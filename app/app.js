@@ -22,11 +22,6 @@ var passport = require('passport');
 var reload = require('reload');
 var session      = require('express-session');
 
-var simplemde = null;
-if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
-  simplemde = require('simplemde');
-}
-
 const port = process.env.PORT || 3000;
 
 var server = require('http').createServer(app);
@@ -50,6 +45,7 @@ app.use(logger('combined', { stream: accessLogStream }));
 
 // app.set('port', process.env.PORT || 3000 );
 
+// TODO Exposing all the installed modules is probably not safe. Should have a dedicated space for client-side scripts, or use cdn versions
 // Allows use of local js stored in modules
 app.use(express.static('node_modules'));
 
@@ -66,6 +62,7 @@ app.set('views', path.join(__dirname,'views'));
 app.use(require('./routes/index'));
 app.use(require('./routes/stories'));
 app.use(require('./routes/newstory'));
+app.use(require('./routes/editstory'));
 app.use(require('./routes/speakers'));
 app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
