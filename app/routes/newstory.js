@@ -1,9 +1,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var fs = require('fs');
-var marked = require('marked');
 var multer = require('multer');
 var Story = require('../models/story');
+
+// Local modules
+var storyHelpers = require('../lib/storyHelpers');
 
 var router = express.Router();
 
@@ -26,13 +27,6 @@ var upload = multer({
   // fileFilter: imageFilter
 });
 
-function deleteUploaded(filePath) {
-  fs.unlink(filePath, function(err) {
-    if (err) throw err;
-    console.log("\nDeleted uploaded file at: ", filePath);
-  });
-}
-
 /* GET New Story page. */
 router.get('/story/new', function(req, res) {
   res.render('newstory.pug', { title: 'Create a New Story' });
@@ -40,7 +34,6 @@ router.get('/story/new', function(req, res) {
 
 /* POST to Add Story Service */
 router.post('/story/add', upload.single('thumbnail'), function(req, res, next) {
-  const uploadDir = 'app/public/'
 
   // Validate form entries
   req.checkBody('title','Story title is required.').notEmpty();
@@ -73,15 +66,16 @@ router.post('/story/add', upload.single('thumbnail'), function(req, res, next) {
   newStory.closingDate = req.body.endDate;
 
   if (errors) {
+    // TODO Look into validating form BEFORE uploading file
     //If there are errors render the form again, passing the previously entered values and errors
-    deleteUploaded(req.file.path);
+    storyHelpers.deleteUploaded(req.file.path);
     res.render('newstory.pug', { title: 'Create a New Story', story: newStory, errors: errors});
     return;
   } else {
     // Form data is valid, continue with processing
     newStory.openingDate = new Date();
 
-    var fileExtension = req.file.originalname.split('.').pop();
+    const fileExtension = req.file.originalname.split('.').pop();
     newStory.thumbnail = newStory._id + '.' + fileExtension;
     newStory.body_md = newStory._id + '.md';
     newStory.body_html = newStory._id + '.html';
@@ -90,44 +84,11 @@ router.post('/story/add', upload.single('thumbnail'), function(req, res, next) {
       if (err){
         console.log('\nError making new story.');
         // Delete uploaded file
-        deleteUploaded(req.file.path);
+        storyHelpers.deleteUploaded(req.file.path);
         return next(err);
       } else {
         // Created story, save related files
-        var thumbPath = uploadDir + 'thumbnails/' + newStory.thumbnail;
-        var bodyPath_md = uploadDir + 'stories/markdown/' + newStory.body_md;
-        var bodyPath_html = uploadDir + 'stories/html/' + newStory.body_html;
-
-        // Move thumbnail
-        fs.rename(req.file.path, thumbPath, function(err) {
-          if (err) {return next(err)};
-          console.log("\nStory created!\nID: ",newStory._id);
-          console.log("Moved thumbnail to: ", thumbPath);
-        });
-
-        // Save story body - markdown
-        fs.writeFile(bodyPath_md, req.body.storyBody, function (err) {
-          if (err) {
-            console.log('\nError writing file: ', bodyPath_md);
-            // Delete uploaded file
-            deleteUploaded(thumbPath);
-            return next(err);
-          }
-          console.log('Wrote story body markdown to: ', bodyPath_md)
-        });
-
-        // Save story body - html
-        var body_html = marked(req.body.storyBody);
-        fs.writeFile(bodyPath_html, body_html, function (err) {
-          if (err) {
-            console.log('\nError writing file: ', bodyPath_html);
-            // Delete uploaded files
-            deleteUploaded(thumbPath);
-            deleteUploaded(bodyPath_md);
-            return next(err);
-          }
-          console.log('Wrote story body html to: ', bodyPath_html)
-        });
+        storyHelpers.writeStoryFiles(newStory, req, res, next);
 
         // Story succesfully created, redirect user to new page
         res.redirect('/story/' + newStory._id);
