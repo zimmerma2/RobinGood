@@ -58,7 +58,7 @@ html
       br
       // The Create an account stuff
       #User-Account-Info.col-md-offset-4.col-md-4.text-center
-        form(action='/userlogin', method='post')
+        form(action='/usersignup', method='post')
           #Login-info.well
             h3 Log In Info
             br
@@ -85,7 +85,7 @@ html
             input(type='text', name='field3')
             br
             br
-            button.btn-lg.btn-success(type='submit', value='login') Create Your Account!
+            button.btn-lg.btn-success.submit(type='submit', value='login') Create Your Account!
           input(type='button', onclick="location.href='/userlogin';", value='Already have an account?')
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
