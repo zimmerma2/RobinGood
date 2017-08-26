@@ -20,26 +20,22 @@ function story_edit_get (req, res, next) {
     return next();
   }
 
-  Story.findById(req.params.id, story_edit_load);
-};
+  Story.findById(req.params.id, function (err,story) {
+    if (err) { return next(err);}
+    // If no story found, continue request
+    if (story === null) {return next();}
 
-function story_edit_load (err,story) {
-  if (err) { return next(err);}
-  // If no story found, continue request
-  if (story === null) {return next();}
+    fs.readFile('app/public/stories/markdown/' + story.body_md, 'utf8', function (err,data) {
+      if (err) {
+        return next(err);
+      }
 
-  fs.readFile('app/public/stories/markdown/' + story.body_md, 'utf8', story_edit_render);
-}
-
-function story_edit_render (err,data) {
-  if (err) {
-    return next(err);
-  }
-
-  res.render('editstory.pug', {
-    title : 'Edit Story',
-    story : story,
-    storyBody_md : data
+      res.render('editstory.pug', {
+        title : 'Edit Story',
+        story : story,
+        storyBody_md : data
+      });
+    });
   });
 };
 
