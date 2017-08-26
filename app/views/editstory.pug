@@ -17,7 +17,7 @@ block content
       for error in errors
         li=error.msg
   
-  form#formEditStory(name='editStory', method='post', action='/story/edit', enctype="multipart/form-data")
+  form#formEditStory(name='editStory', method='post', action='/story/' + story._id + '/edit', enctype="multipart/form-data")
     div.form-group
       input#storyID(type='hidden', name='storyID', required='true', value=story._id)
     div.form-group
@@ -41,4 +41,10 @@ block content
       textarea#inputStoryBody.form-control(name='storyBody', placeholder='Tell your story.', rows=10)
     div
       input#inputSubmit(type='submit', class="btn btn-primary", value='Submit')
+  hr      
+  form#formDeleteStory(name='deleteStory', method='post', action='/story/' + story._id + '/delete')
+    div.form-group
+      input#storyID(type='hidden', name='storyID', required='true', value=story._id)
+      input#inputDelete.btn.btn-danger(type='submit', value='Delete')
+    
       
