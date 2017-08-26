@@ -95,8 +95,9 @@ module.exports = function(app, passport) {
         console.log('Password reset token is invalid or has expired = ' + req.params.token);
         return res.redirect('/forgot');
       }
+      console.log(user.resetPasswordToken);
       res.render('passReset/newPassword.pug', {
-        user: req.user
+        user: user
       });
     });
   });
@@ -104,10 +105,10 @@ module.exports = function(app, passport) {
   app.post('/reset/:token', function(req, res) {
     async.waterfall([
       function(done) {
-        User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+        User.findOne({ resetPasswordToken: req.params.token}, function(err, user) {
           if (!user) {
             req.flash('error', 'Password reset token is invalid or has expired.');
-            console.log('Password reset token is invalid or has expired.');
+            console.log('Password reset token is invalid or has expired. = ' + req.params.token);
             return res.redirect('back');
           }
 
