@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title RobinGood Home
+    title Create A User Account
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/HeadFoot.css')
     .container.navbar.navbar-static-top
@@ -48,23 +48,13 @@ html
             input(type='text', name='search')
   .container-fluid
     body
-      // The login stuff
-      .col-md-offset-4.col-md-4.text-center
-        .well
-          h2 Set Your New Password
-          br
-          // Put filename here
-          form(action='putfilehere')
-            label(for='password') Password:
-            input(type='text', name='password')
-            br
-            br
-            label(for='password2') Repeat Password:
-            input(type='text', name='password2')
-            br
-            br
-            br
-            button.btn-lg.btn-success(type='submit', value='login') Set your new password!
+      .row.col-md-offset-4.col-md-4.text-center
+        h2 An Email Has Been Sent
+      br
+      .row.col-md-offset-3.col-md-6.text-center
+        p
+          | Check your email for further instructions to change your
+          | password.
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')

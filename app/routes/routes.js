@@ -12,7 +12,7 @@ module.exports = function(app, passport) {
 // FORGOTTEN PASSWORD =============
 // ================================
   app.get('/forgot', function(req, res){
-    res.render('forgot.pug', {
+    res.render('passReset/resetRequest.pug', {
       user: req.user
     });
   });
@@ -79,18 +79,23 @@ module.exports = function(app, passport) {
     });
   });
 
+  app.get('/reset_email_sent', function(req, res){
+    res.render('passReset/resetEmailSent.pug', {
+      user: req.user
+    });
+  });
 
   // ================================
   // FORGOTTEN RESET ================
   // ================================
   app.get('/reset/:token', function(req, res) {
-    User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now()} }, function(err, user) {
+    User.findOne({ resetPasswordToken: req.params.token}, function(err, user) {
       if (!user) {
         req.flash('error', 'Password reset token is invalid or has expired.');
-        console.log('Password reset token is invalid or has expired.');
+        console.log('Password reset token is invalid or has expired = ' + req.params.token);
         return res.redirect('/forgot');
       }
-      res.render('reset.pug', {
+      res.render('passReset/newPassword.pug', {
         user: req.user
       });
     });

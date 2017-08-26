@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title RobinGood
+    title RobinGood Home
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/HeadFoot.css')
     .container.navbar.navbar-static-top
@@ -48,27 +48,17 @@ html
             input(type='text', name='search')
   .container-fluid
     body
-      // The login stuff
       .col-md-offset-4.col-md-4.text-center
-        #login.well
-          h2 Log in
+        .well
+          h2 Password Reset Request
           br
-          // Put filename here
-          form(action='/userlogin/', method='post')
-            | User email
-            br
+          form(action='/forgot', method='post')
+            label(for='email') Email:
             input(type='text', name='email')
             br
             br
-            | Password
-            br
-            input(type='password', name='password')
-            br
-            br
-            button.btn-lg.btn-success(type='submit', value='Submit') Log in!
-            br
-            a(href='/forgot') Forgot Your Password?
-            br
+            a(href='CheckYourEmail.html')
+              button.btn-lg.btn-success(type='submit', value='Submit') Send me an email
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')
