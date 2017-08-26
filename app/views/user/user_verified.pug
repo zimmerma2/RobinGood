@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Create A Sponsor Account
+    title RobinGood Home
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/HeadFoot.css')
     .container.navbar.navbar-static-top
@@ -48,55 +48,20 @@ html
             input(type='text', name='search')
   .container-fluid
     body
-      // The Create an account stuff
-      .row
-        .col-md-offset-4.col-md-2.text-center
-          a(href='CreateAUserAccount.html')
-            button.btn.btn-info User
-        .col-md-2
-          a(href='/usersignup')
-            button.btn.btn-info.text-center Sponsor
+      // The login stuff
       br
-      #User-Account-Info.col-md-offset-4.col-md-4.text-center
-        form(action='/sponsorsignup', method='post')
-          #Login-info.well
-            h3 Log In Info
-            br
-            label(for='representative_email') Representative Email:
-            input(type='text', name='representative_email')
-            br
-            br
-            label(for='password') Password:
-            input(type='password', name='password')
-            br
-            br
-            label(for='repeat_password') Repeat Password:
-            input(type='password', name='repeat_password')
-            br
-            br
-          #Add-info.well
-            label(for='name') Name:
-            input(type='text', name='name')
-            br
-            br
-            label(for='email') Company Name:
-            input(type='text', name='company_name')
-            br
-            br
-            label(for='password') Representative First Name:
-            input(type='text', name='representative_first_name')
-            br
-            br
-            label(for='repeatpassword') Representative Last Name:
-            input(type='text', name='representative_last_name')
-            br
-            br
-            label(for='number') Company ID:
-            input(type='text', name='company_id')
-            br
-            br
-            button.btn-lg.btn-success(type='submit', value='Submit') Create Your Account!
-          input(type='button', onclick="location.href='Login.html';", value='Already have an account?')
+      br
+      .row
+        .col-md-offset-4.col-md-4.text-center
+          p Your email has been verified!
+          br
+          p
+            | You can now explore 
+            a(href='Home.html') RobinGood
+            |  and
+            |                         support your favorite causes!
+          br
+          a(href='ProfilePage.html') Go to your profile
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')

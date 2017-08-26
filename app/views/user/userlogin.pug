@@ -54,19 +54,19 @@ html
           h2 Log in
           br
           // Put filename here
-          form(action='/userlogin', method='post')
+          form(action='/userlogin/', method='post')
             | User email
             br
             input(type='text', name='email')
             br
             br
-            |                         Password
+            | Password
             br
-            input(type='text', name='password')
+            input(type='password', name='password')
             br
             br
             br
-            button.btn-lg.btn-success(type='submit', value='login') Log in!
+            button.btn-lg.btn-success(type='submit', value='Submit') Log in!
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')

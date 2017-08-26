@@ -54,6 +54,8 @@ app.use(express.static(path.join(__dirname + '/public')));
 app.locals.siteTitle = 'Robin Good';
 app.locals.allSpeakers = dataFile.speakers;
 
+require('./config/passport')(passport); // pass passport for configuration
+
 app.use(express.static('app/public'));
 app.set('appData', dataFile);
 app.set('view engine', 'ejs');
@@ -67,24 +69,24 @@ app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
 app.use(require('./routes/about'));
 app.use(require('./routes/story'));
+app.use(require('./routes/verificationSent'));
 app.use(require('./routes/user_verification'));
 app.use(require('./routes/sponsor_verification'));
 app.use(require('./routes/userprofile'));
 
+
 app.locals.db = db;
 
 // PASSPORT ================
-// required for passport
+
 app.use(session({
-  secret: 'my_session_secret',
-  saveUninitialized: true,
-  resave: true,
+  secret: 'my_session_secret'
 }));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 // configuration ====================``===========================================
-require('./config/passport')(passport); // pass passport for configuration
+
 
 
 // routes ======================================================================

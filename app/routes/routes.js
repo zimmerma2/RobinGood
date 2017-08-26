@@ -156,11 +156,6 @@ module.exports = function(app, passport) {
   // =====================================
   // PROFILE SECTION =====================
   // =====================================
-  // app.get('/user_profile', isLoggedIn, function(req, res) {
-  //   res.render('userprofile.pug', {
-  //     user : req.user // get the user out of session and pass to template
-  //   });
-  // });
 
   app.get('/sponsor_profile', isLoggedIn, function(req, res) {
     res.render('userprofile.pug', {
@@ -172,6 +167,7 @@ module.exports = function(app, passport) {
   // =====================================
   app.get('/logout', function(req, res) {
     req.logout();
+    delete req.session.authenticated;
     console.log('Successfully logged out');
     req.session.destroy( function ( err ) {
       console.log('Successfully logged out.');

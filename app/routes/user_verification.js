@@ -46,9 +46,9 @@ router.get('/user_verification/:token', function(req, res) {
       });
     }
   });
-  res.render('user/user_verification', {
-    pageTitle: 'UserVerification',
-    pageID: 'user_verification'
+  res.render('user/user_verified.pug', {
+    pageTitle: 'UserVerified',
+    pageID: 'user_verified'
   });
 });
 

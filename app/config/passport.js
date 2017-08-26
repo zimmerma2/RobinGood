@@ -24,13 +24,15 @@ module.exports = function(passport) {
 
   // used to serialize the user for the session
   passport.serializeUser(function(user, done) {
+    console.log('User ID is: ' + user.id);
+    console.log('User EMAIL is: ' + user.email);
     done(null, user.id);
   });
 
   // used to serialize the sponsor for the session
-  passport.serializeUser(function(sponsor, done) {
-    done(null, sponsor.id);
-  });
+  // passport.serializeUser(function(sponsor, done) {
+  //   done(null, sponsor.id);
+  // });
 
   // used to deserialize the user
   passport.deserializeUser(function(id, done) {
@@ -40,11 +42,11 @@ module.exports = function(passport) {
   });
 
   // used to deserialize the sponsor
-  passport.deserializeUser(function(id, done) {
-    Sponsor.findById(id, function(err, sponsor) {
-      done(err, sponsor);
-    });
-  });
+  // passport.deserializeUser(function(id, done) {
+  //   Sponsor.findById(id, function(err, sponsor) {
+  //     done(err, sponsor);
+  //   });
+  // });
 
   // =========================================================================
   // LOCAL USER SIGNUP =======================================================
@@ -249,12 +251,6 @@ module.exports = function(passport) {
                     });
                   });
                 }
-                // newSponsor.save(function(err) {
-                //   if(err)
-                //   throw err;
-                //   return done(null, newSponsor);
-                // });
-                // console.log('New sponsor was created: ' + representative_email);
               }
             });
           });
@@ -280,7 +276,6 @@ module.exports = function(passport) {
             if (err)
             return done(err);
 
-
             // if no user is found, return the message
             if (!user) {
               console.log('No user found.');
@@ -297,7 +292,12 @@ module.exports = function(passport) {
               return done(null, false, req.flash('loginMEssage', 'User is not verified.'));
             }
             // all is well, return successful user
-            console.log('Login successful.');
+            req.session.authenticated = true;
+            req.logIn(user, function(err) {
+                 if (err) { return done(err); }
+                 // Redirect if it succeeds
+                 console.log('Login successful.');
+               });
 
             return done(null, user);
           });
