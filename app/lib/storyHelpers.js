@@ -25,8 +25,8 @@ function deleteStory(id) {
     }
 
     deleteUploaded(uploadDir + 'thumbnails/' + story.thumbnail);
-    deleteUploaded(uploadDir + 'markdown/' + story.body_md);
-    deleteUploaded(uploadDir + 'html/' + story.body_html);
+    deleteUploaded(uploadDir + 'stories/markdown/' + story.body_md);
+    deleteUploaded(uploadDir + 'stories/html/' + story.body_html);
   });
 
   Story.findByIdAndRemove(id, function (err) {
@@ -36,18 +36,19 @@ function deleteStory(id) {
   });
 };
 
-function writeStoryFiles(newStory, req, res, next) {
-  // Created story, save related files
-  var thumbPath = uploadDir + 'thumbnails/' + newStory.thumbnail;
-  var bodyPath_md = uploadDir + 'stories/markdown/' + newStory.body_md;
-  var bodyPath_html = uploadDir + 'stories/html/' + newStory.body_html;
+function moveThumbnail(newStory, req, res, next) {
+  const thumbPath = uploadDir + 'thumbnails/' + newStory.thumbnail;
 
-  // Move thumbnail
   fs.rename(req.file.path, thumbPath, function(err) {
     if (err) {return next(err)};
-    console.log("\nStory created!\nID: ",newStory._id);
-    console.log("Moved thumbnail to: ", thumbPath);
+    console.log("\nStory created!\nID: " + newStory._id);
+    console.log("Moved thumbnail to: " + thumbPath);
   });
+}
+
+function writeBodyFiles(newStory, req, res, next) {
+  const bodyPath_md = uploadDir + 'stories/markdown/' + newStory.body_md;
+  const bodyPath_html = uploadDir + 'stories/html/' + newStory.body_html;
 
   // Save story body - markdown
   fs.writeFile(bodyPath_md, req.body.storyBody, function (err) {
@@ -75,6 +76,8 @@ function writeStoryFiles(newStory, req, res, next) {
 };
 
 // Export functions
-exports.deleteUploaded = deleteUploaded;
-exports.writeStoryFiles = writeStoryFiles;
+exports.uploadDir = uploadDir;
 exports.deleteStory = deleteStory;
+exports.deleteUploaded = deleteUploaded;
+exports.moveThumbnail = moveThumbnail;
+exports.writeBodyFiles = writeBodyFiles;

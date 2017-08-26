@@ -4,7 +4,7 @@ block scriptsAfterContent
   script(type='text/javascript', src="/simplemde/node_modules/codemirror/lib/codemirror.js")
   link(rel="stylesheet" href="/simplemde/dist/simplemde.min.css")
   script(type='text/javascript', src="/simplemde/dist/simplemde.min.js")
-  script(type='text/javascript', src='/js/editstory_md.js')
+  script(type='text/javascript', src='/js/updatestory_md.js')
   script(type='text/javascript') simplemde.value(!{JSON.stringify(storyBody_md)})
 
 block content
@@ -17,9 +17,8 @@ block content
       for error in errors
         li=error.msg
   
-  form#formEditStory(name='editStory', method='post', action='/story/' + story._id + '/edit', enctype="multipart/form-data")
-    div.form-group
-      input#storyID(type='hidden', name='storyID', required='true', value=story._id)
+  //- form#formEditStory(name='updateStory', method='post', action='/story/' + story._id + '/update', enctype="multipart/form-data")
+  form#formEditStory(name='updateStory', method='post', action='/story/' + story._id + '/update')
     div.form-group
       label(for='inputTitle') Story Title
       input#inputTitle.form-control(type='text', placeholder='Story Title', name='title', required='true', value=story.title)
@@ -32,6 +31,7 @@ block content
     div.form-group
       label(for='inputEndDate') Closing Date
       input#inputEndDate.form-control(type='date', name='endDate', required='true', value=story.closingDate.toISOString().slice(0,10))
+    //- TODO add support for updating thumbnail
     //- div.form-group
     //-   label(for='inputThumbnail') Upload a thumbnail
     //-   input#inputThumbnail.form-control-file(type='file', name='thumbnail', aria-describedby="thumbnailHelp", accept='image/*', required='true')
