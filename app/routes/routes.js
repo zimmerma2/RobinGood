@@ -7,12 +7,66 @@ module.exports = function(app, passport) {
   var Token = require('../models/token');
   var nodemailer = require('nodemailer');
   var mg = require('nodemailer-mailgun-transport');
+  var mongoose = require('mongoose');
+  var ObjectId = mongoose.Types.ObjectId;
 
-// ================================
-// FORGOTTEN PASSWORD =============
-// ================================
+
+  // =====================================
+  // USER LOGIN  =========================
+  // =====================================
+  // show the signup form
+
+  app.get('/userlogin', function(req, res) {
+
+    // render the page and pass in any flash data if it exists
+    res.render('user/userlogin.pug', { message: req.flash('loginMessage') });
+  });
+
+  // process the login form
+  app.post('/userlogin', passport.authenticate('user-local-login', {
+    successRedirect : '/user_profile', // redirect to the secure profile section
+    failureRedirect : '/userlogin', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+  }),
+  function(req, res) {
+    // Explicitly save the session before redirecting!
+    req.session.save(() => {
+      res.redirect('/user_profile/:id');
+    })
+  });
+
+  app.get('/user_profile', isLoggedIn, function(req, res) {
+    var candidateId = ObjectId(req.params.id);
+    User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
+      console.log('Initial value of email: ' + req.user.email);
+      res.render('user/userprofile.pug', {
+        user : req.user
+      });
+    });
+  });
+
+  app.post('/user_profile', function(req, res){
+    var email = req.user.email;
+    console.log('email is = ' + email);
+    User.findOne({'email' : email}, function (err, updatedUser) {
+      console.log('updated updatedUser email is = ' + updatedUser.email);
+      if(!updatedUser) {console.log('ERrOR ' + err);}
+      else {
+        updatedUser.nickname = req.body.nickname;
+        updatedUser.save(function(err) {
+          if(err){console.log('Error again ' + err);}
+          else{console.log('Success');}
+        });
+        res.redirect('back');
+      }
+    });
+  });
+
+  // ================================
+  // FORGOTTEN PASSWORD =============
+  // ================================
   app.get('/forgot', function(req, res){
-    res.render('forgot.pug', {
+    res.render('passReset/resetRequest.pug', {
       user: req.user
     });
   });
@@ -79,19 +133,25 @@ module.exports = function(app, passport) {
     });
   });
 
+  app.get('/reset_email_sent', function(req, res){
+    res.render('passReset/resetEmailSent.pug', {
+      user: req.user
+    });
+  });
 
   // ================================
   // FORGOTTEN RESET ================
   // ================================
   app.get('/reset/:token', function(req, res) {
-    User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now()} }, function(err, user) {
+    User.findOne({ resetPasswordToken: req.params.token}, function(err, user) {
       if (!user) {
         req.flash('error', 'Password reset token is invalid or has expired.');
-        console.log('Password reset token is invalid or has expired.');
+        console.log('Password reset token is invalid or has expired = ' + req.params.token);
         return res.redirect('/forgot');
       }
-      res.render('reset.pug', {
-        user: req.user
+      console.log(user.resetPasswordToken);
+      res.render('passReset/newPassword.pug', {
+        user: user
       });
     });
   });
@@ -99,10 +159,10 @@ module.exports = function(app, passport) {
   app.post('/reset/:token', function(req, res) {
     async.waterfall([
       function(done) {
-        User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+        User.findOne({ resetPasswordToken: req.params.token}, function(err, user) {
           if (!user) {
             req.flash('error', 'Password reset token is invalid or has expired.');
-            console.log('Password reset token is invalid or has expired.');
+            console.log('Password reset token is invalid or has expired. = ' + req.params.token);
             return res.redirect('back');
           }
 
@@ -110,7 +170,7 @@ module.exports = function(app, passport) {
             req.flash('error', 'Passwords do not match.');
             console.log('Passwords do not match.');
             return res.redirect('back');
-        }
+          }
           user.password = user.generateHash(req.body.password);
           user.resetPasswordToken = undefined;
           user.resetPasswordExpires = undefined;
@@ -156,11 +216,6 @@ module.exports = function(app, passport) {
   // =====================================
   // PROFILE SECTION =====================
   // =====================================
-  // app.get('/user_profile', isLoggedIn, function(req, res) {
-  //   res.render('userprofile.pug', {
-  //     user : req.user // get the user out of session and pass to template
-  //   });
-  // });
 
   app.get('/sponsor_profile', isLoggedIn, function(req, res) {
     res.render('userprofile.pug', {
@@ -172,6 +227,7 @@ module.exports = function(app, passport) {
   // =====================================
   app.get('/logout', function(req, res) {
     req.logout();
+    delete req.session.authenticated;
     console.log('Successfully logged out');
     req.session.destroy( function ( err ) {
       console.log('Successfully logged out.');
@@ -197,9 +253,11 @@ module.exports = function(app, passport) {
 function isLoggedIn(req, res, next) {
 
   // if user is authenticated in the session, carry on
-  if (req.isAuthenticated())
-  return next();
-
+  if (req.isAuthenticated()) {
+    console.log('isAuthenticated was successful.');
+    return next();
+  }
+  console.log('isAuthenticated failed again.');
   // if they aren't redirect them to the home page
   res.redirect('/');
 }

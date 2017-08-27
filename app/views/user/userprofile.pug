@@ -51,7 +51,8 @@ html
       .row
         .col-md-offset-2.col-md-2
           img(src='http://d33v4339jhl8k0.cloudfront.net/docs/assets/528e78fee4b0865bc066be5a/images/52af1e8ce4b074ab9e98f0e0/file-mxuiNezRS5.jpg')
-          h2 username123
+          h2 
+          = user._id
         .col-md-3.text-center
           a(href='UserFavoritedStories.htm')
             button.btn.btn-md.btn-info Favorite Stories
@@ -63,19 +64,16 @@ html
         .col-md-offset-4.col-md-6
           p
             strong Email:
-            | email@hotmail.com
-          br
-          p
-            strong Phone Number:
-            | (123) 456-7890
-          br
-          p
-            strong Etc:
-            | Etcetera
-          br
-          p
-            strong Etc:
-            | Etcetera
+            = user.email
+          form(action='/user_profile', method='post')
+            br
+            p
+              strong Nickname:
+              input(type='text', placeholder=user.nickname, name='nickname')
+            br
+            p
+              button.btn-lg.btn-success(type='submit', value='Submit') Submit Changes!
+
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')

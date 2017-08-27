@@ -2,21 +2,23 @@ var express = require('express');
 var mongoose = require('mongoose');
 var User = require('../models/user');
 var router = express.Router();
+var ObjectId = mongoose.Types.ObjectId;
 
-router.get('/user_profile/', function(req, res) {
-  var candidateId = mongoose.Types.ObjectId(req.params.id);
+
+router.get('/user_profile', isLoggedIn, function(req, res) {
+  var candidateId = ObjectId(req.params.id);
   User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
     console.log('Initial value of nickname: ' + user.nickname);
     res.render('user/userprofile.pug', {
-      title : user.email,
-      user : user,
+      user : user
     });
   });
 });
 
-router.put('user_profile/', function(req, res){
-  var candidateId = mongoose.Types.ObjectId(req.params.id);
-  User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
+router.post('user_profile', function(req, res){
+  // var candidateId = ObjectId(req.params.id);
+  var candidateEmail = req.body.email;
+  User.find({'email': {'$eq': candidateEmail}},{}, function(err,user) {
     user.nickname = req.body.nickname;
     console.log('Updated value of nickname: ' + user.nickname);
     user.save(function (err) {
@@ -28,5 +30,18 @@ router.put('user_profile/', function(req, res){
     });
   });
 });
+
+function isLoggedIn(req, res, next) {
+
+  // if user is authenticated in the session, carry on
+  if (req.isAuthenticated()) {
+  console.log('successful authentication again.');
+return next();
+}
+console.log('FUCKED UP.');
+
+  // if they aren't redirect them to the home page
+  res.redirect('/');
+}
 
 module.exports = router;
