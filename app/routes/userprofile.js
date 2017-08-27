@@ -5,7 +5,7 @@ var router = express.Router();
 var ObjectId = mongoose.Types.ObjectId;
 
 
-router.get('/user_profile', function(req, res) {
+router.get('/user_profile', isLoggedIn, function(req, res) {
   var candidateId = ObjectId(req.params.id);
   User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
     console.log('Initial value of nickname: ' + user.nickname);

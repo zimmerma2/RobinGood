@@ -5,7 +5,7 @@ html
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/HeadFoot.css')
     .container.navbar.navbar-static-top
-      a.navbar-brand(href='Home.html') RobinGood
+      a.navbar-brand(href='/') RobinGood
       ul.nav.navbar-nav.navbar-right
         li.dropdown
           a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
@@ -33,15 +33,15 @@ html
             li
               a(href='OtherCauses.html') Other
         li
-          a(href='AboutUs.html') About Us
+          a(href='/aboutus') About Us
         li
           a(href='Advertise.html') Advertise
         li
-          a(href='StartACause.html') Start A Cause
+          a(href='/newstory') Start A Cause
         li
           a(href='/userlogin') Log In
         li
-          a(href='CreateAUserAccount.html') Create An Account
+          a(href='/usersignup') Create An Account
         li
           form(action='searchfile')
             button.btn.btn-info(type='submit') Search:
@@ -57,7 +57,7 @@ html
           p
             | Still have questions? Understandable, its all just filler text anyway.
             | Go to our
-            a(href='FAQ.html') FAQ
+            a(href='/faq') FAQ
             |  page to go over frequently asked
             |                         questions!
       .row
@@ -89,20 +89,20 @@ html
         h2 Links
         ul.list-unstyled
           li
-            a(href='Home.html') Home
+            a(href='/') Home
           li
-            a(href='Causes.html') Causes
+            a(href='/stories') Causes
           li
-            a(href='StartACause.html') Start A Cause
+            a(href='/newstory') Start A Cause
           li
             a(href='Advertise.html') Advertise
       .col-md-4.text-center
         h2 About
         ul.list-unstyled
           li
-            a(href='AboutUs.html') About Us
+            a(href='/aboutus') About Us
           li
-            a(href='FAQ.html') FAQ
+            a(href='/faq') FAQ
           li
             a(href='facebook.com') Facebook
           li

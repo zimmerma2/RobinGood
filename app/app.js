@@ -3,6 +3,7 @@ var app = module.exports = express();
 var auth =  require('./config.json');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var cookieSession = require('cookie-session')
 var configDB = require('./config/database.js');
 var dataFile = require('./data/data.json');
 var expressValidator = require('express-validator');
@@ -28,13 +29,19 @@ var server = require('http').createServer(app);
 
 // parse application/x-www-form-urlencoded
 app.use(express.static(__dirname + '/assets'));
-app.use(bodyParser.urlencoded({ extended: false }))
-// parse application/json
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser());
+app.use(bodyParser());
+// app.use(cookieSession()); // Express cookie session middleware
+app.use(passport.initialize());   // passport initialize middleware
+app.use(passport.session());      // passport session middleware
+
+
+
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
-app.use(cookieParser()); // read cookies (needed for auth)
 app.use(expressValidator());
 
 // log requests to stdout and also
@@ -69,15 +76,15 @@ app.use(require('./routes/story'));
 app.use(require('./routes/verificationSent'));
 app.use(require('./routes/user_verification'));
 app.use(require('./routes/sponsor_verification'));
-app.use(require('./routes/userprofile'));
-
-
-app.locals.db = db;
+// app.use(require('./routes/userprofile'));
+// app.locals.db = db;
 
 // PASSPORT ================
 
 app.use(session({
-  secret: 'my_session_secret'
+  secret: 'my_session_secret',
+  saveUninitialized: true,
+  resave: true
 }));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
@@ -85,11 +92,10 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // configuration ====================``===========================================
 
 
-
 // routes ======================================================================
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 require('./routes/usersignup.js')(app, passport);
-require('./routes/userlogin.js')(app, passport);
+// require('./routes/userlogin.js')(app, passport);
 require('./routes/sponsorsignup.js')(app, passport);
 require('./routes/sponsorlogin.js')(app, passport);
 // END OF PASSPORT ==============
@@ -97,7 +103,7 @@ require('./routes/sponsorlogin.js')(app, passport);
 
 // Listen for an application request on designated port
 server.listen(port, function () {
- console.log('Web app started and listening on http://localhost:' + port);
+  console.log('Web app started and listening on http://localhost:' + port);
 });
 
 reload(server, app);
