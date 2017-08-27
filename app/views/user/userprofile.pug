@@ -65,18 +65,15 @@ html
           p
             strong Email:
             = user.email
-          br
-          p
-            strong Phone Number:
-            | (123) 456-7890
-          br
-          p
-            strong Etc:
-            | Etcetera
-          br
-          p
-            strong Etc:
-            | Etcetera
+          form(action='/user_profile', method='post')
+            br
+            p
+              strong Nickname:
+              input(type='text', placeholder=user.nickname, name='nickname')
+            br
+            p
+              button.btn-lg.btn-success(type='submit', value='Submit') Submit Changes!
+
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')

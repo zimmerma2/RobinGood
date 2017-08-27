@@ -31,7 +31,7 @@ module.exports = function(app, passport) {
   function(req, res) {
     // Explicitly save the session before redirecting!
     req.session.save(() => {
-      res.redirect('/user_profile');
+      res.redirect('/user_profile/:id');
     })
   });
 
@@ -45,9 +45,26 @@ module.exports = function(app, passport) {
     });
   });
 
-// ================================
-// FORGOTTEN PASSWORD =============
-// ================================
+  app.post('/user_profile', function(req, res){
+    var email = req.user.email;
+    console.log('email is = ' + email);
+    User.findOne({'email' : email}, function (err, updatedUser) {
+      console.log('updated updatedUser email is = ' + updatedUser.email);
+      if(!updatedUser) {console.log('ERrOR ' + err);}
+      else {
+        updatedUser.nickname = req.body.nickname;
+        updatedUser.save(function(err) {
+          if(err){console.log('Error again ' + err);}
+          else{console.log('Success');}
+        });
+        res.redirect('back');
+      }
+    });
+  });
+
+  // ================================
+  // FORGOTTEN PASSWORD =============
+  // ================================
   app.get('/forgot', function(req, res){
     res.render('passReset/resetRequest.pug', {
       user: req.user
@@ -153,7 +170,7 @@ module.exports = function(app, passport) {
             req.flash('error', 'Passwords do not match.');
             console.log('Passwords do not match.');
             return res.redirect('back');
-        }
+          }
           user.password = user.generateHash(req.body.password);
           user.resetPasswordToken = undefined;
           user.resetPasswordExpires = undefined;
@@ -238,8 +255,8 @@ function isLoggedIn(req, res, next) {
   // if user is authenticated in the session, carry on
   if (req.isAuthenticated()) {
     console.log('isAuthenticated was successful.');
-  return next();
-}
+    return next();
+  }
   console.log('isAuthenticated failed again.');
   // if they aren't redirect them to the home page
   res.redirect('/');

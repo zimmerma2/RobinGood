@@ -76,7 +76,6 @@ app.use(require('./routes/story'));
 app.use(require('./routes/verificationSent'));
 app.use(require('./routes/user_verification'));
 app.use(require('./routes/sponsor_verification'));
-// app.use(require('./routes/userprofile'));
 // app.locals.db = db;
 
 // PASSPORT ================
