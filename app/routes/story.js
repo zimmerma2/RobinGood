@@ -1,11 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-// Load local modules
-var storyHelpers = require('../lib/storyHelpers');
-
-var upload = storyHelpers.imageUploader;
-
 // Require controllers
 var story_controller = require('../controllers/storyController');
 
@@ -19,7 +14,7 @@ router.get('/list', story_controller.story_list);
 router.get('/new', story_controller.story_new_get);
 
 /* POST to Add Story Service */
-router.post('/add', upload.single('thumbnail'), story_controller.story_new_post);
+router.post('/add', story_controller.story_new_post);
 
 /* GET Edit Story page. */
 router.get('/:id([a-z0-9]+)/update', story_controller.story_update_get);
