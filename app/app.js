@@ -42,7 +42,6 @@ app.use(passport.session());      // passport session middleware
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
-<<<<<<< HEAD
 app.use(cookieParser()); // read cookies (needed for auth)
 
 // Define custom form validators
@@ -54,9 +53,7 @@ app.use(expressValidator({
     }
  }
 }));
-=======
-app.use(expressValidator());
->>>>>>> 0a1671b71edc26aafe5704de5f0f0af6c2f76e38
+
 
 // log requests to stdout and also
 // log HTTP requests to a file in combined format
@@ -106,11 +103,11 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 // routes ======================================================================
-require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
-require('./routes/usersignup.js')(app, passport);
+// require('./routes/usersignup.js')(app, passport);
 // require('./routes/userlogin.js')(app, passport);
 require('./routes/sponsorsignup.js')(app, passport);
 require('./routes/sponsorlogin.js')(app, passport);
+require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 // END OF PASSPORT ==============
 
 
