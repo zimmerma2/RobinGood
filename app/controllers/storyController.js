@@ -197,16 +197,17 @@ exports.story_new_post = function story_new_post (req, res, next) {
       story.body_md = story._id + '.md';
       story.body_html = story._id + '.html';
 
-      //Replace markdown and HTML files
-      storyHelpers.deleteUploaded(uploadDir + 'stories/markdown/' + story.body_md);
-      storyHelpers.deleteUploaded(uploadDir + 'stories/html/' + story.body_html);
-      storyHelpers.writeBodyFiles(story, req, res, next);
-
       Story.findByIdAndUpdate(req.params.id, story, {}, function (err, story) {
         if (err) {
           console.error('\nError updating story.');
           return next(err);
         }
+
+        //Replace markdown and HTML files
+        storyHelpers.deleteUploaded(uploadDir + 'stories/markdown/' + story.body_md);
+        storyHelpers.deleteUploaded(uploadDir + 'stories/html/' + story.body_html);
+        storyHelpers.writeBodyFiles(story, req, res, next);
+        
         //successful - redirect to story page
         res.redirect('/story/' + story._id);
       });
@@ -231,37 +232,37 @@ exports.story_new_post = function story_new_post (req, res, next) {
 /********************
  * Helper Functions *
  ********************/
-  function story_form_validate(req) {
-    // TODO there must be a better way!
-    req.body.thumbnail = req.file;
+function story_form_validate(req) {
+  // TODO there must be a better way!
+  req.body.thumbnail = req.file;
 
-    // Validate form entries
-    req.checkBody('title','Story title is required.').notEmpty();
-    req.checkBody('description','Story description is required.').notEmpty();
-    req.checkBody('targetDonation','Target donation must be specified.').notEmpty();
-    req.checkBody('endDate','Valid closing date is required.').isAfter();
-    req.checkBody('storyBody','Story body is required.').notEmpty();
-    req.checkBody('thumbnail.originalname','Thumbnail is required.').notEmpty();
-    if (req.file != undefined)
-      req.checkBody('thumbnail.originalname','Thumbnail must be an image file.').isImage();
+  // Validate form entries
+  req.checkBody('title','Story title is required.').notEmpty();
+  req.checkBody('description','Story description is required.').notEmpty();
+  req.checkBody('targetDonation','Target donation must be specified.').notEmpty();
+  req.checkBody('endDate','Valid closing date is required.').isAfter();
+  req.checkBody('storyBody','Story body is required.').notEmpty();
+  req.checkBody('thumbnail.originalname','Thumbnail is required.').notEmpty();
+  if (req.file != undefined)
+    req.checkBody('thumbnail.originalname','Thumbnail must be an image file.').isImage();
 
-    // Sanitize form entries
-    req.sanitize('title').escape();
-    req.sanitize('title').trim();
-    req.sanitize('description').escape();
-    req.sanitize('description').trim();
-    req.sanitize('targetDonation').escape();
-    req.sanitize('targetDonation').toFloat();
-    req.sanitize('endDate').escape();
-    req.sanitize('endDate').toDate();
-    req.sanitize('storyBody').escape();
-    req.sanitize('storyBody').trim();
+  // Sanitize form entries
+  req.sanitize('title').escape();
+  req.sanitize('title').trim();
+  req.sanitize('description').escape();
+  req.sanitize('description').trim();
+  req.sanitize('targetDonation').escape();
+  req.sanitize('targetDonation').toFloat();
+  req.sanitize('endDate').escape();
+  req.sanitize('endDate').toDate();
+  req.sanitize('storyBody').escape();
+  req.sanitize('storyBody').trim();
 
-    // Validate thumbnail
+  // Validate thumbnail
 
-    // Run the validators
-    var errors = req.validationErrors();
+  // Run the validators
+  var errors = req.validationErrors();
 
-    // Ensure an array is returned
-    return (errors) ? errors: [];
+  // Ensure an array is returned
+  return (errors) ? errors: [];
   }
