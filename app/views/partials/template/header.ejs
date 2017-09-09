@@ -1,53 +1,31 @@
-<header>
-  <div class="jumbotron hidden-xs">
-  </div><!-- jumbotron -->
-
-  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <div class="navbar-header">
-
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-
-        <a href="/" class="navbar-brand">Robin Good</a>
-      </div>
-      <div class="collapse navbar-collapse" id="navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="/">Home</a></li>
-          <li><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Stories (Old) <span class="caret"><span></a>
-            <ul class="dropdown-menu">
-              <li><a href="/speakers">All stories</a></li>
-              <li role="separator" class="divider"></li>
-              <% allSpeakers.forEach(function(item){ %>
-                <li><a href="/speakers/<%= item.shortname %>"><%= item.name %> </a></li>
-              <% }); %>
-            </ul>
-          </li>
-          <li><a href="/story/list">Stories</a></li>
-          <li><a href="/story/new">New Story</a></li>
-          <li><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">SignUp <span class="caret"><span></a>
-            <ul class="dropdown-menu">
-              <li><a href="/usersignup">User SignUp</a></li>
-              <li><a href="/sponsorsignup">Sponsor SignUp</a></li>
-              <li role="separator" class="divider"></li>
-            </ul>
-          </li>
-          <li><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">LogIn <span class="caret"><span></a>
-            <ul class="dropdown-menu">
-              <li><a href="/userlogin">User LogIn</a></li>
-              <li><a href="/sponsorlogin">Sponsor LogIn</a></li>
-              <li role="separator" class="divider"></li>
-            </ul>
-          </li>
-          <li><a href="/faq">FAQ</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contactus">Contact Us</a></li>
-        </ul><!-- nav -->
-      </div><!-- navbar-collapse -->
-    </div><!-- container -->
-  </nav>
-</header>
+<div class='container navbar navbar-static-top'>
+  <a href="Home.html" class='navbar-brand'>RobinGood</a>
+  <ul class='nav navbar-nav navbar-right'>
+    <li class='dropdown'>
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Causes<span class="caret"></span></a>
+      <ul class='dropdown-menu'>
+        <li><a href='MedicalCauses.html'>Medical</a></li>
+        <li><a href='AnimalCauses.html'>Animals</a></li>
+        <li><a href='VolunteerCauses.html'>Volunteer</a></li>
+        <li><a href='EducationCauses.html'>Education</a></li>
+        <li><a href='EmergenciesCauses.html'>Emergencies</a></li>
+        <li><a href='SportsCauses.html'>Sports</a></li>
+        <li><a href='MemorialCauses.html'>Memorial</a></li>
+        <li><a href='HealthCauses.html'>Health</a></li>
+        <li><a href='CommunityBuildingCauses.html'>Community Building</a></li>
+        <li><a href="OtherCauses.html">Other</a></li>
+      </ul>
+    </li>
+    <li><a href='/about'>About Us</a></li>
+    <li><a href='/sponsorsignup'>Advertise</a></li>
+    <li><a href='StartACause.html'>Start A Cause</a></li>
+    <li><a href='/usersignup'>Log In</a></li>
+    <li><a href="CreateAUserAccount.html">Create An Account</a></li>
+    <li>
+      <form action="searchfile">
+        <button class='btn btn-info' type='submit'>Search:</button>
+        <input type="text" name='search'>
+      </form>
+    </li>
+  </ul>
+</div>
