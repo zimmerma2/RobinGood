@@ -24,29 +24,20 @@ module.exports = function(passport) {
 
   // used to serialize the user for the session
   passport.serializeUser(function(user, done) {
-    console.log('User ID is: ' + user.id);
-    console.log('User EMAIL is: ' + user.email);
+    console.log('Login Entity\'s ID is: ' + user.id);
+    console.log('Login Entity\'s EMAIL is: ' + user.representative_email);
     done(null, user.id);
   });
-
-  // used to serialize the sponsor for the session
-  // passport.serializeUser(function(sponsor, done) {
-  //   done(null, sponsor.id);
-  // });
 
   // used to deserialize the user
   passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user) {
       done(err, user);
     });
+    Sponsor.findById(id, function(err, user) {
+      done(err, user);
+    });
   });
-
-  // used to deserialize the sponsor
-  // passport.deserializeUser(function(id, done) {
-  //   Sponsor.findById(id, function(err, sponsor) {
-  //     done(err, sponsor);
-  //   });
-  // });
 
   // =========================================================================
   // LOCAL USER SIGNUP =======================================================
@@ -175,7 +166,7 @@ module.exports = function(passport) {
       // by default, if there was no name, it would just be called 'local'
 
       passport.use('sponsor-local-signup', new LocalStrategy({
-        usernameField : 'representative_email',
+        usernameField: 'representative_email',
         passwordField: 'password',
         passReqToCallback: true // allows us to pass back the entire request to the callback
       },
@@ -340,7 +331,7 @@ module.exports = function(passport) {
             req.logIn(user, function(err) {
                  if (err) { return done(err); }
                  // Redirect if it succeeds
-                 console.log('Login successful.');
+                 console.log('User login successful.');
                });
 
             return done(null, user);
@@ -363,7 +354,6 @@ module.exports = function(passport) {
         function(req, representative_email, password, done) { // callback with email and password from our form
           // find a user whose email is the same as the forms email
           // we are checking to see if the user trying to login already exists
-          console.log('It gets here.');
           Sponsor.findOne({ 'representative_email' :  representative_email }, function(err, sponsor) {
             // if there are any errors, return the error before anything else
             if (err) {
@@ -382,10 +372,15 @@ module.exports = function(passport) {
             }
             if (!sponsor.isVerified) {
               console.log ('User is not verified. Please verify your email.');
-              return done(null, false, req.flash('loginMEssage', 'User is not verified.'));
+              return done(null, false, req.flash('loginMessage', 'User is not verified.'));
             }
             // all is well, return successful sponsor
-            console.log('Login successful.');
+            req.session.authenticated = true;
+            req.logIn(sponsor, function(err) {
+                 if (err) { return done(err); }
+                 // Redirect if it succeeds
+                 console.log('Sponsor login successful.');
+               });
             return done(null, sponsor);
           });
         }));

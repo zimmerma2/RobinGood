@@ -38,8 +38,6 @@ app.use(passport.initialize());   // passport initialize middleware
 app.use(passport.session());      // passport session middleware
 
 
-
-
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
@@ -102,25 +100,20 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 // routes ======================================================================
-// require('./routes/usersignup.js')(app, passport);
-// require('./routes/userlogin.js')(app, passport);
-require('./routes/sponsorsignup.js')(app, passport);
-require('./routes/sponsorlogin.js')(app, passport);
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 // END OF PASSPORT ==============
 
 // =====================================
 // 404 Not Found =======================
 // =====================================
-app.use(function(req, res, next){
-  res.status(404);
-
-  res.render('404.ejs', {
-    pageTitle: '404: Not Found',
-    pageID: '404'
-  });
-  return;
-});
+// app.use(function(req, res, next){
+//   res.status(404);
+//   res.render('404.ejs', {
+//     pageTitle: '404: Not Found',
+//     pageID: '404'
+//   });
+//   return;
+// });
 
 // =====================================
 // Error Handlers ======================
