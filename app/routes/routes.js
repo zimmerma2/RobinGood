@@ -47,6 +47,50 @@ module.exports = function(app, passport) {
     })
   });
 
+  // =====================================
+  // SPONSOR SIGNUP  =====================
+  // =====================================
+
+  app.get('/sponsorsignup', function(req, res) {
+    // render the page and pass in any flash data if it exists
+    res.render('sponsor/sponsorsignup.pug', { message: req.flash('signupMessage') });
+  });
+
+  // process the signup form
+  app.post('/sponsorsignup', passport.authenticate('sponsor-local-signup', {
+    successRedirect : '/sponsorlogin', // redirect to the secure profile section
+    failureRedirect : '/sponsorsignup', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+  }));
+
+
+  // =====================================
+  // SPONSOR LOGIN  ======================
+  // =====================================
+
+  app.get('/sponsorlogin', function(req, res) {
+    // render the page and pass in any flash data if it exists
+    res.render('sponsor/sponsorlogin.ejs', { message: req.flash('loginMessage') });
+  });
+
+  // process the login form
+  app.post('/sponsorlogin', passport.authenticate('sponsor-local-login', {
+    successRedirect : '/sponsor_profile', // redirect to the secure profile section
+    failureRedirect : '/sponsorlogin', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+  }),
+  function(req, res) {
+    // Explicitly save the session before redirecting!
+    req.session.save(() => {
+      res.redirect('/sponsor_profile/:id');
+    })
+  });
+
+
+  // =====================================
+  // USER PROFILE  =======================
+  // =====================================
+
   app.get('/user_profile', isLoggedIn, function(req, res) {
     var candidateId = ObjectId(req.params.id);
     User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
@@ -66,6 +110,38 @@ module.exports = function(app, passport) {
       else {
         updatedUser.nickname = req.body.nickname;
         updatedUser.save(function(err) {
+          if(err){console.log('Error again ' + err);}
+          else{console.log('Success');}
+        });
+        res.redirect('back');
+      }
+    });
+  });
+
+  // =====================================
+  // SPONSOR PROFILE  ====================
+  // =====================================
+
+  app.get('/sponsor_profile', isLoggedIn, function(req, res) {
+    var candidateId = ObjectId(req.params.id);
+    console.log("SPONSOR ID IS " + candidateId);
+    Sponsor.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
+      console.log('Initial value of email: ' + req.sponsor.representative_email);
+      res.render('sponsor/sponsorprofile.pug', {
+        sponsor : req.sponsor
+      });
+    });
+  });
+
+  app.post('/sponsor_profile', function(req, res){
+    var email = req.sponsor.representative_email;
+    console.log('email is = ' + email);
+    Sponsor.findOne({'email' : email}, function (err, updatedSponsor) {
+      console.log('updated updatedSponsor email is = ' + updatedSponsor.email);
+      if(!updatedSponsor) {console.log('ERrOR ' + err);}
+      else {
+        updatedSponsor.representative_first_name = req.body.representative_first_name;
+        updatedSponsor.save(function(err) {
           if(err){console.log('Error again ' + err);}
           else{console.log('Success');}
         });
@@ -229,11 +305,6 @@ module.exports = function(app, passport) {
   // PROFILE SECTION =====================
   // =====================================
 
-  app.get('/sponsor_profile', isLoggedIn, function(req, res) {
-    res.render('userprofile.pug', {
-      sponsor : req.sponsor // get the user out of session and pass to template
-    });
-  });
   // =====================================
   // LOGOUT ==============================
   // =====================================
@@ -250,7 +321,6 @@ module.exports = function(app, passport) {
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
-
   // if user is authenticated in the session, carry on
   if (req.isAuthenticated()) {
     console.log('isAuthenticated was successful.');
