@@ -64,22 +64,23 @@ module.exports = function(passport) {
     // User.findOne will not fire unless data is sent back
     process.nextTick(function() {
       User.findOne({'email' : email}, function (err, user) {
-        if(err)
-        return done(err);
+        if(err) {
+          return done(err);
+        }
+        // if 'user' exists
         if(user) {
-          // ADD RESENDING TOKENS - user is found (has already been created) but token had expired before
-          //   verified their email. Send another token
+          // if 'user' has already been verified, reject the signup request
           if(user.isVerified) {
             console.log('That email is already taken');
             return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
           }
+          // if 'user' has not been verified (registered but has not verified email), resend token
           else {
             var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
             user.verification_token = token._id;
 
             user.save(function(err) {
               if (err) { return res.status(500).send({ msg: err.message }); }
-
               // Create a verification token for this user
               // Save the verification token
               token.save(function (err) {
@@ -108,6 +109,7 @@ module.exports = function(passport) {
               });
             }
           }
+          // if 'user' does not exists, create it and send an email verification token
           else {
             // checks for password and repeat_password match
             if (password != req.body.repeat_password) {
@@ -185,9 +187,51 @@ module.exports = function(passport) {
               console.log('Error: ' + err);
               return done(err);
             }
+            // if 'sponsor' already exists, check if the email of the sponsor has been verified.
             if(sponsor) {
-              console.log('A company with that name already exists.');
-              return done(null, false, req.flash('signupMessage', 'A company with that name already exists.'));
+              // if email of 'sponsor' has been verified, reject the signup request
+              if(sponsor.isVerified) {
+                console.log('A company with that name already exists.');
+                return done(null, false, req.flash('signupMessage', 'A company with that name already exists.'));
+              }
+              else {
+                var token = new Token({ _userId: sponsor._id, token: crypto.randomBytes(16).toString('hex') });
+                sponsor.verification_token = token._id;
+
+                sponsor.save(function(err) {
+                  if (err) { console.log('Error: ' + err);
+                    // return res.status(500).send({ msg: err.message });
+                  }
+                  // Create a verification token for this sponsor
+                  // Save the verification token
+                  token.save(function (err) {
+                    if (err) { console.log('Error: ' + err);
+                      // return res.status(500).send({ msg: err.message });
+                     }
+
+                    // Send the email
+                    var auth = {
+                      auth: {
+                        api_key : 'key-cdff84af4df2afedfcbfae910a42c471',
+                        domain: 'sandbox9027eeecb61d473c9a14f12a8e4a846e.mailgun.org'
+                      }
+                    }
+                    var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+                    var mailOptions = {
+                      from: 'no-reply@yourwebapplication.com',
+                      to: sponsor.representative_email,
+                      subject: 'Account Verification Token',
+                      text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/sponsor_verification\/' + token.token + '.\n' };
+                      nodemailerMailgun.sendMail(mailOptions, function (err) {
+                        if (err) {
+                          console.log('Error: ' + err);
+                        }
+                        // res.status(200).send('A verification email has been sent to ' + sponsor.email + '.');
+                      });
+                    });
+                  });
+                }
+
             } else {
               // checks for password and repeat_password match
               if (password != req.body.repeat_password) {

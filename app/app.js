@@ -53,6 +53,10 @@ app.use(expressValidator({
     }
  }
 }));
+<<<<<<< HEAD
+=======
+
+>>>>>>> b24dda528d40d416e14eb9da4917f5009ff42957
 
 // log requests to stdout and also
 // log HTTP requests to a file in combined format
@@ -101,11 +105,11 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 // routes ======================================================================
-require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
-require('./routes/usersignup.js')(app, passport);
+// require('./routes/usersignup.js')(app, passport);
 // require('./routes/userlogin.js')(app, passport);
 require('./routes/sponsorsignup.js')(app, passport);
 require('./routes/sponsorlogin.js')(app, passport);
+require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 // END OF PASSPORT ==============
 
 // =====================================
