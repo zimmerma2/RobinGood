@@ -48,14 +48,6 @@ html
             input(type='text', name='search')
   .container-fluid
     body
-    .row
-        .col-md-offset-4.col-md-2.text-center
-          a(href='userlogin')
-            button.btn.btn-info.btn-md User
-        .col-md-2
-          a(href='sponsorlogin')
-            button.btn.btn-info.btn-md Sponsor
-      br
       // The login stuff
       .col-md-offset-4.col-md-4.text-center
         #login.well
@@ -63,23 +55,23 @@ html
           br
           // Put filename here
           form(action='/userlogin/', method='post')
-            | User email
-            br
-            input(type='text', name='email')
-            br
-            br
-            | Password
-            br
-            input(type='password', name='password')
-            br
-            br
-            button.btn-lg.btn-success(type='submit', value='Submit') Log in!
-            br
-            a(href='/forgot') Forgot Your Password?
-            br
+                      | User email
+                      br
+                      input(type='text', name='email')
+                      br
+                      br
+                      | Password
+                      br
+                      input(type='password', name='password')
+                      br
+                      br
+                      button.btn-lg.btn-success(type='submit', value='Submit') Log in!
+                      br
+                      a(href='/forgot') Forgot Your Password?
+                      br
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
-      script(src='/js/bootstrap.js')
+      script(src='bootstrap.js')
   // Foot of the page
   .footer
     .row

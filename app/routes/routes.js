@@ -39,13 +39,7 @@ module.exports = function(app, passport) {
     successRedirect : '/user_profile', // redirect to the secure profile section
     failureRedirect : '/userlogin', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
-  }),
-  function(req, res) {
-    // Explicitly save the session before redirecting!
-    req.session.save(() => {
-      res.redirect('/user_profile/:id');
-    })
-  });
+  }));
 
   // =====================================
   // SPONSOR SIGNUP  =====================
@@ -78,24 +72,18 @@ module.exports = function(app, passport) {
     successRedirect : '/sponsor_profile', // redirect to the secure profile section
     failureRedirect : '/sponsorlogin', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
-  }),
-  function(req, res) {
-    // Explicitly save the session before redirecting!
-    req.session.save(() => {
-      res.redirect('/sponsor_profile/:id');
-    })
-  });
+  }));
 
 
   // =====================================
   // USER PROFILE  =======================
   // =====================================
 
-  app.get('/user_profile', isLoggedIn, function(req, res) {
+  app.get('/user_profile', isLoggedIn, function(req, response) {
     var candidateId = ObjectId(req.params.id);
     User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
       console.log('Initial value of email: ' + req.user.email);
-      res.render('user/userprofile.pug', {
+      response.render('user/userprofile.pug', {
         user : req.user
       });
     });
@@ -127,7 +115,7 @@ module.exports = function(app, passport) {
     console.log("SPONSOR ID IS " + candidateId);
     Sponsor.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
       console.log('Initial value of email: ' + req.sponsor.representative_email);
-      res.render('sponsor/sponsorprofile.pug', {
+      res.render('sponsor/sponsorprofile.ejs', {
         sponsor : req.sponsor
       });
     });
@@ -300,10 +288,6 @@ module.exports = function(app, passport) {
       res.redirect('/forgot');
     });
   });
-
-  // =====================================
-  // PROFILE SECTION =====================
-  // =====================================
 
   // =====================================
   // LOGOUT ==============================

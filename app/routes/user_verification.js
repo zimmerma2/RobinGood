@@ -25,7 +25,7 @@ router.get('/user_verification/:token', function(req, res) {
           console.log('This user has already been verified.');
           // return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
         }
-        else if (dateMath.gt(Date.now(), tokenObject.expireAfterSeconds)) {
+        else if (Date.now() - tokenObject.expireAfterSeconds - tokenObject.createdAt < 0){
           console.log('The token has expired.');
           tokenObject.remove();
         }

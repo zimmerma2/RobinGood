@@ -3,7 +3,7 @@ var router = express.Router();
 
 router.get('/about', function(req, res) {
 
-  res.render('about', {
+  res.render('about.ejs', {
     pageTitle: 'About',
     pageID: 'about'
   });
