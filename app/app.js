@@ -54,6 +54,7 @@ app.use(expressValidator({
  }
 }));
 
+
 // log requests to stdout and also
 // log HTTP requests to a file in combined format
 var accessLogStream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' });
