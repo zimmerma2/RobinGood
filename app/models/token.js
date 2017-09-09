@@ -5,7 +5,8 @@ var User = require('../models/user');
 var TokenSchema = Schema({
   _userId: { type: Schema.ObjectId, required: true, ref: 'User' },
   token: { type: String, required: true },
-  expiresAt: { type: Date, required: true, default: Date.now() + 3600000}
+  createdAt: { type: Date, required: true, default: Date.now()},
+  expireAfterSeconds: { type: Date, required: true, default: 60}
 });
 
 module.exports = mongoose.model('Token', TokenSchema);

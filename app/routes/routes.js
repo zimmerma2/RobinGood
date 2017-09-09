@@ -10,14 +10,26 @@ module.exports = function(app, passport) {
   var mongoose = require('mongoose');
   var ObjectId = mongoose.Types.ObjectId;
 
+  // =====================================
+  // USER SIGNUP  ========================
+  // =====================================
+  app.get('/usersignup', function(req, res) {
+    // render the page and pass in any flash data if it exists
+    res.render('user/usersignup.pug', { message: req.flash('signupMessage') });
+  });
+
+// process the signup form
+  app.post('/usersignup', passport.authenticate('user-local-signup', {
+    successRedirect : '/verification_sent', // redirect to the secure profile section
+    failureRedirect : '/usersignup', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+  }));
 
   // =====================================
   // USER LOGIN  =========================
   // =====================================
   // show the signup form
-
   app.get('/userlogin', function(req, res) {
-
     // render the page and pass in any flash data if it exists
     res.render('user/userlogin.pug', { message: req.flash('loginMessage') });
   });
@@ -129,7 +141,7 @@ module.exports = function(app, passport) {
       }
     ], function(err) {
       if (err) return next(err);
-      res.redirect('/forgot');
+      res.redirect('/');
     });
   });
 
