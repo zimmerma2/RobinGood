@@ -83,11 +83,10 @@ app.use(require('./routes/index'));
 app.use(require('./routes/faq'));
 app.use(require('./routes/contactus'));
 app.use(require('./routes/about'));
-app.use(require('./routes/story'));
+app.use('/story', require('./routes/story'));
 app.use(require('./routes/verificationSent'));
 app.use(require('./routes/user_verification'));
 app.use(require('./routes/sponsor_verification'));
-// app.locals.db = db;
 
 // PASSPORT ================
 
@@ -109,6 +108,31 @@ require('./routes/sponsorsignup.js')(app, passport);
 require('./routes/sponsorlogin.js')(app, passport);
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 // END OF PASSPORT ==============
+
+// =====================================
+// 404 Not Found =======================
+// =====================================
+app.use(function(req, res, next){
+  res.status(404);
+
+  res.render('404.ejs', {
+    pageTitle: '404: Not Found',
+    pageID: '404'
+  });
+  return;
+});
+
+// =====================================
+// Error Handlers ======================
+// =====================================
+app.use( function multerErrorHandler (err, req, res, next) {
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    console.error('\n\nFile too large!\n\n');
+    next();
+  } else {
+    next(err);
+  }
+});
 
 
 // Listen for an application request on designated port

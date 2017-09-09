@@ -246,19 +246,6 @@ module.exports = function(app, passport) {
       res.redirect('/');
     });
   });
-
-  // =====================================
-  // 404 Not Found =======================
-  // =====================================
-  // app.use(function(req, res, next){
-  //   res.status(404);
-  //
-  //   res.render('404.ejs', {
-  //     pageTitle: '404: Not Found',
-  //     pageID: '404'
-  //   });
-  //   return;
-  // });
 };
 
 // route middleware to make sure a user is logged in

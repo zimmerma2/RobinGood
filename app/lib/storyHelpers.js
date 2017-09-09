@@ -1,6 +1,5 @@
 var fs = require('fs');
 var marked = require('marked');
-var multer = require('multer');
 var Story = require('../models/story');
 
 const uploadDir = 'app/public/'
@@ -13,16 +12,10 @@ function imageFilter(req, file, cb) {
   // accept image only
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
     console.error("Not an image file: ", file.originalname);
-    cb(null, false);
+    cb(new Error('_INVALID_IMAGE_'), false);
   }
   cb(null, true);
 };
-
-var imageUploader = multer({
-  dest: 'temp/',
-  limits: {fileSize: 1000000, files:1},
-  fileFilter: imageFilter
-});
 
 function moveThumbnail(newStory, req, res, next) {
   const thumbPath = uploadDir + 'thumbnails/' + newStory.thumbnail;
@@ -93,13 +86,14 @@ function deleteStory(id) {
 
   Story.findByIdAndRemove(id, function (err) {
     if (err) throw err;
-    //Success - got to author list
+    //Success
     console.log("Story with id '" + id + "' deleted succesfully.");
   });
+  return true;
 };
 
 // Export functions
-exports.imageUploader = imageUploader;
+exports.imageFilter = imageFilter;
 exports.uploadDir = uploadDir;
 exports.deleteStory = deleteStory;
 exports.deleteUploaded = deleteUploaded;
