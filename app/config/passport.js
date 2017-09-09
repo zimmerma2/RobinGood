@@ -97,8 +97,8 @@ module.exports = function(passport) {
                     // res.status(200).send('A verification email has been sent to ' + user.email + '.');
                   });
                 });
+                return done(null, user);
               });
-              return done(null, user);
             }
           }
           // if 'user' does not exists, create it and send an email verification token
@@ -153,9 +153,9 @@ module.exports = function(passport) {
                       // res.status(200).send('A verification email has been sent to ' + newUser.email + '.');
                     });
                   });
+                  return done(null, newUser);
                 });
               }
-              return done(null, newUser);
             }
           });
         });
@@ -222,9 +222,9 @@ module.exports = function(passport) {
                     // res.status(200).send('A verification email has been sent to ' + sponsor.email + '.');
                   });
                 });
+                return done(null, sponsor);
               });
             }
-
           } else {
             // checks for password and repeat_password match
             if (password != req.body.repeat_password) {
@@ -286,6 +286,7 @@ module.exports = function(passport) {
                       // res.status(200).send('A verification email has been sent to ' + newSponsor.email + '.');
                     });
                   });
+                  return done(null, newSponsor);
                 });
               }
             }
