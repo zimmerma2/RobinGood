@@ -66,7 +66,11 @@ exports.story_new_get = function story_new_get (req, res) {
 exports.story_new_post = function story_new_post (req, res, next) {
   thumbnailUpload(req, res, function (multerError) {
 
-    var errors = story_form_validate(req, true);
+    console.log("BODY:");
+    console.log(req.body);
+
+
+    var errors = story_form_validate(req, true, true);
 
     if (multerError) {
       console.error('MULTER ERROR: ');
@@ -172,7 +176,7 @@ exports.story_update_post = function story_update_post (req, res, next) {
     return next('route');
   }
 
-  var errors = story_form_validate(req, false);
+  var errors = story_form_validate(req, false, false);
 
   //Create a story object with escaped and trimmed data.
   var story = new Story();
@@ -232,7 +236,7 @@ exports.story_delete = function story_delete (req, res, next) {
 /********************
 * Helper Functions *
 ********************/
-function story_form_validate(req, checkThumbnail) {
+function story_form_validate(req, checkThumbnail, checkLocation) {
   // TODO there must be a better way!
   req.body.thumbnail = req.file;
 
@@ -246,7 +250,14 @@ function story_form_validate(req, checkThumbnail) {
   if (checkThumbnail) {
     req.checkBody('thumbnail.originalname','Thumbnail is required.').notEmpty();
     if (req.file != undefined)
-    req.checkBody('thumbnail.originalname','Thumbnail must be an image file.').isImage();
+      req.checkBody('thumbnail.originalname','Thumbnail must be an image file.').isImage();
+  }
+
+  if (checkLocation) {
+    req.checkBody('city','City is required.').notEmpty();
+    req.checkBody('state','State is required.').notEmpty();
+    req.checkBody('zipCode','ZIP code is required.').notEmpty();
+    req.checkBody('zipCode','A ZIP code must have 5 digits.').isLength({min: 5, max: 5});
   }
 
   // Sanitize form entries
@@ -260,6 +271,16 @@ function story_form_validate(req, checkThumbnail) {
   req.sanitize('endDate').toDate();
   req.sanitize('storyBody').escape();
   req.sanitize('storyBody').trim();
+
+  if (checkLocation) {
+    req.sanitize('city').escape();
+    req.sanitize('city').escape();
+    req.sanitize('state').escape();
+    req.sanitize('state').trim();
+    req.sanitize('zipCode').escape();
+    req.sanitize('zipCode').trim();
+    req.sanitize('zipCode').toInt();
+  }
 
   // Validate thumbnail
 

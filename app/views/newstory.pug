@@ -40,34 +40,30 @@ block content
     
     //- Location form fields 
     div.form-group    
+    
+      //- TODO use field id's consistent with rest of site
+      //- TODO Add fields to Story model (create a location class)
+      //- TODO sanitize fields in the POST request
+      //- TODO add same functionality to edit story page
+      
       div#locationField
-        input#autocomplete(placeholder='Enter your address', onfocus='geolocate()', type='text')
+        input#locationAutocomplete(placeholder='Enter your address', onfocus='geolocate()', type='text')
       table#address
         tr
           td.label Street address
-          td.slimField
-            input#street_number.field(disabled='true')
-          td.wideField(colspan='2')
-            input#route.field(disabled='true')
+          td.wideField(colspan='3')
+            input#route.field(type='text', name='streetAddress')
         tr
           td.label City
-          //
-            Note: Selection of address components in this example is typical.
-            You may need to adjust it for the locations relevant to your app. See
-            https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
           td.wideField(colspan='3')
-            input#locality.field(disabled='true')
+            input#locality.field(type='text', name='city', required='true')
         tr
           td.label State
           td.slimField
-            input#administrative_area_level_1.field(disabled='true')
+            input#administrative_area_level_1.field(type='text', name='state', required='true')
           td.label Zip code
           td.wideField
-            input#postal_code.field(disabled='true')
-        tr
-          td.label Country
-          td.wideField(colspan='3')
-            input#country.field(disabled='true')
+            input#postal_code.field(type='number', name='zipCode', required='true')
             
     div.form-group
       label(for='inputThumbnail') Upload a thumbnail
