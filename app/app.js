@@ -86,6 +86,9 @@ app.use(require('./routes/verificationSent'));
 app.use(require('./routes/user_verification'));
 app.use(require('./routes/sponsor_verification'));
 
+// GOOGLE MAPS API Key ==========
+app.locals.gmapsAPI = 'AIzaSyD8jTZcYe852PX8u9DmSZQPgeMpbZUM51w';
+
 // PASSPORT ================
 
 app.use(session({
