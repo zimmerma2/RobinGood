@@ -32,10 +32,14 @@ module.exports = function(passport) {
   // used to deserialize the user
   passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user) {
-      done(err, user);
-    });
-    Sponsor.findById(id, function(err, user) {
-      done(err, user);
+      if(user) {
+        done(err, user);
+      }
+      else {
+        Sponsor.findById(id, function(err, sponsor) {
+          done(err, sponsor);
+        });
+      }
     });
   });
 

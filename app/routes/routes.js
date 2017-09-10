@@ -4,6 +4,7 @@ module.exports = function(app, passport) {
   var crypto = require('crypto');
   var bcrypt = require('bcrypt-nodejs');
   var User = require('../models/user');
+  var Sponsor = require('../models/sponsor');
   var Token = require('../models/token');
   var nodemailer = require('nodemailer');
   var mg = require('nodemailer-mailgun-transport');
@@ -57,7 +58,7 @@ module.exports = function(app, passport) {
 
   // process the signup form
   app.post('/sponsorsignup', passport.authenticate('sponsor-local-signup', {
-    successRedirect : '/sponsorlogin', // redirect to the secure profile section
+    successRedirect : '/verification_sent', // redirect to the secure profile section
     failureRedirect : '/sponsorsignup', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
   }));
@@ -133,33 +134,39 @@ module.exports = function(app, passport) {
   // SPONSOR PROFILE  ====================
   // =====================================
 
-  app.get('/sponsor_profile', isLoggedIn, function(req, res) {
-    var candidateId = ObjectId(req.params.id);
-    console.log("SPONSOR ID IS " + candidateId);
-    Sponsor.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
-      console.log('Initial value of email: ' + req.sponsor.representative_email);
-      res.render('sponsor/sponsorprofile.ejs', {
-        sponsor : req.sponsor
-      });
+  app.get('/sponsor_profile', isLoggedIn, function(request, response) {
+    console.log('Session ID in GET is' + request.sessionID);
+    response.render('sponsor/sponsorprofile.ejs', {
+      sponsor : request.sponsor
     });
   });
 
   app.post('/sponsor_profile', function(req, res){
-    var email = req.sponsor.representative_email;
-    console.log('email is = ' + email);
-    Sponsor.findOne({'email' : email}, function (err, updatedSponsor) {
-      console.log('updated updatedSponsor email is = ' + updatedSponsor.email);
-      if(!updatedSponsor) {console.log('ERrOR ' + err);}
-      else {
-        updatedSponsor.representative_first_name = req.body.representative_first_name;
-        updatedSponsor.save(function(err) {
-          if(err){console.log('Error again ' + err);}
-          else{console.log('Success');}
-        });
-        res.redirect('back');
-      }
+    console.log('Session ID in POST is' + req.sessionID);
+    Sponsor.update({_id: req.sponsor.id}, {
+        // nickname: req.body.nickname
+    },function(err, numberAffected, rawResponse) {
+      if(err)
+       console.log('new profile update error');
     });
   });
+
+  // app.post('/sponsor_profile', function(req, res){
+  //   var email = req.sponsor.representative_email;
+  //   console.log('email is = ' + email);
+  //   Sponsor.findOne({'email' : email}, function (err, updatedSponsor) {
+  //     console.log('updated updatedSponsor email is = ' + updatedSponsor.email);
+  //     if(!updatedSponsor) {console.log('ERrOR ' + err);}
+  //     else {
+  //       updatedSponsor.representative_first_name = req.body.representative_first_name;
+  //       updatedSponsor.save(function(err) {
+  //         if(err){console.log('Error again ' + err);}
+  //         else{console.log('Success');}
+  //       });
+  //       res.redirect('back');
+  //     }
+  //   });
+  // });
 
   // ================================
   // FORGOTTEN PASSWORD =============
