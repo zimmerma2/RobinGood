@@ -25,6 +25,7 @@ module.exports = function(app, passport) {
     failureFlash : true // allow flash messages
   }));
 
+
   // =====================================
   // USER LOGIN  =========================
   // =====================================
@@ -39,7 +40,11 @@ module.exports = function(app, passport) {
     successRedirect : '/user_profile', // redirect to the secure profile section
     failureRedirect : '/userlogin', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
-  }));
+  }),
+  function(req,res) {
+    console.log('The user that just logged in is ' + req.user);
+    req.session.user = req.user;
+  });
 
   // =====================================
   // SPONSOR SIGNUP  =====================
@@ -79,32 +84,50 @@ module.exports = function(app, passport) {
   // USER PROFILE  =======================
   // =====================================
 
-  app.get('/user_profile', isLoggedIn, function(req, response) {
-    var candidateId = ObjectId(req.params.id);
-    User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
-      console.log('Initial value of email: ' + req.user.email);
-      response.render('user/userprofile.pug', {
-        user : req.user
-      });
+  // app.get('/user_profile', isLoggedIn, function(request, response) {
+  //   var candidateId = ObjectId(request.params.id);
+  //   User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
+  //     console.log('Initial value of email: ' + request.user.email);
+  //     response.render('user/userprofile.pug', {
+  //       user : request.user
+  //     });
+  //   });
+  // });
+
+  app.get('/user_profile', isLoggedIn, function(request, response) {
+    console.log('Session ID in GET is' + request.sessionID);
+    response.render('user/userprofile.pug', {
+      user : request.user
     });
   });
 
   app.post('/user_profile', function(req, res){
-    var email = req.user.email;
-    console.log('email is = ' + email);
-    User.findOne({'email' : email}, function (err, updatedUser) {
-      console.log('updated updatedUser email is = ' + updatedUser.email);
-      if(!updatedUser) {console.log('ERrOR ' + err);}
-      else {
-        updatedUser.nickname = req.body.nickname;
-        updatedUser.save(function(err) {
-          if(err){console.log('Error again ' + err);}
-          else{console.log('Success');}
-        });
-        res.redirect('back');
-      }
+    console.log('Session ID in POST is' + req.sessionID);
+    User.update({_id: req.user.id}, {
+        nickname: req.body.nickname
+    },function(err, numberAffected, rawResponse) {
+      if(err)
+       console.log('new profile update error');
     });
   });
+
+
+  // app.post('/user_profile', function(req, res){
+  //   var email = req.user.email;
+  //   console.log('email is = ' + email);
+  //   User.findOne({'email' : email}, function (err, updatedUser) {
+  //     console.log('updated updatedUser email is = ' + updatedUser.email);
+  //     if(!updatedUser) {console.log('ERrOR ' + err);}
+  //     else {
+  //       updatedUser.nickname = req.body.nickname;
+  //       updatedUser.save(function(err) {
+  //         if(err){console.log('Error again ' + err);}
+  //         else{console.log('Success');}
+  //       });
+  //       res.redirect('back');
+  //     }
+  //   });
+  // });
 
   // =====================================
   // SPONSOR PROFILE  ====================
