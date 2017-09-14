@@ -25,7 +25,8 @@ module.exports = function(passport) {
   // used to serialize the user for the session
   passport.serializeUser(function(user, done) {
     console.log('Login Entity\'s ID is: ' + user.id);
-    console.log('Login Entity\'s EMAIL is: ' + user.email);
+    // console.log('Login Entity\'s EMAIL is: ' + user.email);
+    console.log('Login Entity\'s EMAIL is: ' + user.representative_email);
     done(null, user.id);
   });
 

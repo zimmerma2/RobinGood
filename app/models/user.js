@@ -60,9 +60,5 @@ UserSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-UserSchema.methods.isUser = function(entity) {
-  return UserSchema.findById
-};
-
 //Export model
 module.exports = mongoose.model('User', UserSchema);
