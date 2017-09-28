@@ -25,4 +25,7 @@ router.post('/story/:id([a-z0-9]+)/update', story_controller.story_update_post);
 /* POST to Delete Story */
 router.post('/story/:id([a-z0-9]+)/delete', story_controller.story_delete);
 
+/* GET Search Story page. */
+router.get('/story/search', story_controller.story_search_get);
+
 module.exports = router;

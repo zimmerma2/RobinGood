@@ -231,6 +231,13 @@ exports.story_delete = function story_delete (req, res, next) {
   res.redirect('/story/list');
 };
 
+/****************************************
+* Controllers for searching for stories *
+*****************************************/
+exports.story_search_get = function story_search_get (req, res, next) {
+  res.render('searchstory.pug', { title: 'Search for stories' });
+}
+
 /********************
 * Helper Functions *
 ********************/
