@@ -48,33 +48,50 @@ html
             input(type='text', name='search')
   .container-fluid
     body
-      .row
-        .col-md-offset-2.col-md-2
-          img(src='http://d33v4339jhl8k0.cloudfront.net/docs/assets/528e78fee4b0865bc066be5a/images/52af1e8ce4b074ab9e98f0e0/file-mxuiNezRS5.jpg')
-          h2 
-          = user._id
-        .col-md-3.text-center
-          a(href='UserFavoritedStories.htm')
-            button.btn.btn-md.btn-info Favorite Stories
-        .col-md-3.text-center
-          a(href='UserDonationHistory.htm')
-            button.btn.btn-md.btn-info Donation History
+      .row.col-md-offset-4.col-md-4.text-center
+        p
+          a(href='/logout') LOG OUT
+        br
+        p
+          big We are
+      #sponsorName.row.col-md-offset-3.col-md-6.text-center
+        a(href='http://www.dogwelfarealliance.com/')
+          p The Alliance of Dog Wellfare
+      br
       br
       .row
-        .col-md-offset-4.col-md-6
+        .col-md-offset-4.col-md-4
+          .text-center
+            p Thanks to people like you, we've donated
+            p
+      .row
+        #moneydonated.col-md-offset-4.col-md-4.text-center
+          p $500,145
+      br
+      br
+      .row
+        .col-md-offset-2.col-md-4
+          p We are proud to be helping these 2 causes:
+      .row.well.well-lg
+        .col-md-offset-3.col-md-2
+          img(src='http://cdn2-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-8.jpg', height='150', width='150')
+        .col-md-4
           p
-            strong Email:
-            = user.email
-          form(action='/user_profile', method='post')
-            br
-            p
-              strong Nickname:
-              input(type='text', placeholder=user.nickname, name='nickname')
-            br
-            p
-              button.btn-lg.btn-success(type='submit', value='Submit') Submit Changes!
-              a(href='/logout') LOG OUT
-
+            big
+              strong Poweshiek Animal League Shelter
+          br
+          p
+            | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      .row.well.well-lg
+        .col-md-offset-3.col-md-2
+          img(src='http://cdn2-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-8.jpg', height='150', width='150')
+        .col-md-4
+          p
+            big
+              strong Poweshiek Animal League Shelter
+          br
+          p
+            | "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
       // Connects to Bootstrap
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
       script(src='/js/bootstrap.js')

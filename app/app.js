@@ -52,6 +52,14 @@ app.use(expressValidator({
  }
 }));
 
+app.use(function(req, res, next) {
+    if (!req.sponsor && !req.user) {
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+        res.header('Expires', '-1');
+        res.header('Pragma', 'no-cache');
+    }
+    next();
+});
 
 // log requests to stdout and also
 // log HTTP requests to a file in combined format
