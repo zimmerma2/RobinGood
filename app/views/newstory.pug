@@ -10,7 +10,7 @@ block scriptsAfterContent
   
   //- Google Maps location search integration
   link(rel="stylesheet" href="/css/locationSearch.css")
-  script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8jTZcYe852PX8u9DmSZQPgeMpbZUM51w&libraries=places&callback=initAutocomplete" async defer)
+  script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGpkOOr3Uahd29AOHbI_dN8zR4OIHbnoY&libraries=places&callback=initAutocomplete" async defer)
   script(type='text/javascript', src='/js/locationSearch.js')
 
 block content
@@ -37,13 +37,8 @@ block content
       label(for='inputEndDate') Closing Date
       input#inputEndDate.form-control(type='date', name='endDate', required='true', value=(undefined===story ? '' : story.closingDate.toISOString().slice(0,10)))
         
-    
     //- Location form fields 
-    div.form-group    
-    
-      //- TODO Add fields to Story model (create a location class)
-      //- TODO add same functionality to edit story page
-      
+    div.form-group
       div#locationField
         input#locationAutocomplete(placeholder='Enter your address', onfocus='geolocate()', type='text')
       table#address

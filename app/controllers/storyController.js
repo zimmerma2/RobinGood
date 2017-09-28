@@ -67,16 +67,9 @@ exports.story_new_get = function story_new_get (req, res) {
 exports.story_new_post = function story_new_post (req, res, next) {
   thumbnailUpload(req, res, function (multerError) {
 
-    console.log("BODY:");
-    console.log(req.body);
-
-
     var errors = story_form_validate(req, true, true);
 
     if (multerError) {
-      console.error('MULTER ERROR: ');
-      console.error(multerError);
-
       // Create expressvalidator compatible error
       var newError = {
         'msg' : multerError.code,
@@ -86,9 +79,6 @@ exports.story_new_post = function story_new_post (req, res, next) {
       }
       errors.push(newError);
     }
-
-    console.log("Sanitized BODY:");
-    console.log(req.body);
 
     //Create a story object with escaped and trimmed data.
     var newStory = new Story();
@@ -289,8 +279,6 @@ function story_form_validate(req, checkThumbnail, checkLocation) {
     req.sanitize('zipCode').trim();
     req.sanitize('zipCode').toInt();
   }
-
-  // Validate thumbnail
 
   // Run the validators
   var errors = req.validationErrors();
