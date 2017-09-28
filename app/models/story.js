@@ -9,7 +9,13 @@ var StorySchema = Schema({
   closingDate: {type: Date, required: true},
   thumbnail: {type: String, required: true},
   body_md: {type: String, required: true},
-  body_html: {type: String, required: true}
+  body_html: {type: String, required: true},
+  location: {
+    streetAddress: {type: String, required: false, max:200},
+    city: {type: String, required: true, max:100},
+    state: {type: String, required: true, uppercase: true, max: 2},
+    zipCode: {type: Number, required: true, validate: /\d{5}/}
+  }
   // category: {type: String}
   //verification_media
   // [{type: Schema.ObjectId, ref: 'Genre'}]
@@ -19,6 +25,16 @@ var StorySchema = Schema({
   // current_donation_status: {type: Number, required: true},
   // company: [{type: Schema.ObjectId, ref: 'Company', required: true}]
 });
+
+StorySchema.methods.locationString = function() {
+  const location = this.location;
+  if (location.streetAddress)
+    ret = location.streetAddress + '\n';
+  else
+    ret = ''
+
+  return  ret + location.city + ', ' + location.state + ' ' + location.zipCode;
+}
 
 // Virtual for story's URL
 StorySchema

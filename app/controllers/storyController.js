@@ -41,6 +41,7 @@ exports.story_detail = function story_detail (req, res, next) {
     res.render('story.pug', {
       title : story.title,
       story : story,
+      story_location : story.locationString()
     });
   });
 };
@@ -86,12 +87,19 @@ exports.story_new_post = function story_new_post (req, res, next) {
       errors.push(newError);
     }
 
+    console.log("Sanitized BODY:");
+    console.log(req.body);
+
     //Create a story object with escaped and trimmed data.
     var newStory = new Story();
     newStory.title = req.body.title;
     newStory.description = req.body.description;
     newStory.targetDonation = req.body.targetDonation;
     newStory.closingDate = req.body.endDate;
+    newStory.location.streetAddress = req.body.streetAddress;
+    newStory.location.city = req.body.city;
+    newStory.location.state = req.body.state;
+    newStory.location.zipCode = req.body.zipCode;
 
     if (errors.length) {
       // TODO Look into validating form BEFORE uploading file
