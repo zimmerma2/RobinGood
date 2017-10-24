@@ -93,3 +93,14 @@
   width: 90px;
   height: 90px;
 }
+
+#profpic {
+  height: 90px;
+  width: 90px;
+}
+
+#profile {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+}
