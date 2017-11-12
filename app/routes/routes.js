@@ -105,7 +105,11 @@ module.exports = function(app, passport) {
   app.post('/user_profile', function(req, res){
     console.log('Session ID in POST is' + req.sessionID);
     User.update({_id: req.user.id}, {
-        nickname: req.body.nickname
+        nickname: req.body.nickname,
+        date_of_birth: req.body.date_of_birth,
+        nationality: req.body.nationality,
+        address: req.body.address,
+        phone_number: req.body.phone_number
     },function(err, numberAffected, rawResponse) {
       if(err)
        console.log('new profile update error');

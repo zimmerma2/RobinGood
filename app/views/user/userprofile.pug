@@ -72,7 +72,23 @@ html
                 br
                 p
                   strong Nickname:
-                  input(type='text', placeholder=user.nickname, name='nickname')
+                  input(type='text', value=user.nickname, name='nickname')
+                br
+                p
+                  strong Date of Birth:
+                  input(type='date', value=user.date_of_birth, name='date_of_birth')
+                br
+                p
+                  strong Nationality:
+                  input(type='text', value=user.nationality, name='nationality')
+                br
+                p
+                  strong Address:
+                  input(type='text', value=user.address, name='address')
+                br
+                p
+                  strong Phone Number:
+                  input(type='text', value=user.phone_number, name='phone_number')
                 br
                 p
                   button.btn-lg.btn-success(type='submit', value='Submit') Submit Changes!

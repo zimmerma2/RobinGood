@@ -15,11 +15,16 @@ router.get('/user_profile', isLoggedIn, function(req, res) {
   });
 });
 
-router.post('user_profile', function(req, res){
+router.post('user_profile', function(req, res, done){
   // var candidateId = ObjectId(req.params.id);
   var candidateEmail = req.body.email;
-  User.find({'email': {'$eq': candidateEmail}},{}, function(err,user) {
+  User.findOne({'email': {'$eq': candidateEmail}},{}, function(err,user) {
     user.nickname = req.body.nickname;
+    user.date_of_birth = req.body.date_of_birth;
+    user.address = req.body.address;
+    user.nationality = req.body.nationality;
+    user.phone_number = req.body.phone_number;
+
     console.log('Updated value of nickname: ' + user.nickname);
     user.save(function (err) {
       if (err) {
@@ -28,18 +33,17 @@ router.post('user_profile', function(req, res){
       }
       // res.status(200).send("The account has been verified. Please log in.");
     });
+    return res.status(200);
   });
 });
 
 function isLoggedIn(req, res, next) {
-
   // if user is authenticated in the session, carry on
   if (req.isAuthenticated()) {
-  console.log('successful authentication again.');
-return next();
-}
-console.log('FUCKED UP.');
-
+    console.log('successful authentication again.');
+    return next();
+  }
+  console.log('FUCKED UP.');
   // if they aren't redirect them to the home page
   res.redirect('/');
 }
