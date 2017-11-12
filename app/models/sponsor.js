@@ -11,7 +11,7 @@ var SponsorSchema = Schema({
   isVerified: { type: Boolean, default: false },
   verification_token: { type: Schema.ObjectId, ref: 'Token'},
   representative_last_name: {type: String, required: true}
-  // representative_phone_number: {type: String, required: true},
+  // representative_phone_number: {type: String, required: true}
   // logo: {data: Buffer, contentType: String, required: true}, // filepath to an image?
   // website: {type: String, required:true, max:20},
   // address: {type: String, required:true},

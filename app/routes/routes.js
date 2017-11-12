@@ -75,7 +75,7 @@ module.exports = function(app, passport) {
 
   // process the login form
   app.post('/sponsorlogin', passport.authenticate('sponsor-local-login', {
-    successRedirect : '/sponsor_profile/:id', // redirect to the secure profile section
+    successRedirect : '/sponsor_profile/', // redirect to the secure profile section
     failureRedirect : '/sponsorlogin', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
   }));
@@ -84,16 +84,6 @@ module.exports = function(app, passport) {
   // =====================================
   // USER PROFILE  =======================
   // =====================================
-
-  // app.get('/user_profile', isLoggedIn, function(request, response) {
-  //   var candidateId = ObjectId(request.params.id);
-  //   User.find({'_id': {'$eq': candidateId}},{}, function(err,user) {
-  //     console.log('Initial value of email: ' + request.user.email);
-  //     response.render('user/userprofile.pug', {
-  //       user : request.user
-  //     });
-  //   });
-  // });
 
   app.get('/user_profile', isLoggedIn, function(request, response) {
     console.log('Session ID in GET is' + request.sessionID);
@@ -116,61 +106,31 @@ module.exports = function(app, passport) {
     });
   });
 
-
-  // app.post('/user_profile', function(req, res){
-  //   var email = req.user.email;
-  //   console.log('email is = ' + email);
-  //   User.findOne({'email' : email}, function (err, updatedUser) {
-  //     console.log('updated updatedUser email is = ' + updatedUser.email);
-  //     if(!updatedUser) {console.log('ERrOR ' + err);}
-  //     else {
-  //       updatedUser.nickname = req.body.nickname;
-  //       updatedUser.save(function(err) {
-  //         if(err){console.log('Error again ' + err);}
-  //         else{console.log('Success');}
-  //       });
-  //       res.redirect('back');
-  //     }
-  //   });
-  // });
-
   // =====================================
   // SPONSOR PROFILE  ====================
   // =====================================
 
-  app.get('/sponsor_profile/:id', isLoggedIn, function(request, response) {
-    console.log('Session ID in GET is' + request.sessionID);
+  app.get('/sponsor_profile', isLoggedIn, function(request, response) {
+    console.log('Session ID in GET is ' + request.sessionID);
     response.render('sponsor/sponsorprofile.pug', {
-      sponsor : request.sponsor
+      sponsor : request.user
     });
   });
 
-  app.post('/sponsor_profile/:id', function(req, res){
-    console.log('Session ID in POST is' + req.sessionID);
-    Sponsor.update({_id: req.sponsor.id}, {
-        // nickname: req.body.nickname
+  app.post('/sponsor_profile', function(req, res){
+    console.log('Session ID in POST is == ' + req.sessionID);
+    console.log('SPONSOR ID IS = ' + req.user.id);
+    Sponsor.update({_id: req.user.id}, {
+        company_name: req.body.company_name,
+        company_id: req.body.company_id,
+        representative_first_name: req.body.representative_first_name,
+        representative_last_name: req.body.representative_last_name,
+        representative_phone_number: req.body.representative_phone_number
     },function(err, numberAffected, rawResponse) {
       if(err)
        console.log('new profile update error');
     });
   });
-
-  // app.post('/sponsor_profile', function(req, res){
-  //   var email = req.sponsor.representative_email;
-  //   console.log('email is = ' + email);
-  //   Sponsor.findOne({'email' : email}, function (err, updatedSponsor) {
-  //     console.log('updated updatedSponsor email is = ' + updatedSponsor.email);
-  //     if(!updatedSponsor) {console.log('ERrOR ' + err);}
-  //     else {
-  //       updatedSponsor.representative_first_name = req.body.representative_first_name;
-  //       updatedSponsor.save(function(err) {
-  //         if(err){console.log('Error again ' + err);}
-  //         else{console.log('Success');}
-  //       });
-  //       res.redirect('back');
-  //     }
-  //   });
-  // });
 
   // ================================
   // FORGOTTEN PASSWORD =============
