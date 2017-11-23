@@ -4,6 +4,9 @@ var User = require('../models/user');
 var router = express.Router();
 var ObjectId = mongoose.Types.ObjectId;
 
+// Load local modules
+var authHelpers = require('../lib/authHelpers');
+var isLoggedIn = authHelpers.isLoggedIn;
 
 router.get('/user_profile', isLoggedIn, function(req, res) {
   var candidateId = ObjectId(req.params.id);
@@ -36,16 +39,5 @@ router.post('user_profile', function(req, res, done){
     return res.status(200);
   });
 });
-
-function isLoggedIn(req, res, next) {
-  // if user is authenticated in the session, carry on
-  if (req.isAuthenticated()) {
-    console.log('successful authentication again.');
-    return next();
-  }
-  console.log('FUCKED UP.');
-  // if they aren't redirect them to the home page
-  res.redirect('/');
-}
 
 module.exports = router;

@@ -2,9 +2,12 @@ var fs = require('fs');
 var mongoose = require('mongoose');
 var multer = require('multer');
 var Story = require('../models/story');
+var User = require('../models/user');
 
 // Load local modules
 var storyHelpers = require('../lib/storyHelpers');
+var authHelpers = require('../lib/authHelpers');
+var isLoggedIn = authHelpers.isLoggedIn;
 
 var ObjectId = mongoose.Types.ObjectId;
 const uploadDir = storyHelpers.uploadDir;
@@ -59,9 +62,12 @@ exports.story_list =  function story_list (req, res, next) {
 /****************************************
 * Controllers for creating a new story *
 ****************************************/
-exports.story_new_get = function story_new_get (req, res) {
-  res.render('newstory.pug', { title: 'Create a New Story' });
-}
+exports.story_new_get = [
+  isLoggedIn,
+  function story_new_get (req, res) {
+    res.render('newstory.pug', { title: 'Create a New Story' });
+  }
+]
 
 exports.story_new_post = function story_new_post (req, res, next) {
     thumbnailUpload(req, res, function (multerError) {
@@ -207,7 +213,7 @@ exports.story_new_post = function story_new_post (req, res, next) {
         storyHelpers.deleteUploaded(uploadDir + 'stories/markdown/' + story.body_md);
         storyHelpers.deleteUploaded(uploadDir + 'stories/html/' + story.body_html);
         storyHelpers.writeBodyFiles(story, req, res, next);
-        
+
         //successful - redirect to story page
         res.redirect('/story/' + story._id);
       });
@@ -257,8 +263,6 @@ function story_form_validate(req) {
   req.sanitize('endDate').toDate();
   req.sanitize('storyBody').escape();
   req.sanitize('storyBody').trim();
-
-  // Validate thumbnail
 
   // Run the validators
   var errors = req.validationErrors();
