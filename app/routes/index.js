@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
     pagePhotos = pagePhotos.concat(item.artwork);
   });
 
-  res.render('index', {
+  res.render('home.ejs', {
     pageTitle: 'Home',
     artwork: pagePhotos,
     pageID: 'home'

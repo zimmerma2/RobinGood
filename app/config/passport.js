@@ -264,7 +264,10 @@ module.exports = function(passport) {
               newSponsor.verification_token = token._id;
 
               newSponsor.save(function(err) {
-                if (err) { return res.status(500).send({ msg: err.message }); }
+                if (err) {
+                  console.log(err);
+                  // return res.status(500).send({ msg: err.message });
+                }
 
                 // Create a verification token for this user
                 // Save the verification token

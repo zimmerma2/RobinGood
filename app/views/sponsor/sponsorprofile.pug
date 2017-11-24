@@ -50,7 +50,33 @@ html
     body
       .row.col-md-offset-4.col-md-4.text-center
         p
-          a(href='/logout') LOG OUT
+          strong Email:
+          = sponsor.representative_email
+        form(action='/sponsor_profile', method='post')
+          br
+          p
+            strong Company Name:
+            input(type='text', value=sponsor.company_name, name='company_name')
+          br
+          p
+            strong Company ID:
+            input(type='text', value=sponsor.company_id, name='company_id')
+          br
+          p
+            strong Representative First Name:
+            input(type='text', value=sponsor.representative_first_name, name='representative_first_name')
+          br
+          p
+            strong Representative Last Name:
+            input(type='text', value=sponsor.representative_last_name, name='representative_last_name')
+          br
+          p
+            strong Representative Phone Number:
+            input(type='text', value=sponsor.representative_phone_number, name='representative_phone_number')
+          br
+          p
+            button.btn-lg.btn-success(type='submit', value='Submit') Submit Changes!
+            a(href='/logout') LOG OUT
         br
         p
           big We are
