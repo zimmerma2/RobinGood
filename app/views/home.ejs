@@ -1,39 +1,9 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>RobinGood</title>
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/HeadFoot.css">
-    <div class="container navbar navbar-static-top"><a href="Home.html" class="navbar-brand">RobinGood</a>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown"><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Causes<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="/medical">Medical</a></li>
-            <li><a href="/animal">Animals</a></li>
-            <li><a href="/volunteer">Volunteer</a></li>
-            <li><a href="/education">Education</a></li>
-            <li><a href="/emergencies">Emergencies</a></li>
-            <li><a href="/sports">Sports</a></li>
-            <li><a href="/memorial">Memorial</a></li>
-            <li><a href="/health">Health</a></li>
-            <li><a href="/community">Community Building</a></li>
-            <li><a href="/other">Other</a></li>
-          </ul>
-        </li>
-        <li><a href="/about">About Us</a></li>
-        <li><a href="/sponsorsignup">Advertise</a></li>
-        <li><a href="/story">Start A Cause</a></li>
-        <li><a href="/user/userlogin">Log In</a></li>
-        <li><a href="/usersignup">Create An Account</a></li>
-        <li>
-          <form action="searchfile">
-            <button type="submit" class="btn btn-info">Search:</button>
-            <input type="text" name="search">
-          </form>
-        </li>
-      </ul>
-    </div>
-  </head>
+<head>
+  <% include partials/template/head.ejs %>
+  <% include partials/template/general_header.ejs %>
+</head>
   <body>
     <section id='showcase'>
       <div class='container'>
@@ -70,34 +40,5 @@
       </div>
     </section>
   </body>
-  <div class="footer">
-    <div class="row">
-      <div class="col-md-4 text-center">
-        <h2>Links</h2>
-        <ul class="list-unstyled">
-          <li><a href="/home">Home</a></li>
-          <li><a href="/updatestory">Causes</a></li>
-          <li><a href="/updatestory">Start A Cause</a></li>
-          <li><a href="/sponsorlogin">Advertise</a></li>
-        </ul>
-      </div>
-      <div class="col-md-4 text-center">
-        <h2>About</h2>
-        <ul class="list-unstyled">
-          <li><a href="/about">About Us</a></li>
-          <li><a href="/faq">FAQ</a></li>
-          <li><a href="facebook.com">Facebook</a></li>
-          <li><a href="twitter.com">Twitter</a></li>
-        </ul>
-      </div>
-      <div class="col-md-4 text-center">
-        <h2>Contact Us</h2>
-        <ul class="list-unstyled">
-          <li>Grinnell, IA</li>
-          <li>1-555-robingo</li>
-          <li>RobinGood@hotmail.com</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <% include /partials/template/general_footer.ejs %>
   </html>
