@@ -1,11 +1,11 @@
 doctype html
 html
   head
-    title Profile Page
+    title RobinGood
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/HeadFoot.css')
     .container.navbar.navbar-static-top
-      a.navbar-brand(href='Home.html') RobinGood
+      a.navbar-brand(href='/../home') RobinGood
       ul.nav.navbar-nav.navbar-right
         li.dropdown
           a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
@@ -13,29 +13,29 @@ html
             span.caret
           ul.dropdown-menu
             li
-              a(href='MedicalCauses.html') Medical
+              a(href='/../story_types/medical') Medical
             li
-              a(href='AnimalCauses.html') Animals
+              a(href='/../story_types/animal') Animals
             li
-              a(href='VolunteerCauses.html') Volunteer
+              a(href='/../story_types/volunteer') Volunteer
             li
-              a(href='EducationCauses.html') Education
+              a(href='/../story_types/education') Education
             li
-              a(href='EmergenciesCauses.html') Emergencies
+              a(href='/../story_types/emergencies') Emergencies
             li
-              a(href='SportsCauses.html') Sports
+              a(href='/../story_types/sports') Sports
             li
-              a(href='MemorialCauses.html') Memorial
+              a(href='/../story_types/memorial') Memorial
             li
-              a(href='HealthCauses.html') Health
+              a(href='/../story_types/health') Health
             li
-              a(href='CommunityBuildingCauses.html') Community Building
+              a(href='/../story_types/community') Community Building
             li
-              a(href='OtherCauses.html') Other
+              a(href='/../story_types/other') Other
         li
-          a(href='AboutUs.html') About Us
+          a(href='/../about') About Us
         li
-          a(href='Advertise.html') Advertise
+          a(href='/') Advertise
         li
           a(href='StartACause.html') Start A Cause
         li
@@ -45,7 +45,7 @@ html
         li
           form(action='searchfile')
             button.btn.btn-info(type='submit') Search:
-            input(type='text', name='search')
+            input(type='text', name='search') 
   body
     .container-fluid
       #profile.wrapper
@@ -190,32 +190,33 @@ html
       }
       document.getElementById(inside).style.display = 'block';
       }
-  .row
-    .col-md-4.text-center
-      h2 Links
-      ul.list-unstyled
-        li
-          a(href='Home.html') Home
-        li
-          a(href='Causes.html') Causes
-        li
-          a(href='StartACause.html') Start A Cause
-        li
-          a(href='Advertise.html') Advertise
-    .col-md-4.text-center
-      h2 About
-      ul.list-unstyled
-        li
-          a(href='AboutUs.html') About Us
-        li
-          a(href='FAQ.html') FAQ
-        li
-          a(href='facebook.com') Facebook
-        li
-          a(href='twitter.com') Twitter
-    .col-md-4.text-center
-      h2 Contact Us
-      ul.list-unstyled
-        li Grinnell, IA
-        li 1-555-robingo
-        li RobinGood@hotmail.com
+  .footer
+    .row
+      .col-md-4.text-center
+        h2 Links
+        ul.list-unstyled
+          li
+            a(href='/../home') Home
+          li
+            a(href='/../storylist') Causes
+          li
+            a(href='/../story/new') Start A Cause
+          li
+            a(href='/../sponsor/sponsorsignup') Advertise
+      .col-md-4.text-center
+        h2 About
+        ul.list-unstyled
+          li
+            a(href='/../about') About Us
+          li
+            a(href='/../faq') FAQ
+          li
+            a(href='facebook.com') Facebook
+          li
+            a(href='twitter.com') Twitter
+      .col-md-4.text-center
+        h2 Contact Us
+        ul.list-unstyled
+          li Grinnell, IA
+          li 1-555-robingo
+          li RobinGood@hotmail.com
