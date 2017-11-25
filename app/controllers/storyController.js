@@ -1,8 +1,10 @@
 var fs = require('fs');
 var mongoose = require('mongoose');
 var multer = require('multer');
+var paginate = require('express-paginate');
 var Story = require('../models/story');
 var User = require('../models/user');
+var url = require('url');
 
 // Load local modules
 var storyHelpers = require('../lib/storyHelpers');
@@ -49,21 +51,19 @@ exports.story_detail = function story_detail (req, res, next) {
 };
 
 exports.story_list =  function story_list (req, res, next) {
-  // Sort by title, descending
-  Story.find().sort({title : 1}).exec(function(err,stories) {
-    if (err) {return next(err);}
-    res.render('storylist.pug', {
-      title : 'Stories',
-      storylist : stories
-    });
-  });
+  res.redirect(url.format({
+    pathname:'/story/',
+    query: {
+      sort:'title'
+    }
+  }));
 }
 
 /****************************************
 * Controllers for creating a new story *
 ****************************************/
 exports.story_new_get = [
-  isLoggedIn,
+  // isLoggedIn,
   function story_new_get (req, res) {
     res.render('newstory.pug', { title: 'Create a New Story' });
   }
@@ -178,7 +178,7 @@ exports.story_new_post = function story_new_post (req, res, next) {
       return next('route');
     }
 
-    var errors = story_form_validate(req);
+    var errors = story_form_validate(req, checkThumbnail=false);
 
     //Create a story object with escaped and trimmed data.
     var story = new Story();
@@ -235,10 +235,44 @@ exports.story_new_post = function story_new_post (req, res, next) {
     res.redirect('/story/list');
   };
 
+/*************************************
+ * Controllers for searching stories *
+ *************************************/
+
+exports.story_search_get = function story_search_get (req, res) {
+  res.render('searchstory.pug', { title: 'Search for Stories', query : req.query });
+}
+
+exports.story_search_results_get = function story_search_results_get (req, res, next) {
+
+  console.log("Query:");
+  console.log(req.query);
+
+  var query = {};
+  var options = {
+    // select: 'title date author',
+    sort: req.query.sort,
+    page: req.query.page,
+    limit: req.query.limit,
+  };
+
+  Story.paginate(query, options, function(err, stories) {
+    if (err) return next(err);
+    res.render('storysearchresults.pug', {
+      title: 'Stories',
+      stories: stories.docs,
+      pageCount: stories.pages,
+      itemCount: stories.limit,
+      pages: paginate.getArrayPages(req)(3, stories.pages, req.query.page),
+      query: req.query,
+    });
+  });
+}
+
 /********************
  * Helper Functions *
  ********************/
-function story_form_validate(req) {
+function story_form_validate(req, checkThumbnail=true) {
   // TODO there must be a better way!
   req.body.thumbnail = req.file;
 
@@ -248,9 +282,11 @@ function story_form_validate(req) {
   req.checkBody('targetDonation','Target donation must be specified.').notEmpty();
   req.checkBody('endDate','Valid closing date is required.').isAfter();
   req.checkBody('storyBody','Story body is required.').notEmpty();
-  req.checkBody('thumbnail.originalname','Thumbnail is required.').notEmpty();
-  if (req.file != undefined)
-    req.checkBody('thumbnail.originalname','Thumbnail must be an image file.').isImage();
+  if (checkThumbnail) {
+    req.checkBody('thumbnail.originalname','Thumbnail is required.').notEmpty();
+    if (req.file != undefined)
+      req.checkBody('thumbnail.originalname','Thumbnail must be an image file.').isImage();
+  }
 
   // Sanitize form entries
   req.sanitize('title').escape();
