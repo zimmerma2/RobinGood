@@ -17,11 +17,11 @@ block content
   h1= title
   
   if errors
-    br      
-    h2 Form Errors:
-    ul
-      for error in errors
-        li=error.msg
+    div.alert.alert-danger
+      h2 Form Errors:
+      ul
+        each error in errors
+          li=error.msg
   
   form#formAddStory(name='addStory', method='post', action='/story/add', enctype="multipart/form-data")
     div.form-group

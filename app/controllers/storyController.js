@@ -249,44 +249,66 @@ exports.story_search_get = function story_search_get (req, res) {
 exports.story_search_results_get = function story_search_results_get (req, res, next) {
 
   // Validate query
-  req.checkQuery('endDate','Future closing date is required.').isAfter();
-
-  // sanitizeQuery
-  req.sanitize('sq').escape();
-  req.sanitize('sq').trim();
-  req.sanitizeQuery('endDate').escape();
-  req.sanitizeQuery('endDate').toDate();
-
-  var options = {
-    // select: 'title date author',
-    sort: req.query.sort,
-    page: req.query.page,
-    limit: req.query.limit,
-  };
-
-  var query = {};
-
-  if (req.query.sq) {
-      query['$text'] = { $search: req.query.sq }
-  }
-
   if (req.query.endDate) {
-    query['closingDate'] = {
-      $lte: new Date(req.query.endDate)
-    }
+    req.checkQuery('endDate','Future closing date is required.').isAfter();
   }
 
-  Story.paginate(query, options, function(err, stories) {
-    if (err) return next(err);
-    res.render('story/storysearchresults.pug', {
-      title: 'Stories',
-      stories: stories.docs,
-      pageCount: stories.pages,
-      itemCount: stories.limit,
-      pages: paginate.getArrayPages(req)(3, stories.pages, req.query.page),
-      query: req.query,
+  // Sanitize Query
+  req.sanitizeQuery('sq').escape();
+  req.sanitizeQuery('sq').trim();
+  req.sanitizeQuery('endDate').escape();
+  req.sanitizeQuery('endDate').trim();
+  req.sanitizeQuery('endDate').toDate();
+  req.sanitizeQuery('city').escape();
+  req.sanitizeQuery('state').trim();
+  req.sanitizeQuery('zip').escape();
+  req.sanitizeQuery('zip').trim();
+  req.sanitizeQuery('zip').toInt();
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    //If there are errors render the form again, passing the previously entered values and errors
+    res.render('story/searchstory.pug', {
+      title : 'Search for Stories',
+      errors : errors,
+      query : req.query,
     });
-  });
+    return;
+  } else {
+
+    var options = {
+      // select: 'title date author',
+      sort: req.query.sort,
+      page: req.query.page,
+      limit: req.query.limit,
+    };
+
+    var query = {};
+
+    if (req.query.sq) {
+      query['$text'] = { $search: req.query.sq }
+    }
+
+    if (req.query.endDate) {
+      query['closingDate'] = {
+        $lte: new Date(req.query.endDate)
+      }
+    }
+
+    Story.paginate(query, options, function(err, stories) {
+      if (err) return next(err);
+      res.render('story/storysearchresults.pug', {
+        title: 'Stories',
+        stories: stories.docs,
+        pageCount: stories.pages,
+        itemCount: stories.limit,
+        pages: paginate.getArrayPages(req)(3, stories.pages, req.query.page),
+        query: req.query,
+      });
+    });
+
+  }
 }
 
 /********************

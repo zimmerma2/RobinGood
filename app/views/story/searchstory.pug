@@ -8,32 +8,36 @@ block scriptsAfterContent
 
 block content
   
+  if errors
+    div.alert.alert-danger
+      h2 Search Error:
+      ul
+        each error in errors
+          li=error.msg
+  
   form#formSearchStory(name='searchStory', action='/story/')
     div.form-group
       label(for='inputTitle') Key words
-      input#inputTitle.form-control(type='text', placeholder='Search title or description...', name='sq')
+      input#inputTitle.form-control(type='text', placeholder='Search title or description...', name='sq', value=((query) && (query.sq) ? query.sq : '' ))
     div.form-group
       label(for='inputEndDate') Story ends before
-      input#inputEndDate.form-control(type='date', name='endDate') 
+      input#inputEndDate.form-control(type='date', name='endDate', value=(((query) && (query.endDate)) ? query.endDate.toISOString().slice(0,10) : '' )) 
     //- Location form fields 
     div.form-group
+      label Story matches location
       div#locationField
-        input#locationAutocomplete(placeholder='Enter your address', onfocus='geolocate()', type='text')
+        input#locationAutocomplete(placeholder='Enter an address', onfocus='geolocate()', type='text')
       table#address
-        //- tr
-        //-   td.label Street address
-        //-   td.wideField(colspan='3')
-        //-     input#route.field(type='text', name='streetAddress')
         tr
           td.label City
           td.wideField(colspan='3')
-            input#locality.field(type='text', name='city')
+            input#locality.field(type='text', name='city', value=((query) && (query.city) ? query.city : '' ))
         tr
           td.label State
           td.slimField
-            input#administrative_area_level_1.field(type='text', name='state')
+            input#administrative_area_level_1.field(type='text', name='state',, value=((query) && (query.state) ? query.state : '' ))
           td.label Zip code
           td.wideField
-            input#postal_code.field(type='number', name='zipCode')
+            input#postal_code.field(type='number', name='zipCode', , value=((query) && (query.zipCode) ? query.zipCode : '' ))
     div
       input#inputSubmit(type='submit', class="btn btn-primary", value='Search')
