@@ -12,6 +12,7 @@ var StorySchema = Schema({
   body_md: {type: String, required: true},
   body_html: {type: String, required: true},
   location: {
+    streetNumber: {type: Number, required: false},
     streetAddress: {type: String, required: false, max:200},
     city: {type: String, required: true, max:100},
     state: {type: String, required: true, uppercase: true, max: 2},

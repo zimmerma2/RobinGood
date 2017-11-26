@@ -92,7 +92,8 @@ exports.story_new_post = function story_new_post (req, res, next) {
     newStory.description = req.body.description;
     newStory.targetDonation = req.body.targetDonation;
     newStory.closingDate = req.body.endDate;
-    newStory.location.streetAddress = req.body.streetAddress;
+    newStory.location.streetNumber = (req.body.streetNumber) ? req.body.streetNumber : undefined;
+    newStory.location.streetAddress = (req.body.streetAddress) ? req.body.streetAddress : undefined;
     newStory.location.city = req.body.city;
     newStory.location.state = req.body.state;
     newStory.location.zipCode = req.body.zipCode;
@@ -329,12 +330,17 @@ function story_form_validate(req, checkThumbnail=true, checkLocation=true) {
 
   if (checkLocation) {
     req.sanitize('city').escape();
-    req.sanitize('city').escape();
+    req.sanitize('city').trim();
     req.sanitize('state').escape();
     req.sanitize('state').trim();
     req.sanitize('zipCode').escape();
     req.sanitize('zipCode').trim();
     req.sanitize('zipCode').toInt();
+    req.sanitize('streetAddress').escape();
+    req.sanitize('streetAddress').trim();
+    req.sanitize('streetNumber').escape();
+    req.sanitize('streetNumber').trim();
+    req.sanitize('streetNumber').toInt();
   }
 
   // Run the validators

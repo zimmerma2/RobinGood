@@ -11,7 +11,7 @@ block scriptsAfterContent
   //- Google Maps location search integration
   link(rel="stylesheet" href="/css/locationSearch.css")
   script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGpkOOr3Uahd29AOHbI_dN8zR4OIHbnoY&libraries=places&callback=initAutocomplete" async defer)
-  script(type='text/javascript', src='/js/locationSearch.js')
+  script(type='text/javascript', src='/js/locationSearch_streetAdress.js')
 
 block content
   h1= title
@@ -44,6 +44,8 @@ block content
       table#address
         tr
           td.label Street address
+          td.slimField
+            input#street_number.field(type='text', name='streetNumber')
           td.wideField(colspan='3')
             input#route.field(type='text', name='streetAddress')
         tr
