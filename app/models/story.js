@@ -28,6 +28,12 @@ StorySchema
   return '/catalog/story/' + this._id;
 });
 
+// Allows searching through title and description text
+StorySchema.index({
+  title: "text",
+  description: "text"
+});
+
 // Add pagination to Story model
 StorySchema.plugin(mongoosePaginate)
 

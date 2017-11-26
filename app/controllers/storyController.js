@@ -245,16 +245,33 @@ exports.story_search_get = function story_search_get (req, res) {
 
 exports.story_search_results_get = function story_search_results_get (req, res, next) {
 
-  console.log("Query:");
-  console.log(req.query);
+  // Validate query
+  req.checkQuery('endDate','Future closing date is required.').isAfter();
 
-  var query = {};
+  // sanitizeQuery
+  req.sanitize('sq').escape();
+  req.sanitize('sq').trim();
+  req.sanitizeQuery('endDate').escape();
+  req.sanitizeQuery('endDate').toDate();
+
   var options = {
     // select: 'title date author',
     sort: req.query.sort,
     page: req.query.page,
     limit: req.query.limit,
   };
+
+  var query = {};
+
+  if (req.query.sq) {
+      query['$text'] = { $search: req.query.sq }
+  }
+
+  if (req.query.endDate) {
+    query['closingDate'] = {
+      $lte: new Date(req.query.endDate)
+    }
+  }
 
   Story.paginate(query, options, function(err, stories) {
     if (err) return next(err);
@@ -280,7 +297,7 @@ function story_form_validate(req, checkThumbnail=true) {
   req.checkBody('title','Story title is required.').notEmpty();
   req.checkBody('description','Story description is required.').notEmpty();
   req.checkBody('targetDonation','Target donation must be specified.').notEmpty();
-  req.checkBody('endDate','Valid closing date is required.').isAfter();
+  req.checkBody('endDate','Future closing date is required.').isAfter();
   req.checkBody('storyBody','Story body is required.').notEmpty();
   if (checkThumbnail) {
     req.checkBody('thumbnail.originalname','Thumbnail is required.').notEmpty();

@@ -8,10 +8,13 @@ block scriptsAfterContent
 
 block content
   
-  form#formSearchStory(name='searchStory', method='post', action='/story/search')
+  form#formSearchStory(name='searchStory', action='/story/')
     div.form-group
-      label(for='inputTitle') Story Title
-      input#inputTitle.form-control(type='text', placeholder='Story Title', name='title', value=(undefined===story ? '' : story.title))        
+      label(for='inputTitle') Key words
+      input#inputTitle.form-control(type='text', placeholder='Search title or description...', name='sq')
+    div.form-group
+      label(for='inputEndDate') Story ends before
+      input#inputEndDate.form-control(type='date', name='endDate') 
     //- Location form fields 
     div.form-group
       div#locationField
