@@ -18,6 +18,7 @@ var db = mongoose.connection; // Make our db accessible to our route
 var morgan       = require('morgan');
 var nodeMailer = require('nodemailer');
 var nconf = require('nconf');
+var paginate = require('express-paginate');
 var path = require('path');
 var passport = require('passport');
 var reload = require('reload');
@@ -37,6 +38,8 @@ app.use(bodyParser());
 app.use(passport.initialize());   // passport initialize middleware
 app.use(passport.session());      // passport session middleware
 
+// For pagination. Must be called before any routes that use it.
+app.use(paginate.middleware(10, 50));
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
@@ -135,6 +138,20 @@ app.use( function multerErrorHandler (err, req, res, next) {
   }
 });
 
+
+// =====================================
+// Seacrh Results ======================
+// =====================================
+const results_per_page = 10
+const max_results_per_page = 50
+paginate.middleware(results_per_page, max_results_per_page)
+// Limit entries per page to 20 across all paginated results
+app.all(function(req, res, next) {
+  // set default or minimum is 10 (as it was prior to v0.2.0)
+  if (req.query.limit <= results_per_page)
+    req.query.limit = max_results_per_page;
+  next();
+});
 
 // Listen for an application request on designated port
 server.listen(port, function () {

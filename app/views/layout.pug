@@ -43,9 +43,9 @@ html
         li
           a(href='/user/usersignup') Create An Account
         li
-          form(action='searchfile')
+          form(action='/story/')
             button.btn.btn-info(type='submit') Search:
-            input(type='text', name='search')
+            input(type='text', name='sq')
     block scriptsHeader
   body
     .container-fluid
@@ -64,7 +64,7 @@ html
             li
               a(href='/home') Home
             li
-              a(href='/storylist') Causes
+              a(href='/story/list') Causes
             li
               a(href='/story/new') Start A Cause
             li

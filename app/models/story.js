@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 var Schema = mongoose.Schema;
 
 var StorySchema = Schema({
@@ -26,6 +27,15 @@ StorySchema
 .get(function () {
   return '/catalog/story/' + this._id;
 });
+
+// Allows searching through title and description text
+StorySchema.index({
+  title: "text",
+  description: "text"
+});
+
+// Add pagination to Story model
+StorySchema.plugin(mongoosePaginate)
 
 //Export model
 module.exports = mongoose.model('Story', StorySchema);

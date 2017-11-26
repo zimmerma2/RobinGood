@@ -1,0 +1,39 @@
+extends layout
+
+mixin story-card(story)
+  li.media
+    hr
+    a(href="/story/" + story._id)
+      img(class="d-flex align-self-center mr-3", src="/thumbnails/" + story.thumbnail, width=100, height=100)
+    div.media-body
+      h4(class="mt-0 mb-1")= story.title
+      a(href="/story/" + story._id) Link
+      p Closing date: #{story.closingDate}
+      p.card-text= story.description
+    hr
+
+block content
+  h1 Stories
+  
+  hr
+  a.btn.btn-primary(href="/story/search") Refine search
+  hr
+  
+  if (stories.length)
+    a.btn.btn-info(href=paginate.href({ sort: 'title' })) Sort by title
+  
+    //- this assumes you have `?closingDate=1` or `?closingDate=-1` in the querystring
+    //- so this will basically negate the value and give you
+    //- the opposite sorting order (desc with -1 or asc with 1)
+    a.btn.btn-info(href=paginate.href({ sort: query.sort === 'closingDate' ? '-closingDate' : 'closingDate' })) Sort by closing date
+    
+    div
+      ul.list-unstyled
+        each story in stories
+          +story-card(story)
+
+    include _paginate
+    
+  else
+    div.alert.alert-warning(role=alert)
+      h3 No stories found!
