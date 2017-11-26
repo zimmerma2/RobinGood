@@ -17,7 +17,6 @@ block content
       for error in errors
         li=error.msg
   
-  //- form#formEditStory(name='updateStory', method='post', action='/story/' + story._id + '/update', enctype="multipart/form-data")
   form#formEditStory(name='updateStory', method='post', action='/story/' + story._id + '/update')
     div.form-group
       label(for='inputTitle') Story Title
@@ -31,11 +30,7 @@ block content
     div.form-group
       label(for='inputEndDate') Closing Date
       input#inputEndDate.form-control(type='date', name='endDate', required='true', value=story.closingDate.toISOString().slice(0,10))
-    //- TODO add support for updating thumbnail
-    //- div.form-group
-    //-   label(for='inputThumbnail') Upload a thumbnail
-    //-   input#inputThumbnail.form-control-file(type='file', name='thumbnail', aria-describedby="thumbnailHelp", accept='image/*', required='true')
-    //-   small#thumbnailHelp(class="form-text text-muted") Make sure its square!
+    //- TODO add thumbnail uploading
     div.form-group
       label(for='storyBody') Story body
       textarea#inputStoryBody.form-control(name='storyBody', placeholder='Tell your story.', rows=10)

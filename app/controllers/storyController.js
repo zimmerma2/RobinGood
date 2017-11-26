@@ -46,6 +46,7 @@ exports.story_detail = function story_detail (req, res, next) {
     res.render('story.pug', {
       title : story.title,
       story : story,
+      story_location : story.locationString()
     });
   });
 };
@@ -70,177 +71,178 @@ exports.story_new_get = [
 ]
 
 exports.story_new_post = function story_new_post (req, res, next) {
-    thumbnailUpload(req, res, function (multerError) {
+  thumbnailUpload(req, res, function (multerError) {
 
-      var errors = story_form_validate(req);
+    var errors = story_form_validate(req, checkThumbnail=true, checkLocation=true);
 
-      if (multerError) {
-        console.error('MULTER ERROR: ');
-        console.error(multerError);
-
-        // Create expressvalidator compatible error
-        var newError = {
-          'msg' : multerError.code,
-          'param' : multerError.field,
-          'value' : null,
-          'location' : 'body'
-        }
-          errors.push(newError);
+    if (multerError) {
+      // Create expressvalidator compatible error
+      var newError = {
+        'msg' : multerError.code,
+        'param' : multerError.field,
+        'value' : null,
+        'location' : 'body'
       }
-
-      //Create a story object with escaped and trimmed data.
-      var newStory = new Story();
-      newStory.title = req.body.title;
-      newStory.description = req.body.description;
-      newStory.targetDonation = req.body.targetDonation;
-      newStory.closingDate = req.body.endDate;
-
-      if (errors.length) {
-        // TODO Look into validating form BEFORE uploading file
-        //If there are errors render the form again, passing the previously entered values and errors
-        if (req.file != undefined) {
-          storyHelpers.deleteUploaded(req.file.path);
-        }
-        res.render('newstory.pug', {
-          title :  'Create a New Story',
-          errors : errors,
-          story : newStory,
-          storyBody_md : req.body.storyBody
-        });
-        return;
-      } else {
-        // Form data is valid, continue with processing
-        newStory.openingDate = new Date();
-
-        const fileExtension = req.file.originalname.split('.').pop();
-        newStory.thumbnail = newStory._id + '.' + fileExtension;
-        newStory.body_md = newStory._id + '.md';
-        newStory.body_html = newStory._id + '.html';
-
-        newStory.save(function(err) {
-          if (err){
-            console.log('\nError making new story.');
-            // Delete uploaded file
-            storyHelpers.deleteUploaded(req.file.path);
-            return next(err);
-          } else {
-            // Created story, save related files
-            storyHelpers.moveThumbnail(newStory, req, res, next);
-            storyHelpers.writeBodyFiles(newStory, req, res, next);
-
-            // Story succesfully created, redirect user to new page
-            res.redirect('/story/' + newStory._id);
-          }
-        });
-      }
-    })
-  }
-
-  /**************************************
-  * Controllers for updating the story *
-  **************************************/
-  exports.story_update_get = function story_update_get (req, res, next) {
-    // Sanitize id
-    req.sanitize('id').escape();
-    req.sanitize('id').trim();
-
-    // Redirect to 404 if id is invalid
-    if (!ObjectId.isValid(req.params.id)) {
-      return next();
+      errors.push(newError);
     }
-
-    Story.findById(req.params.id, function (err,story) {
-      if (err) { return next(err);}
-      // If no story found, continue request
-      if (story === null) {return next();}
-
-      fs.readFile('app/public/stories/markdown/' + story.body_md, 'utf8', function (err,data) {
-        if (err) {
-          return next(err);
-        }
-
-        res.render('updatestory.pug', {
-          title : 'Edit Story',
-          story : story,
-          storyBody_md : data
-        });
-      });
-    });
-  };
-
-  exports.story_update_post = function story_update_post (req, res, next) {
-    // Sanitize id
-    req.sanitize('id').escape();
-    req.sanitize('id').trim();
-
-    // Redirect to 404 if id is invalid
-    if (!ObjectId.isValid(req.params.id)) {
-      return next('route');
-    }
-
-    var errors = story_form_validate(req, checkThumbnail=false);
 
     //Create a story object with escaped and trimmed data.
-    var story = new Story();
-
-    // Important, or new ID will be assigned!
-    story._id = req.params.id;
-    story.title = req.body.title;
-    story.description = req.body.description;
-    story.targetDonation = req.body.targetDonation;
-    story.closingDate = req.body.endDate;
+    var newStory = new Story();
+    newStory.title = req.body.title;
+    newStory.description = req.body.description;
+    newStory.targetDonation = req.body.targetDonation;
+    newStory.closingDate = req.body.endDate;
+    newStory.location.streetAddress = req.body.streetAddress;
+    newStory.location.city = req.body.city;
+    newStory.location.state = req.body.state;
+    newStory.location.zipCode = req.body.zipCode;
 
     if (errors.length) {
+      // TODO Look into validating form BEFORE uploading file
       //If there are errors render the form again, passing the previously entered values and errors
-      res.render('updatestory.pug', {
-        title : 'Edit Story',
+      if (req.file != undefined) {
+        storyHelpers.deleteUploaded(req.file.path);
+      }
+      res.render('newstory.pug', {
+        title :  'Create a New Story',
         errors : errors,
-        story : story,
+        story : newStory,
         storyBody_md : req.body.storyBody
       });
       return;
     } else {
-      story.body_md = story._id + '.md';
-      story.body_html = story._id + '.html';
+      // Form data is valid, continue with processing
+      newStory.openingDate = new Date();
 
-      Story.findByIdAndUpdate(req.params.id, story, {}, function (err, story) {
-        if (err) {
-          console.error('\nError updating story.');
+      const fileExtension = req.file.originalname.split('.').pop();
+      newStory.thumbnail = newStory._id + '.' + fileExtension;
+      newStory.body_md = newStory._id + '.md';
+      newStory.body_html = newStory._id + '.html';
+
+      newStory.save(function(err) {
+        if (err){
+          console.log('\nError making new story.');
+          // Delete uploaded file
+          storyHelpers.deleteUploaded(req.file.path);
           return next(err);
+        } else {
+          // Created story, save related files
+          storyHelpers.moveThumbnail(newStory, req, res, next);
+          storyHelpers.writeBodyFiles(newStory, req, res, next);
+
+          // Story succesfully created, redirect user to new page
+          res.redirect('/story/' + newStory._id);
         }
-
-        //Replace markdown and HTML files
-        storyHelpers.deleteUploaded(uploadDir + 'stories/markdown/' + story.body_md);
-        storyHelpers.deleteUploaded(uploadDir + 'stories/html/' + story.body_html);
-        storyHelpers.writeBodyFiles(story, req, res, next);
-
-        //successful - redirect to story page
-        res.redirect('/story/' + story._id);
       });
     }
-  };
+  })
+}
 
-  exports.story_delete = function story_delete (req, res, next) {
-    // Sanitize id
-    req.sanitize('id').escape();
-    req.sanitize('id').trim();
+/**************************************
+* Controllers for updating the story *
+**************************************/
+exports.story_update_get = function story_update_get (req, res, next) {
+  // Sanitize id
+  req.sanitize('id').escape();
+  req.sanitize('id').trim();
 
-    // Redirect to 404 if id is invalid
-    if (!ObjectId.isValid(req.params.id)) {
-      return next();
-    }
+  // Redirect to 404 if id is invalid
+  if (!ObjectId.isValid(req.params.id)) {
+    return next();
+  }
 
-    storyHelpers.deleteStory(req.params.id);
+  Story.findById(req.params.id, function (err,story) {
+    if (err) { return next(err);}
+    // If no story found, continue request
+    if (story === null) {return next();}
 
-    res.redirect('/story/list');
-  };
+    fs.readFile('app/public/stories/markdown/' + story.body_md, 'utf8', function (err,data) {
+      if (err) {
+        return next(err);
+      }
+
+      res.render('updatestory.pug', {
+        title : 'Edit Story',
+        story : story,
+        storyBody_md : data
+      });
+    });
+  });
+};
+
+exports.story_update_post = function story_update_post (req, res, next) {
+  // Sanitize id
+  req.sanitize('id').escape();
+  req.sanitize('id').trim();
+
+  // Redirect to 404 if id is invalid
+  if (!ObjectId.isValid(req.params.id)) {
+    return next('route');
+  }
+
+  var errors = story_form_validate(req, checkThumbnail=false, checkLocation=false);
+
+  //Create a story object with escaped and trimmed data.
+  var story = new Story();
+
+  // Important, or new ID will be assigned!
+  story._id = req.params.id;
+  story.title = req.body.title;
+  story.description = req.body.description;
+  story.targetDonation = req.body.targetDonation;
+  story.closingDate = req.body.endDate;
+
+  if (errors.length) {
+    //If there are errors render the form again, passing the previously entered values and errors
+    res.render('updatestory.pug', {
+      title : 'Edit Story',
+      errors : errors,
+      story : story,
+      storyBody_md : req.body.storyBody
+    });
+    return;
+  } else {
+    story.body_md = story._id + '.md';
+    story.body_html = story._id + '.html';
+
+    Story.findByIdAndUpdate(req.params.id, story, {}, function (err, story) {
+      if (err) {
+        console.error('\nError updating story.');
+        return next(err);
+      }
+
+      //Replace markdown and HTML files
+      storyHelpers.deleteUploaded(uploadDir + 'stories/markdown/' + story.body_md);
+      storyHelpers.deleteUploaded(uploadDir + 'stories/html/' + story.body_html);
+      storyHelpers.writeBodyFiles(story, req, res, next);
+
+      //successful - redirect to story page
+      res.redirect('/story/' + story._id);
+    });
+  }
+};
+
+exports.story_delete = function story_delete (req, res, next) {
+  // Sanitize id
+  req.sanitize('id').escape();
+  req.sanitize('id').trim();
+
+  // Redirect to 404 if id is invalid
+  if (!ObjectId.isValid(req.params.id)) {
+    return next();
+  }
+
+  storyHelpers.deleteStory(req.params.id);
+
+  res.redirect('/story/list');
+};
 
 /*************************************
  * Controllers for searching stories *
  *************************************/
 
 exports.story_search_get = function story_search_get (req, res) {
-  res.render('searchstory.pug', { title: 'Search for Stories', query : req.query });
+  res.render('searchstory.pug', { title: 'Search for Stories' });
 }
 
 exports.story_search_results_get = function story_search_results_get (req, res, next) {
@@ -289,7 +291,7 @@ exports.story_search_results_get = function story_search_results_get (req, res, 
 /********************
  * Helper Functions *
  ********************/
-function story_form_validate(req, checkThumbnail=true) {
+function story_form_validate(req, checkThumbnail=true, checkLocation=true) {
   // TODO there must be a better way!
   req.body.thumbnail = req.file;
 
@@ -299,10 +301,18 @@ function story_form_validate(req, checkThumbnail=true) {
   req.checkBody('targetDonation','Target donation must be specified.').notEmpty();
   req.checkBody('endDate','Future closing date is required.').isAfter();
   req.checkBody('storyBody','Story body is required.').notEmpty();
+
   if (checkThumbnail) {
     req.checkBody('thumbnail.originalname','Thumbnail is required.').notEmpty();
     if (req.file != undefined)
       req.checkBody('thumbnail.originalname','Thumbnail must be an image file.').isImage();
+  }
+
+  if (checkLocation) {
+    req.checkBody('city','City is required.').notEmpty();
+    req.checkBody('state','State is required.').notEmpty();
+    req.checkBody('zipCode','ZIP code is required.').notEmpty();
+    req.checkBody('zipCode','A ZIP code must have 5 digits.').isLength({min: 5, max: 5});
   }
 
   // Sanitize form entries
@@ -317,9 +327,19 @@ function story_form_validate(req, checkThumbnail=true) {
   req.sanitize('storyBody').escape();
   req.sanitize('storyBody').trim();
 
+  if (checkLocation) {
+    req.sanitize('city').escape();
+    req.sanitize('city').escape();
+    req.sanitize('state').escape();
+    req.sanitize('state').trim();
+    req.sanitize('zipCode').escape();
+    req.sanitize('zipCode').trim();
+    req.sanitize('zipCode').toInt();
+  }
+
   // Run the validators
   var errors = req.validationErrors();
 
   // Ensure an array is returned
   return (errors) ? errors: [];
-  }
+}
