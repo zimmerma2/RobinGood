@@ -43,7 +43,7 @@ exports.story_detail = function story_detail (req, res, next) {
     // If no story found, continue request
     if (story === null) {return next();}
 
-    res.render('story.pug', {
+    res.render('story/story.pug', {
       title : story.title,
       story : story,
       story_location : story.locationString()
@@ -66,7 +66,7 @@ exports.story_list =  function story_list (req, res, next) {
 exports.story_new_get = [
   // isLoggedIn,
   function story_new_get (req, res) {
-    res.render('newstory.pug', { title: 'Create a New Story' });
+    res.render('story/newstory.pug', { title: 'Create a New Story' });
   }
 ]
 
@@ -103,7 +103,7 @@ exports.story_new_post = function story_new_post (req, res, next) {
       if (req.file != undefined) {
         storyHelpers.deleteUploaded(req.file.path);
       }
-      res.render('newstory.pug', {
+      res.render('story/newstory.pug', {
         title :  'Create a New Story',
         errors : errors,
         story : newStory,
@@ -161,7 +161,7 @@ exports.story_update_get = function story_update_get (req, res, next) {
         return next(err);
       }
 
-      res.render('updatestory.pug', {
+      res.render('story/updatestory.pug', {
         title : 'Edit Story',
         story : story,
         storyBody_md : data
@@ -194,7 +194,7 @@ exports.story_update_post = function story_update_post (req, res, next) {
 
   if (errors.length) {
     //If there are errors render the form again, passing the previously entered values and errors
-    res.render('updatestory.pug', {
+    res.render('story/updatestory.pug', {
       title : 'Edit Story',
       errors : errors,
       story : story,
@@ -242,7 +242,7 @@ exports.story_delete = function story_delete (req, res, next) {
  *************************************/
 
 exports.story_search_get = function story_search_get (req, res) {
-  res.render('searchstory.pug', { title: 'Search for Stories' });
+  res.render('story/searchstory.pug', { title: 'Search for Stories' });
 }
 
 exports.story_search_results_get = function story_search_results_get (req, res, next) {
@@ -277,7 +277,7 @@ exports.story_search_results_get = function story_search_results_get (req, res, 
 
   Story.paginate(query, options, function(err, stories) {
     if (err) return next(err);
-    res.render('storysearchresults.pug', {
+    res.render('story/storysearchresults.pug', {
       title: 'Stories',
       stories: stories.docs,
       pageCount: stories.pages,

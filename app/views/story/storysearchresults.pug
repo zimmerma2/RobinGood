@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 mixin story-card(story)
   li.media
@@ -32,7 +32,7 @@ block content
         each story in stories
           +story-card(story)
 
-    include _paginate
+    include ../_paginate
     
   else
     div.alert.alert-warning(role=alert)
