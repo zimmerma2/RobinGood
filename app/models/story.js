@@ -30,11 +30,14 @@ var StorySchema = Schema({
 
 StorySchema.methods.locationString = function() {
   const location = this.location;
-  if (location.streetAddress)
+
+  if (location.streetNumber && location.streetAddress)
+    ret = location.streetNumber + ' ' + location.streetAddress + '\n';
+  else if (location.streetAddress)
     ret = location.streetAddress + '\n';
   else
     ret = ''
-
+  
   return  ret + location.city + ', ' + location.state + ' ' + location.zipCode;
 }
 

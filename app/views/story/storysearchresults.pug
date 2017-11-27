@@ -9,6 +9,7 @@ mixin story-card(story)
       h4(class="mt-0 mb-1")= story.title
       a(href="/story/" + story._id) Link
       p Closing date: #{story.closingDate}
+      p Location: #{story.locationString()}
       p.card-text= story.description
     hr
 

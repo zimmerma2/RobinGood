@@ -45,8 +45,7 @@ exports.story_detail = function story_detail (req, res, next) {
 
     res.render('story/story.pug', {
       title : story.title,
-      story : story,
-      story_location : story.locationString()
+      story : story
     });
   });
 };
@@ -261,9 +260,9 @@ exports.story_search_results_get = function story_search_results_get (req, res, 
   req.sanitizeQuery('endDate').toDate();
   req.sanitizeQuery('city').escape();
   req.sanitizeQuery('state').trim();
-  req.sanitizeQuery('zip').escape();
-  req.sanitizeQuery('zip').trim();
-  req.sanitizeQuery('zip').toInt();
+  req.sanitizeQuery('zipCode').escape();
+  req.sanitizeQuery('zipCode').trim();
+  req.sanitizeQuery('zipCode').toInt();
 
   var errors = req.validationErrors();
 
@@ -294,6 +293,18 @@ exports.story_search_results_get = function story_search_results_get (req, res, 
       query['closingDate'] = {
         $lte: new Date(req.query.endDate)
       }
+    }
+
+    if (req.query.city) {
+      query['location.city'] = req.query.city
+    }
+
+    if (req.query.state) {
+      query['location.state'] = req.query.state
+    }
+
+    if (req.query.zipCode) {
+      query['location.zipCode'] = req.query.zipCode
     }
 
     Story.paginate(query, options, function(err, stories) {
