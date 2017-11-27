@@ -17,7 +17,7 @@ block content
   h1 Stories
   
   hr
-  a.btn.btn-primary(href="/story/search") Refine search
+  a.btn.btn-primary(href=(search_url) : search_url ? "/story/search") Refine search
   hr
   
   if (stories.length)

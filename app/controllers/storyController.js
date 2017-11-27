@@ -242,7 +242,7 @@ exports.story_delete = function story_delete (req, res, next) {
  *************************************/
 
 exports.story_search_get = function story_search_get (req, res) {
-  res.render('story/searchstory.pug', { title: 'Search for Stories' });
+  res.render('story/searchstory.pug', { title: 'Search for Stories', query:req.query });
 }
 
 exports.story_search_results_get = function story_search_results_get (req, res, next) {
@@ -283,31 +283,36 @@ exports.story_search_results_get = function story_search_results_get (req, res, 
       limit: req.query.limit,
     };
 
-    var query = {};
+    var mongo_query = {};
 
     if (req.query.sq) {
-      query['$text'] = { $search: req.query.sq }
+      mongo_query['$text'] = { $search: req.query.sq }
     }
 
     if (req.query.endDate) {
-      query['closingDate'] = {
+      mongo_query['closingDate'] = {
         $lte: new Date(req.query.endDate)
       }
     }
 
     if (req.query.city) {
-      query['location.city'] = req.query.city
+      mongo_query['location.city'] = req.query.city
     }
 
     if (req.query.state) {
-      query['location.state'] = req.query.state
+      mongo_query['location.state'] = req.query.state
     }
 
     if (req.query.zipCode) {
-      query['location.zipCode'] = req.query.zipCode
+      mongo_query['location.zipCode'] = req.query.zipCode
     }
 
-    Story.paginate(query, options, function(err, stories) {
+    var search_url = url.format({
+      pathname:'/story/search',
+      query: req.query
+    });
+
+    Story.paginate(mongo_query, options, function(err, stories) {
       if (err) return next(err);
       res.render('story/storysearchresults.pug', {
         title: 'Stories',
@@ -316,9 +321,9 @@ exports.story_search_results_get = function story_search_results_get (req, res, 
         itemCount: stories.limit,
         pages: paginate.getArrayPages(req)(3, stories.pages, req.query.page),
         query: req.query,
+        search_url: search_url,
       });
     });
-
   }
 }
 
