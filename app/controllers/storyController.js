@@ -277,8 +277,7 @@ exports.story_search_results_get = function story_search_results_get (req, res, 
   } else {
 
     var options = {
-      // select: 'title date author',
-      sort: req.query.sort,
+      sort: (req.query.sort) ? req.query.sort : 'title',
       page: req.query.page,
       limit: req.query.limit,
     };
